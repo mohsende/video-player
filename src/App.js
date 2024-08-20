@@ -1,70 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const App = () => {
-  const [videoUrl, setVideoUrl] = useState('');
+function App() {
   const [links, setLinks] = useState([]);
+  const [videoUrl, setVideoUrl] = useState('');
 
-  // Load links from Cloudflare Workers API
   useEffect(() => {
-    fetch('https://videolinks.bugatichapi.workers.dev/')
-      .then((response) => response.json())
-      .then((data) => setLinks(data))
-      .catch((error) => console.error('Error loading links:', error));
+    fetchLinks();
   }, []);
 
-  const handleAddLink = () => {
-    if (videoUrl && !links.includes(videoUrl)) {
-      const newLinks = [...links, videoUrl];
-      setLinks(newLinks);
-      setVideoUrl('');
-      // Save new link to Cloudflare Workers API
-      fetch('https://videolinks.bugatichapi.workers.dev/', {
+  // تابع برای گرفتن لینک‌ها از Workers KV
+  const fetchLinks = async () => {
+    const response = await fetch('https://videolinks.bugatichapi.workers.dev/');
+    const data = await response.json();
+    setLinks(data);
+  };
+
+  // تابع برای اضافه کردن لینک جدید
+  const addLink = async () => {
+    if (videoUrl) {
+      const response = await fetch('https://videolinks.bugatichapi.workers.dev/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(videoUrl),
-      }).catch((error) => console.error('Error saving link:', error));
+        body: JSON.stringify(videoUrl)
+      });
+
+      if (response.ok) {
+        setLinks([...links, videoUrl]);
+        setVideoUrl('');
+      }
     }
   };
 
-  const handleLoadLink = (link) => {
-    setVideoUrl(link);
-  };
+  // تابع برای حذف لینک
+  const deleteLink = async (link) => {
+    const response = await fetch('https://videolinks.bugatichapi.workers.dev/', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(link)
+    });
 
-  const handleDeleteLink = (linkToDelete) => {
-    const newLinks = links.filter((link) => link !== linkToDelete);
-    setLinks(newLinks);
-    // Optionally update the list in the backend
+    if (response.ok) {
+      setLinks(links.filter(item => item !== link));
+    }
   };
 
   return (
-    <div className='container'>
-      <h1>Video Player</h1>
-      {videoUrl && (
-        <video width="600" controls>
-          <source src={videoUrl} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      )}
+    <div>
       <input
         type="text"
-        placeholder="Enter video URL"
         value={videoUrl}
         onChange={(e) => setVideoUrl(e.target.value)}
+        placeholder="Enter video URL"
       />
-      <button onClick={handleAddLink}>Add</button>
+      <button onClick={addLink}>Add Video</button>
+
       <ul>
         {links.map((link, index) => (
           <li key={index}>
-            <span onClick={() => handleLoadLink(link)}>{link}</span>
-            <button onClick={() => handleDeleteLink(link)}>Delete</button>
+            {link}
+            <button onClick={() => deleteLink(link)}>Delete</button>
           </li>
         ))}
       </ul>
     </div>
   );
-};
+}
 
 export default App;
