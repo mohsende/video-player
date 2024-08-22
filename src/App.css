@@ -1,44 +1,55 @@
+* {
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+}
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
 .container {
-  display: flex;
+  margin: 10px;
+    /* display: flex;
   flex-direction: column;
+  text-align: center;
+    */ width: 50%;
   
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.videoPlayers {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.players {
+  width: 33%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+video{
+  width: 90%;
+  height: auto;
 }
+
+.player-container{
+  width: 100%;
+}
+/* h1 {} */
+
+.list {
+  list-style-type: none;
+}
+.player-wrapper {
+  width: 80%;
+  /* height: auto; */
+  /* position: relative; */
+  /* padding-top: 56.25%; */
+  /* 16:9 Aspect Ratio */
+}
+
+/* .react-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+} */
