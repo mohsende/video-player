@@ -4,52 +4,94 @@
   box-sizing: border-box;
 }
 .App {
+  padding-top: 40px;
   text-align: center;
 }
 
+.inputSection {
+  margin: 0 auto;
+  width: 400px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid gray;
+}
+
+input {
+  flex-grow: 1.2;
+  font-size: 1.2rem;
+  padding: 10px;
+  outline: none;
+}
+
+button {
+  font-size: 1.2rem;
+  outline: none;
+  padding: 5px 10px;
+  color: whitesmoke;
+  background-color: rgb(75, 152, 162);
+}
+
+button:hover {
+  cursor: pointer;
+  color: white;
+  background-color: rgb(64, 190, 207);;
+}
+
+.deleteBtn {
+  background-color: crimson;
+  color: white;
+  margin-left: 5px;
+  border-radius: 5px;
+}
+
+.deleteBtn:hover {
+  cursor: pointer;
+    color: white;
+    background-color: rgb(166, 7, 39);
+    ;
+}
 
 .container {
   margin: 10px;
-    /* display: flex;
-  flex-direction: column;
-  text-align: center;
-    */ width: 50%;
-  
 }
 
 .videoPlayers {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
 }
 
 .players {
-  width: 33%;
+
 }
 
 video{
-  width: 90%;
-  height: auto;
+  
 }
 
 .player-container{
   width: 100%;
 }
-/* h1 {} */
 
-.list {
+ul {
+  padding: 0;
+  text-align: justify;
   list-style-type: none;
 }
-.player-wrapper {
-  width: 80%;
-  /* height: auto; */
-  /* position: relative; */
-  /* padding-top: 56.25%; */
-  /* 16:9 Aspect Ratio */
+
+li {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  background-color: whitesmoke;
+  /* border: 1px solid red; */
+  margin: 5px ;
+  padding: 5px;
 }
 
-/* .react-player {
-  position: absolute;
-  top: 0;
-  left: 0;
-} */
+li:hover{
+  cursor: pointer;
+  background-color: rgb(183, 246, 169);
+  
+}

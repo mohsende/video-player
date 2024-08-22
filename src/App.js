@@ -69,38 +69,36 @@ function App() {
   return (
     <div className="App">
       <h1>Video Players Test</h1>
-
-      {/* اینپوت برای اضافه کردن لینک جدید */}
-      <input
-        type="text"
-        value={videoUrl}
-        onChange={(e) => setVideoUrl(e.target.value)}
-        placeholder="Enter video URL"
-      />
-      <button onClick={handleAddVideo}>Add Video</button>
+      <div className='inputSection'>
+        <input
+          type="text"
+          value={videoUrl}
+          onChange={(e) => setVideoUrl(e.target.value)}
+          placeholder="Enter video URL"
+        />
+        <button onClick={handleAddVideo}>Add Video</button>
+      </div>
 
       {/* لیست ویدیوها */}
       <ul>
         {videoList.map((url, index) => (
           <li key={index}>
             <span onClick={() => handleVideoClick(url)}>{url}</span>
-            <button onClick={() => handleDeleteVideo(url)}>Delete</button>
+            <button className='deleteBtn' onClick={() => handleDeleteVideo(url)}>X</button>
           </li>
         ))}
       </ul>
 
       <div className='videoPlayers'>
         {currentVideo && (
-          <>
+          <div>
             <div className='players'>
-              {/* پلیر ReactPlayer */}
               <div className="player-container">
                 <h3>React Player</h3>
-                <ReactPlayer url={currentVideo} controls width="100%" height="200px" />
+                <ReactPlayer url={currentVideo} controls />
               </div>
             </div>
-            <div className='players'>
-              {/* پلیر VideoJS */}
+            {/* <div className='players'>
               <div className="player-container">
                 <h3>Video.js Player</h3>
                 <div data-vjs-player>
@@ -118,20 +116,18 @@ function App() {
               </div>
             </div>
             <div className='players'>
-              {/* پلیر Plyr */}
               <div className="player-container">
                 <h3>Plyr Player</h3>
                 <Plyr source={{ type: 'video', sources: [{ src: currentVideo, type: 'video/mp4' }] }} />
               </div>
             </div>
             <div className='players'>
-              {/* پلیر Shaka */}
               <div className="player-container">
                 <h3>Shaka Player</h3>
                 <ShakaPlayer src={currentVideo} />
               </div>
-            </div>
-          </>
+            </div> */}
+          </div>
         )}
       </div>
     </div>
