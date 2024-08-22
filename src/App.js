@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import VideoJS from 'video.js';
+// import VideoJS from 'video.js';
 import Plyr from 'plyr-react';
 import 'video.js/dist/video-js.css';
 import 'plyr-react/plyr.css';
