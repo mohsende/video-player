@@ -7,7 +7,6 @@ import 'plyr-react/plyr.css';
 import ShakaPlayer from './ShakaPlayer'; // کامپوننت جدید
 import './App.css';
 
-// آدرس Worker شما
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
 function App() {
