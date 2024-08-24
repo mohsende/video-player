@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-// import './App.css';
+import './App.css';
 
+// Worker Address
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
 function App() {
