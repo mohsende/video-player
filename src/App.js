@@ -100,16 +100,16 @@ function App() {
         ))}
       </ul>
 
-      {/* <div className='videoPlayers'> */}
-        {/* {currentVideo && ( */}
-            {/* <div className='player'>
-              <h3>React Player</h3>
-              <div className="reactPlayer-wrapper">
-                <ReactPlayer className='reactPlayer' url={currentVideo} controls />
-              </div>
-            </div> */}
-        {/* )} */}
-      {/* </div> */}
+      <div className='videoPlayers'>
+        {currentVideo && (
+          <div className='player'>
+            <h3>React Player</h3>
+            <div className="reactPlayer-wrapper">
+              <ReactPlayer className='reactPlayer' url={currentVideo} controls />
+            </div>
+          </div>
+        )} 
+      </div>
     </div>
   );
 }
