@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-// import VideoJS from 'video.js';
-// import Plyr from 'plyr-react';
-// import 'video.js/dist/video-js.css';
-// import 'plyr-react/plyr.css';
-// import ShakaPlayer from './ShakaPlayer'; // کامپوننت جدید
 // import './App.css';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
@@ -29,8 +24,10 @@ function App() {
   }, []);
 
   const handleAddVideo = async () => {
-    if (videoUrl && !videoList.includes(videoUrl)) {
-      const updatedList = [...videoList, videoUrl];
+    if (videoUrl && !videoList.some(video => video.url === videoUrl)) {
+      const fileName = videoUrl.split('/').pop();
+      const newVideo = { url: videoUrl, name: fileName };
+      const updatedList = [...videoList, newVideo];
       setVideoList(updatedList);
       setVideoUrl('');
 
@@ -38,7 +35,7 @@ function App() {
         await fetch(WORKER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedList),
+          body: JSON.stringify(newVideo),
         });
       } catch (error) {
         console.error('Error saving links:', error);
@@ -47,17 +44,31 @@ function App() {
   };
 
   const handleDeleteVideo = async (url) => {
-    const updatedList = videoList.filter(video => video !== url);
+    const updatedList = videoList.filter(video => video.url !== url);
     setVideoList(updatedList);
 
     try {
       await fetch(WORKER_URL, {
-        method: 'POST',
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedList),
+        body: JSON.stringify({ url }),
       });
     } catch (error) {
       console.error('Error deleting link:', error);
+    }
+  };
+
+  const handleClearList = async () => {
+    setVideoList([]);
+
+    try {
+      await fetch(WORKER_URL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clearAll: true }),
+      });
+    } catch (error) {
+      console.error('Error clearing list:', error);
     }
   };
 
@@ -76,30 +87,28 @@ function App() {
           placeholder="Enter video URL"
         />
         <button onClick={handleAddVideo}>Add Video</button>
+        <button onClick={handleClearList}>Clear List</button>
       </div>
 
-      {/* لیست ویدیوها */}
       <ul>
-        {videoList.map((url, index) => (
+        {videoList.map((video, index) => (
           <li key={index}>
-            <span onClick={() => handleVideoClick(url)}>{url}</span>
-            <button className='deleteBtn' onClick={() => handleDeleteVideo(url)}>X</button>
+            <span onClick={() => handleVideoClick(video.url)}>{video.name}</span>
+            <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
           </li>
         ))}
       </ul>
 
-      <div className='videoPlayers'>
-        {currentVideo && (
-          <div>
-            <div className='players'>
-              <div className="player-container">
-                <h3>React Player</h3>
-                <ReactPlayer url={currentVideo} controls />
+      {/* <div className='videoPlayers'> */}
+        {/* {currentVideo && ( */}
+            {/* <div className='player'>
+              <h3>React Player</h3>
+              <div className="reactPlayer-wrapper">
+                <ReactPlayer className='reactPlayer' url={currentVideo} controls />
               </div>
-            </div>
-          </div>
-        )}
-      </div>
+            </div> */}
+        {/* )} */}
+      {/* </div> */}
     </div>
   );
 }
