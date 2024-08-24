@@ -10,17 +10,20 @@
 
 .inputSection {
   margin: 0 auto;
-  width: 400px;
+  max-width: fit-content;
   display: flex;
   justify-content: center;
-  border: 1px solid gray;
+  /* border: 1px solid gray; */
+  /* border-radius: 5px; */
 }
 
-input {
+.videoUrl {
   flex-grow: 1.2;
   font-size: 1.2rem;
   padding: 10px;
   outline: none;
+  background-color: whitesmoke;
+  
 }
 
 button {
@@ -33,12 +36,58 @@ button {
 
 button:hover {
   cursor: pointer;
-  color: white;
-  background-color: rgb(64, 190, 207);;
+  opacity: 1;
+}
+
+.addBtn {
+  background-color: rgb(78, 224, 70);
+  width: 40px;
+  opacity: 0.8;
+} 
+
+.clearBtn {
+  background-color: rgb(255, 98, 50);
+  opacity: 0.8;
+}
+
+.movieList {
+  padding: 0 10px;
+  margin-top: 20px;
+  text-align: justify;
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  /* flex-basis: 33%; */
+}
+
+.movieCard {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  background-color: whitesmoke;
+  justify-content: space-between;
+  margin: 5px;
+  padding: 10px;
+  width: 300px;
+  border-radius: 10px;
+  opacity: 0.7;
+  
+}
+
+.movieCard:hover {
+  cursor: pointer;
+  background-color: rgb(183, 246, 169);
+  opacity: 1;
+}
+
+.videoName {
+  line-break: anywhere;
+  flex-grow: 1;
 }
 
 .deleteBtn {
-  background-color: crimson;
+  background-color: rgb(245, 16, 73);
+  opacity: 0.7;
   color: white;
   margin-left: 5px;
   border-radius: 5px;
@@ -46,9 +95,8 @@ button:hover {
 
 .deleteBtn:hover {
   cursor: pointer;
-    color: white;
-    background-color: rgb(166, 7, 39);
-    ;
+  color: white;
+  opacity: 1;
 }
 
 .container {
@@ -56,42 +104,27 @@ button:hover {
 }
 
 .videoPlayers {
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: center; */
+  /* width: 100vw; */
+}
+
+.player {
+  /* width: 100%; */
+}
+
+/* این استایل را به فایل App.css یا فایل استایل دیگری اضافه کنید */
+.reactPlayer-wrapper {
+  position: relative;
+  padding-top: 56.25%;
+  /* نسبت ابعاد 16:9 */
+}
+
+.reactPlayer {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-}
-
-.players {
-
-}
-
-video{
-  
-}
-
-.player-container{
-  width: 100%;
-}
-
-ul {
-  padding: 0;
-  text-align: justify;
-  list-style-type: none;
-}
-
-li {
-  display: flex;
-  align-items: center;
-  font-size: 1.2rem;
-  background-color: whitesmoke;
-  /* border: 1px solid red; */
-  margin: 5px ;
-  padding: 5px;
-}
-
-li:hover{
-  cursor: pointer;
-  background-color: rgb(183, 246, 169);
-  
+  height: 100%;
 }

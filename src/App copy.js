@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
+// import VideoJS from 'video.js';
+import Plyr from 'plyr-react';
+import 'video.js/dist/video-js.css';
+import 'plyr-react/plyr.css';
+import ShakaPlayer from './ShakaPlayer'; // کامپوننت جدید
 import './App.css';
 
-// Worker Address
+// آدرس Worker شما
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
 function App() {
@@ -83,19 +88,19 @@ function App() {
       <div className='inputSection'>
         <input
           type="text"
-          className='videoUrl'
           value={videoUrl}
           onChange={(e) => setVideoUrl(e.target.value)}
           placeholder="Enter video URL"
         />
-        <button className='addBtn' onClick={handleAddVideo}>+</button>
-        <button className='clearBtn' onClick={handleClearList}>Clear All</button>
+        <button onClick={handleAddVideo}>Add Video</button>
+        <button onClick={handleClearList}>Clear List</button>
       </div>
 
-      <ul className='movieList'>
+      {/* لیست ویدیوها */}
+      <ul>
         {videoList.map((video, index) => (
-          <li key={index} className='movieCard'>
-            <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.name}</span>
+          <li key={index}>
+            <span onClick={() => handleVideoClick(video.url)}>{video.name}</span>
             <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
           </li>
         ))}
@@ -103,13 +108,45 @@ function App() {
 
       <div className='videoPlayers'>
         {currentVideo && (
-          <div className='player'>
-            <h3>React Player</h3>
-            <div className="reactPlayer-wrapper">
-              <ReactPlayer className='reactPlayer' url={currentVideo} controls />
+          <div>
+            <div className='players'>
+              <div className="player-container">
+                <h3>React Player</h3>
+                <ReactPlayer url={currentVideo} controls />
+              </div>
             </div>
+            {/* این قسمت‌ها را دوباره فعال کنید اگر نیاز دارید */}
+            {/* <div className='players'>
+              <div className="player-container">
+                <h3>Video.js Player</h3>
+                <div data-vjs-player>
+                  <video
+                    id="video-js"
+                    className="video-js"
+                    controls
+                    preload="auto"
+                    width="100%"
+                    height="200px"
+                  >
+                    <source src={currentVideo} type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+            </div>
+            <div className='players'>
+              <div className="player-container">
+                <h3>Plyr Player</h3>
+                <Plyr source={{ type: 'video', sources: [{ src: currentVideo, type: 'video/mp4' }] }} />
+              </div>
+            </div>
+            <div className='players'>
+              <div className="player-container">
+                <h3>Shaka Player</h3>
+                <ShakaPlayer src={currentVideo} />
+              </div>
+            </div> */}
           </div>
-        )} 
+        )}
       </div>
     </div>
   );
