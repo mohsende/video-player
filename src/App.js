@@ -8,7 +8,15 @@ const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 function App() {
   const [videoUrl, setVideoUrl] = useState('');
   const [videoList, setVideoList] = useState([]);
-  const [currentVideo, setCurrentVideo] = useState('');
+  const [currentVideo, setCurrentVideo] = useState(''); 
+  const [captions_arr, setCaptions] = useState([
+    {
+      kind: 'subtitles',
+      src: '/sub.vtt', // اطمینان حاصل کنید که مسیر صحیح است
+      srcLang: 'fa',
+      default: true
+    }
+  ]);
 
   const fetchVideoList = async () => {
     try {
@@ -79,7 +87,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Video Players Test</h1>
+      <h1>Video Player</h1>
       <div className='inputSection'>
         <input
           type="text"
@@ -89,7 +97,7 @@ function App() {
           placeholder="Enter video URL"
         />
         <button className='addBtn' onClick={handleAddVideo}>+</button>
-        <button className='clearBtn' onClick={handleClearList}>Clear All</button>
+        <button className='clearBtn' onClick={handleClearList}>-</button>
       </div>
 
       <ul className='movieList'>
@@ -100,13 +108,23 @@ function App() {
           </li>
         ))}
       </ul>
-
+      
       <div className='videoPlayers'>
         {currentVideo && (
           <div className='player'>
             <h3>React Player</h3>
             <div className="reactPlayer-wrapper">
-              <ReactPlayer className='reactPlayer' url={currentVideo} width='80%' height='auto' style={{minWidth: '440px'}} controls />
+              <ReactPlayer 
+                className='reactPlayer' 
+                url={currentVideo} 
+                config={{
+                  file: {
+                    tracks: captions_arr,
+                  },
+                }}
+                width='60%' height='auto' 
+                style={{minWidth: '440px'}} 
+                controls />
             </div>
           </div>
         )} 
