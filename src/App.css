@@ -86,6 +86,10 @@ button:hover {
 
 .videoName {
   line-break: anywhere;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: pre-wrap;
   flex-grow: 1;
 }
 
