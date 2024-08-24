@@ -61,7 +61,7 @@ button:hover {
   list-style-type: none;
   display: flex;
   flex-wrap: wrap;
-  /* flex-basis: 33%; */
+  flex-basis: 33%;
 }
 
 .movieCard {
@@ -73,9 +73,9 @@ button:hover {
   margin: 5px;
   padding: 10px;
   width: 300px;
+  height: auto;
   border-radius: 10px;
   opacity: 0.7;
-  
 }
 
 .movieCard:hover {
@@ -85,6 +85,7 @@ button:hover {
 }
 
 .videoName {
+  height: auto;
   line-break: anywhere;
   word-wrap: break-word;
   overflow-wrap: break-word;
