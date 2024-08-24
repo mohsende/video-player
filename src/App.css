@@ -104,6 +104,9 @@ button:hover {
 }
 
 .videoPlayers {
+  /* margin: 0 auto; */
+  text-align: justify;
+  padding-top: 10px;
   /* display: flex;
   flex-wrap: wrap;
   justify-content: center; */
