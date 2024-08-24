@@ -106,7 +106,7 @@ function App() {
           <div className='player'>
             <h3>React Player</h3>
             <div className="reactPlayer-wrapper">
-              <ReactPlayer className='reactPlayer' url={currentVideo} controls />
+              <ReactPlayer className='reactPlayer' url={currentVideo} width='80%' height='auto' style={{minWidth: '440px'}} controls />
             </div>
           </div>
         )} 
