@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 // import VideoJS from 'video.js';
-import Plyr from 'plyr-react';
-import 'video.js/dist/video-js.css';
-import 'plyr-react/plyr.css';
-import ShakaPlayer from './ShakaPlayer'; // کامپوننت جدید
-import './App.css';
+// import Plyr from 'plyr-react';
+// import 'video.js/dist/video-js.css';
+// import 'plyr-react/plyr.css';
+// import ShakaPlayer from './ShakaPlayer'; // کامپوننت جدید
+// import './App.css';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
@@ -97,35 +97,6 @@ function App() {
                 <ReactPlayer url={currentVideo} controls />
               </div>
             </div>
-            {/* <div className='players'>
-              <div className="player-container">
-                <h3>Video.js Player</h3>
-                <div data-vjs-player>
-                  <video
-                    id="video-js"
-                    className="video-js"
-                    controls
-                    preload="auto"
-                    width="100%"
-                    height="200px"
-                  >
-                    <source src={currentVideo} type="video/mp4" />
-                  </video>
-                </div>
-              </div>
-            </div>
-            <div className='players'>
-              <div className="player-container">
-                <h3>Plyr Player</h3>
-                <Plyr source={{ type: 'video', sources: [{ src: currentVideo, type: 'video/mp4' }] }} />
-              </div>
-            </div>
-            <div className='players'>
-              <div className="player-container">
-                <h3>Shaka Player</h3>
-                <ShakaPlayer src={currentVideo} />
-              </div>
-            </div> */}
           </div>
         )}
       </div>
