@@ -102,8 +102,9 @@ function App() {
 
       <ul className='movieList'>
         {videoList.map((video, index) => (
-          <li key={index} className='movieCard'>
-            <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.name}</span>
+          <li key={index} className='movieCard' onClick={() => handleVideoClick(video.url)}>
+            <img src='' alt=''></img>
+            <span className='videoName' /*onClick={() => handleVideoClick(video.url)}*/>{video.name}</span>
             <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
           </li>
         ))}
