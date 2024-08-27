@@ -30,8 +30,15 @@
   flex-direction: column;
 }
 
+input#file-upload-button {
+  color: rgb(193, 53, 53);
+  background-color: whitesmoke
+}
+
 input[type=file] {
-  color: white;
+  color: rgb(72, 72, 72);
+  background-color: rgb(241, 241, 241);
+  /* border: 1px solid rgb(227, 227, 227); */
 }
 
 .videoUrl {
@@ -44,11 +51,11 @@ input[type=file] {
 }
 
 ::-webkit-file-upload-button {
-  /* background: rgb(24, 129, 145);
+  background: rgb(24, 129, 145);
   color: rgb(255, 255, 255);
-  padding: 10px;
-  font-size: 1.2rem;
-  border: none; */
+  padding: 5px;
+  /* font-size: 1.2rem; */
+  border: none;
 }
 
 button {
