@@ -25,6 +25,15 @@
   /* border-radius: 5px; */
 }
 
+.input {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type=file] {
+  color: white;
+}
+
 .videoUrl {
   flex-grow: 1.2;
   font-size: 1.2rem;
@@ -32,6 +41,14 @@
   outline: none;
   background-color: whitesmoke;
   
+}
+
+::-webkit-file-upload-button {
+  /* background: rgb(24, 129, 145);
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  font-size: 1.2rem;
+  border: none; */
 }
 
 button {

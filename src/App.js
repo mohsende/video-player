@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import './App.css';
 
-// Worker Address
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
 function App() {
   const [videoUrl, setVideoUrl] = useState('');
-  const [subtitleFile, setSubtitleFile] = useState(null); // اضافه کردن وضعیت برای فایل زیرنویس
+  const [subtitleFile, setSubtitleFile] = useState(null);
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
-  const [captions_arr, setCaptions] = useState([]);
+  const [captionsArr, setCaptions] = useState([]);
+
+  useEffect(() => {
+    fetchVideoList();
+  }, []);
 
   const fetchVideoList = async () => {
     try {
@@ -21,10 +24,6 @@ function App() {
       console.error('Error fetching links:', error);
     }
   };
-
-  useEffect(() => {
-    fetchVideoList();
-  }, []);
 
   const handleAddVideo = async () => {
     if (videoUrl && !videoList.some(video => video.url === videoUrl)) {
@@ -38,19 +37,15 @@ function App() {
       }
 
       try {
-        const response = await fetch(WORKER_URL, {
+        await fetch(WORKER_URL, {
           method: 'POST',
           body: formData,
         });
 
-        if (response.ok) {
-          const updatedList = [...videoList, newVideo];
-          setVideoList(updatedList);
-          setVideoUrl('');
-          setSubtitleFile(null);
-        } else {
-          console.error('Failed to add video');
-        }
+        const updatedList = [...videoList, newVideo];
+        setVideoList(updatedList);
+        setVideoUrl('');
+        setSubtitleFile(null);
       } catch (error) {
         console.error('Error saving links:', error);
       }
@@ -89,6 +84,7 @@ function App() {
   const handleVideoClick = (url) => {
     const video = videoList.find(video => video.url === url);
     setCurrentVideo(url);
+
     if (video.subtitle) {
       setCaptions([
         {
@@ -107,6 +103,7 @@ function App() {
     <div className="App">
       <h1>Video Player</h1>
       <div className='inputSection'>
+        <div className='input'>
         <input
           type="text"
           className='videoUrl'
@@ -116,9 +113,11 @@ function App() {
         />
         <input
           type="file"
+          id='fileUpload'
           accept=".vtt"
           onChange={(e) => setSubtitleFile(e.target.files[0])}
         />
+        </div>
         <button className='addBtn' onClick={handleAddVideo}>+</button>
         <button className='clearBtn' onClick={handleClearList}>-</button>
       </div>
@@ -146,13 +145,12 @@ function App() {
                     attributes: {
                       crossOrigin: 'anonymous',
                     },
-                    tracks: captions_arr,
+                    tracks: captionsArr,
                   },
                 }}
                 width='60%' height='auto'
                 style={{ minWidth: '440px' }}
-                controls
-              />
+                controls />
             </div>
           </div>
         )}
