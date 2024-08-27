@@ -27,6 +27,8 @@
 
 .input {
   display: flex;
+  width: 500px;
+  max-width: 80%;
   flex-direction: column;
 }
 
@@ -191,7 +193,7 @@ button:hover {
 /* این استایل را به فایل App.css یا فایل استایل دیگری اضافه کنید */
 .reactPlayer-wrapper {
   position: relative;
-  padding-top: 56.25%;
+  /* padding-top: 56.25%; */
   /* نسبت ابعاد 16:9 */
   max-width: 100%;
   height: auto;

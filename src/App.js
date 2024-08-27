@@ -46,7 +46,7 @@ function App() {
         setVideoList(updatedList);
         setVideoUrl('');
         console.log(subtitleFile);
-        setSubtitleFile(null);
+        setSubtitleFile('');
         console.log(subtitleFile);
       } catch (error) {
         console.error('Error saving links:', error);
@@ -137,16 +137,15 @@ function App() {
       <div className='videoPlayers'>
         {currentVideo && (
           <div className='player'>
-            <h3>React Player</h3>
             <div className="reactPlayer-wrapper">
               <ReactPlayer
                 className='reactPlayer'
                 url={currentVideo}
                 config={{
                   file: {
-                    // attributes: {
-                    //   crossOrigin: 'anonymous',
-                    // },
+                    attributes: {
+                      crossOrigin: 'anonymous',
+                    },
                     tracks: captionsArr,
                   },
                 }}
