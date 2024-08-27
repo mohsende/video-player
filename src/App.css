@@ -109,7 +109,7 @@ button:hover {
 }
 
 .movieCard img {
-  width: 150px;
+  width: 100px;
   /* height: 100px; */
   /* position: absolute; */
   /* top: 0; */
@@ -121,7 +121,7 @@ button:hover {
 }
 
 .videoName {
-  width: 250px;
+  width: 200px;
   
   /* height: 200px; */
   /* line-break: anywhere; */

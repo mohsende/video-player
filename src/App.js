@@ -45,7 +45,9 @@ function App() {
         const updatedList = [...videoList, newVideo];
         setVideoList(updatedList);
         setVideoUrl('');
+        console.log(subtitleFile);
         setSubtitleFile(null);
+        console.log(subtitleFile);
       } catch (error) {
         console.error('Error saving links:', error);
       }
@@ -142,9 +144,9 @@ function App() {
                 url={currentVideo}
                 config={{
                   file: {
-                    attributes: {
-                      crossOrigin: 'anonymous',
-                    },
+                    // attributes: {
+                    //   crossOrigin: 'anonymous',
+                    // },
                     tracks: captionsArr,
                   },
                 }}
