@@ -7,16 +7,10 @@ const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
 function App() {
   const [videoUrl, setVideoUrl] = useState('');
+  const [subtitleFile, setSubtitleFile] = useState(null); // اضافه کردن وضعیت برای فایل زیرنویس
   const [videoList, setVideoList] = useState([]);
-  const [currentVideo, setCurrentVideo] = useState(''); 
-  const [captions_arr, setCaptions] = useState([
-    {
-      kind: 'subtitles',
-      src: '/sub.vtt', // اطمینان حاصل کنید که مسیر صحیح است
-      srcLang: 'fa',
-      default: true
-    }
-  ]);
+  const [currentVideo, setCurrentVideo] = useState('');
+  const [captions_arr, setCaptions] = useState([]);
 
   const fetchVideoList = async () => {
     try {
@@ -36,16 +30,27 @@ function App() {
     if (videoUrl && !videoList.some(video => video.url === videoUrl)) {
       const fileName = videoUrl.split('/').pop();
       const newVideo = { url: videoUrl, name: fileName };
-      const updatedList = [...videoList, newVideo];
-      setVideoList(updatedList);
-      setVideoUrl('');
+
+      const formData = new FormData();
+      formData.append('videoData', JSON.stringify(newVideo));
+      if (subtitleFile) {
+        formData.append('subtitle', subtitleFile);
+      }
 
       try {
-        await fetch(WORKER_URL, {
+        const response = await fetch(WORKER_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newVideo),
+          body: formData,
         });
+
+        if (response.ok) {
+          const updatedList = [...videoList, newVideo];
+          setVideoList(updatedList);
+          setVideoUrl('');
+          setSubtitleFile(null);
+        } else {
+          console.error('Failed to add video');
+        }
       } catch (error) {
         console.error('Error saving links:', error);
       }
@@ -82,7 +87,20 @@ function App() {
   };
 
   const handleVideoClick = (url) => {
+    const video = videoList.find(video => video.url === url);
     setCurrentVideo(url);
+    if (video.subtitle) {
+      setCaptions([
+        {
+          kind: 'subtitles',
+          src: video.subtitle,
+          srcLang: 'fa',
+          default: true,
+        }
+      ]);
+    } else {
+      setCaptions([]);
+    }
   };
 
   return (
@@ -96,39 +114,48 @@ function App() {
           onChange={(e) => setVideoUrl(e.target.value)}
           placeholder="Enter video URL"
         />
+        <input
+          type="file"
+          accept=".vtt"
+          onChange={(e) => setSubtitleFile(e.target.files[0])}
+        />
         <button className='addBtn' onClick={handleAddVideo}>+</button>
         <button className='clearBtn' onClick={handleClearList}>-</button>
       </div>
 
       <ul className='movieList'>
         {videoList.map((video, index) => (
-          <li key={index} className='movieCard' onClick={() => handleVideoClick(video.url)}>
-            <img src='' alt=''></img>
-            <span className='videoName' /*onClick={() => handleVideoClick(video.url)}*/>{video.name}</span>
+          <li key={index} className='movieCard'>
+            <img src='/movie-icon-2.png' alt='' onClick={() => handleVideoClick(video.url)}></img>
+            <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.name}</span>
             <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
           </li>
         ))}
       </ul>
-      
+
       <div className='videoPlayers'>
         {currentVideo && (
           <div className='player'>
             <h3>React Player</h3>
             <div className="reactPlayer-wrapper">
-              <ReactPlayer 
-                className='reactPlayer' 
-                url={currentVideo} 
+              <ReactPlayer
+                className='reactPlayer'
+                url={currentVideo}
                 config={{
                   file: {
+                    attributes: {
+                      crossOrigin: 'anonymous',
+                    },
                     tracks: captions_arr,
                   },
                 }}
-                width='60%' height='auto' 
-                style={{minWidth: '440px'}} 
-                controls />
+                width='60%' height='auto'
+                style={{ minWidth: '440px' }}
+                controls
+              />
             </div>
           </div>
-        )} 
+        )}
       </div>
     </div>
   );
