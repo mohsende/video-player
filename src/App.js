@@ -21,7 +21,7 @@ function App() {
       const data = await response.json();
       setVideoList(data || []);
     } catch (error) {
-      console.error('Error fetching links:', error);
+      console.error('Error fetching video list:', error);
     }
   };
 
@@ -41,43 +41,36 @@ function App() {
           method: 'POST',
           body: formData,
         });
-
-        const updatedList = [...videoList, newVideo];
-        setVideoList(updatedList);
+        setVideoList([...videoList, newVideo]);
         setVideoUrl('');
-        console.log(subtitleFile);
-        setSubtitleFile('');
-        console.log(subtitleFile);
+        setSubtitleFile(null);
       } catch (error) {
-        console.error('Error saving links:', error);
+        console.error('Error saving video:', error);
       }
     }
   };
 
   const handleDeleteVideo = async (url) => {
-    const updatedList = videoList.filter(video => video.url !== url);
-    setVideoList(updatedList);
-
     try {
       await fetch(WORKER_URL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
       });
+      setVideoList(videoList.filter(video => video.url !== url));
     } catch (error) {
-      console.error('Error deleting link:', error);
+      console.error('Error deleting video:', error);
     }
   };
 
   const handleClearList = async () => {
-    setVideoList([]);
-
     try {
       await fetch(WORKER_URL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clearAll: true }),
       });
+      setVideoList([]);
     } catch (error) {
       console.error('Error clearing list:', error);
     }
@@ -88,14 +81,12 @@ function App() {
     setCurrentVideo(url);
 
     if (video.subtitle) {
-      setCaptions([
-        {
-          kind: 'subtitles',
-          src: video.subtitle,
-          srcLang: 'fa',
-          default: true,
-        }
-      ]);
+      setCaptions([{
+        kind: 'subtitles',
+        src: video.subtitle,
+        srcLang: 'fa',
+        default: true,
+      }]);
     } else {
       setCaptions([]);
     }
@@ -106,19 +97,19 @@ function App() {
       <h1>Video Player</h1>
       <div className='inputSection'>
         <div className='input'>
-        <input
-          type="text"
-          className='videoUrl'
-          value={videoUrl}
-          onChange={(e) => setVideoUrl(e.target.value)}
-          placeholder="Enter video URL"
-        />
-        <input
-          type="file"
-          id='fileUpload'
-          accept=".vtt"
-          onChange={(e) => setSubtitleFile(e.target.files[0])}
-        />
+          <input
+            type="text"
+            className='videoUrl'
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="Enter video URL"
+          />
+          <input
+            type="file"
+            id='fileUpload'
+            accept=".vtt"
+            onChange={(e) => setSubtitleFile(e.target.files[0])}
+          />
         </div>
         <button className='addBtn' onClick={handleAddVideo}>+</button>
         <button className='clearBtn' onClick={handleClearList}>-</button>
@@ -127,32 +118,45 @@ function App() {
       <ul className='movieList'>
         {videoList.map((video, index) => (
           <li key={index} className='movieCard'>
-            <img src='/movie-icon-2.png' alt='' onClick={() => handleVideoClick(video.url)}></img>
-            <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.name}</span>
-            <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
+            <img
+              src='/movie-icon-2.png'
+              alt=''
+              onClick={() => handleVideoClick(video.url)}
+            />
+            <span
+              className='videoName'
+              onClick={() => handleVideoClick(video.url)}
+            >
+              {video.name}
+            </span>
+            <button
+              className='deleteBtn'
+              onClick={() => handleDeleteVideo(video.url)}
+            >
+              X
+            </button>
           </li>
         ))}
       </ul>
 
       <div className='videoPlayers'>
         {currentVideo && (
-          <div className='player'>
-            <div className="reactPlayer-wrapper">
-              <ReactPlayer
-                className='reactPlayer'
-                url={currentVideo}
-                config={{
-                  file: {
-                    attributes: {
-                      crossOrigin: 'anonymous',
-                    },
-                    tracks: captionsArr,
+          <div className='reactPlayer-wrapper'>
+            <ReactPlayer
+              className='reactPlayer'
+              url={currentVideo}
+              config={{
+                file: {
+                  attributes: {
+                    crossOrigin: 'anonymous',
                   },
-                }}
-                width='60%' height='auto'
-                style={{ minWidth: '440px' }}
-                controls />
-            </div>
+                  tracks: captionsArr,
+                },
+              }}
+              width='60%'
+              height='auto'
+              controls
+            />
           </div>
         )}
       </div>
