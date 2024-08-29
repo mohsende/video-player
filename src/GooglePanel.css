@@ -1,0 +1,43 @@
+/* GooglePanel.css */
+.rightPanel {
+  float: right;
+  width: 50%;
+  /* padding: 10px; */
+  position: relative;
+  height: calc(100vh - 40px);
+  box-sizing: border-box;
+}
+
+.rightPanel iframe {
+  width: 100%;
+  height: calc(100% - 40px);
+  border: none;
+}
+
+.googleBtn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #4285F4;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.backBtn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 10px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.show .googleBtn {
+  display: none;
+}

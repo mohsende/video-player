@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import ReactPlayer from 'react-player';
 import './App.css';
+import InputSection from './InputSection';
+import VideoList from './VideoList';
+import VideoPlayer from './VideoPlayer';
+import GooglePanel from './GooglePanel';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
@@ -10,6 +13,8 @@ function App() {
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
   const [captionsArr, setCaptions] = useState([]);
+  const [showGoogle, setShowGoogle] = useState(false);
+  const [googleUrl, setGoogleUrl] = useState('https://www.google.com/search?igu=1');
 
   useEffect(() => {
     fetchVideoList();
@@ -21,7 +26,7 @@ function App() {
       const data = await response.json();
       setVideoList(data || []);
     } catch (error) {
-      console.error('Error fetching video list:', error);
+      console.error('Error fetching links:', error);
     }
   };
 
@@ -41,36 +46,41 @@ function App() {
           method: 'POST',
           body: formData,
         });
-        setVideoList([...videoList, newVideo]);
+
+        const updatedList = [...videoList, newVideo];
+        setVideoList(updatedList);
         setVideoUrl('');
         setSubtitleFile(null);
       } catch (error) {
-        console.error('Error saving video:', error);
+        console.error('Error saving links:', error);
       }
     }
   };
 
   const handleDeleteVideo = async (url) => {
+    const updatedList = videoList.filter(video => video.url !== url);
+    setVideoList(updatedList);
+
     try {
       await fetch(WORKER_URL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
       });
-      setVideoList(videoList.filter(video => video.url !== url));
     } catch (error) {
-      console.error('Error deleting video:', error);
+      console.error('Error deleting link:', error);
     }
   };
 
   const handleClearList = async () => {
+    setVideoList([]);
+
     try {
       await fetch(WORKER_URL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clearAll: true }),
       });
-      setVideoList([]);
     } catch (error) {
       console.error('Error clearing list:', error);
     }
@@ -79,87 +89,57 @@ function App() {
   const handleVideoClick = (url) => {
     const video = videoList.find(video => video.url === url);
     setCurrentVideo(url);
+    setShowGoogle(false);
 
     if (video.subtitle) {
-      setCaptions([{
-        kind: 'subtitles',
-        src: video.subtitle,
-        srcLang: 'fa',
-        default: true,
-      }]);
+      setCaptions([
+        {
+          kind: 'subtitles',
+          src: video.subtitle,
+          srcLang: 'fa',
+          default: true,
+        }
+      ]);
     } else {
       setCaptions([]);
     }
   };
 
+  const handleGoogleClick = () => {
+    setShowGoogle(true);
+  };
+
+  const handleBackButtonClick = () => {
+    setShowGoogle(false);
+  };
+
   return (
     <div className="App">
-      <h1>Video Player</h1>
-      <div className='inputSection'>
-        <div className='input'>
-          <input
-            type="text"
-            className='videoUrl'
-            value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
-            placeholder="Enter video URL"
-          />
-          <input
-            type="file"
-            id='fileUpload'
-            accept=".vtt"
-            onChange={(e) => setSubtitleFile(e.target.files[0])}
-          />
-        </div>
-        <button className='addBtn' onClick={handleAddVideo}>+</button>
-        <button className='clearBtn' onClick={handleClearList}>-</button>
+      <div className='leftPanel'>
+        <h1>Video Player</h1>
+        <InputSection
+          videoUrl={videoUrl}
+          setVideoUrl={setVideoUrl}
+          setSubtitleFile={setSubtitleFile}
+          handleAddVideo={handleAddVideo}
+          handleClearList={handleClearList}
+        />
+        <VideoList
+          videoList={videoList}
+          handleVideoClick={handleVideoClick}
+          handleDeleteVideo={handleDeleteVideo}
+        />
+        <VideoPlayer
+          currentVideo={currentVideo}
+          captionsArr={captionsArr}
+        />
       </div>
-
-      <ul className='movieList'>
-        {videoList.map((video, index) => (
-          <li key={index} className='movieCard'>
-            <img
-              src='/movie-icon-2.png'
-              alt=''
-              onClick={() => handleVideoClick(video.url)}
-            />
-            <span
-              className='videoName'
-              onClick={() => handleVideoClick(video.url)}
-            >
-              {video.name}
-            </span>
-            <button
-              className='deleteBtn'
-              onClick={() => handleDeleteVideo(video.url)}
-            >
-              X
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <div className='videoPlayers'>
-        {currentVideo && (
-          <div className='reactPlayer-wrapper'>
-            <ReactPlayer
-              className='reactPlayer'
-              url={currentVideo}
-              config={{
-                file: {
-                  attributes: {
-                    crossOrigin: 'anonymous',
-                  },
-                  tracks: captionsArr,
-                },
-              }}
-              width='60%'
-              height='auto'
-              controls
-            />
-          </div>
-        )}
-      </div>
+      <GooglePanel
+        showGoogle={showGoogle}
+        googleUrl={googleUrl}
+        handleGoogleClick={handleGoogleClick}
+        handleBackButtonClick={handleBackButtonClick}
+      />
     </div>
   );
 }

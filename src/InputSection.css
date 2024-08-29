@@ -1,0 +1,52 @@
+/* InputSection.css */
+.inputSection {
+  padding: 0 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  display: flex;
+  min-width: 300px;
+  width: 100%;
+  max-width: 700px;
+  flex-direction: column;
+}
+
+.videoUrl {
+  flex-grow: 1.2;
+  font-size: 1.2rem;
+  padding: 10px;
+  outline: none;
+  background-color: whitesmoke;
+}
+
+input[type=file] {
+  color: rgb(72, 72, 72);
+  background-color: rgb(241, 241, 241);
+}
+
+button {
+  font-size: 1.2rem;
+  outline: none;
+  padding: 5px 10px;
+  color: whitesmoke;
+  background-color: rgb(75, 152, 162);
+}
+
+button:hover {
+  opacity: 1;
+}
+
+.addBtn {
+  background-color: rgb(78, 224, 70);
+  width: 40px;
+  opacity: 0.8;
+}
+
+.clearBtn {
+  background-color: rgb(255, 98, 50);
+  width: 40px;
+  opacity: 0.8;
+}
