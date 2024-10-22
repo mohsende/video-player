@@ -93,7 +93,7 @@ function App() {
     setCurrentVideo(url);
     setShowGoogle(false);
 
-    window.open(newUrl, '_blank');
+    //window.open(newUrl, '_blank');
     
     if (video.subtitle) {
       setCaptions([
