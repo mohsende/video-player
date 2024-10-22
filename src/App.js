@@ -4,6 +4,8 @@ import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
 import GooglePanel from './GooglePanel';
+import LinkFenerator from './LinkGenerator.js'
+import LinkGenerator from './LinkGenerator.js';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
@@ -87,6 +89,8 @@ function App() {
   };
 
   const handleVideoClick = (url) => {
+    const newUrl = `https://anym3u8player.com/mp4-player/?url=${url}`;
+    window.open(newUrl, '_blank');
     const video = videoList.find(video => video.url === url);
     setCurrentVideo(url);
     setShowGoogle(false);
@@ -116,6 +120,7 @@ function App() {
   return (
     <div className="App">
       <div className='leftPanel'>
+        <LinkGenerator />
         <h1>Video Player</h1>
         <InputSection
           videoUrl={videoUrl}
@@ -134,12 +139,12 @@ function App() {
           captionsArr={captionsArr}
         />
       </div>
-      <GooglePanel
+      {/* <GooglePanel
         showGoogle={showGoogle}
         googleUrl={googleUrl}
         handleGoogleClick={handleGoogleClick}
         handleBackButtonClick={handleBackButtonClick}
-      />
+      /> */}
     </div>
   );
 }
