@@ -14,7 +14,7 @@ function VideoPlayer({ currentVideo, captionsArr }) {
               config={{
                 file: {
                   attributes: {
-                    crossOrigin: 'anonymous',
+                    crossOrigin: 'use-credentials',
                   },
                   tracks: captionsArr,
                 },
