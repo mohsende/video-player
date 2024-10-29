@@ -4,8 +4,7 @@ import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
 import GooglePanel from './GooglePanel';
-import LinkFenerator from './LinkGenerator.js'
-import LinkGenerator from './LinkGenerator.js';
+//import LinkGenerator from './LinkGenerator.js';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
