@@ -1,6 +1,7 @@
 /* InputSection.css */
 .inputSection {
   padding: 0 20px;
+  margin-top: 10px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -37,6 +38,10 @@ button {
 
 button:hover {
   opacity: 1;
+}
+
+.showInputSection {
+
 }
 
 .addBtn {

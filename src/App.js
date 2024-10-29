@@ -13,6 +13,7 @@ function App() {
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
   const [captionsArr, setCaptions] = useState([]);
+  const [showInputSection, setShowInputSection] = useState(false);
   // const [showGoogle, setShowGoogle] = useState(false);
   // const [googleUrl, setGoogleUrl] = useState('https://www.google.com/search?igu=1');
 
@@ -51,6 +52,7 @@ function App() {
         setVideoList(updatedList);
         setVideoUrl('');
         setSubtitleFile(null);
+        setShowInputSection(false);
       } catch (error) {
         console.error('Error saving links:', error);
       }
@@ -113,17 +115,22 @@ function App() {
   //   setShowGoogle(false);
   // };
 
+  function showHandleClick() {
+    setShowInputSection(show => !show);
+  }
+
   return (
     <div className="App">
       <div className='leftPanel'>
-        <h1>Video Player</h1>
-        <InputSection
+        <h1>MDe Player</h1>
+        <button className='showInputSection' onClick={showHandleClick}>{showInputSection ? 'Hide' : 'Show'}</button>
+        {showInputSection && <InputSection
           videoUrl={videoUrl}
           setVideoUrl={setVideoUrl}
           setSubtitleFile={setSubtitleFile}
           handleAddVideo={handleAddVideo}
           handleClearList={handleClearList}
-        />
+        />}
         <VideoList
           videoList={videoList}
           handleVideoClick={handleVideoClick}
