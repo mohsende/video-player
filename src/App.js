@@ -3,8 +3,7 @@ import './App.css';
 import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
-import GooglePanel from './GooglePanel';
-//import LinkGenerator from './LinkGenerator.js';
+// import GooglePanel from './GooglePanel';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 
@@ -14,8 +13,8 @@ function App() {
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
   const [captionsArr, setCaptions] = useState([]);
-  const [showGoogle, setShowGoogle] = useState(false);
-  const [googleUrl, setGoogleUrl] = useState('https://www.google.com/search?igu=1');
+  // const [showGoogle, setShowGoogle] = useState(false);
+  // const [googleUrl, setGoogleUrl] = useState('https://www.google.com/search?igu=1');
 
   useEffect(() => {
     fetchVideoList();
@@ -88,12 +87,9 @@ function App() {
   };
 
   const handleVideoClick = (url) => {
-    // const newUrl = `https://anym3u8player.com/mp4-player/?url=${url}`;
     const video = videoList.find(video => video.url === url);
     setCurrentVideo(url);
-    setShowGoogle(false);
-
-    //window.open(newUrl, '_blank');
+    // setShowGoogle(false);
     
     if (video.subtitle) {
       setCaptions([
@@ -109,18 +105,17 @@ function App() {
     }
   };
 
-  const handleGoogleClick = () => {
-    setShowGoogle(true);
-  };
+  // const handleGoogleClick = () => {
+  //   setShowGoogle(true);
+  // };
 
-  const handleBackButtonClick = () => {
-    setShowGoogle(false);
-  };
+  // const handleBackButtonClick = () => {
+  //   setShowGoogle(false);
+  // };
 
   return (
     <div className="App">
       <div className='leftPanel'>
-        <LinkGenerator />
         <h1>Video Player</h1>
         <InputSection
           videoUrl={videoUrl}

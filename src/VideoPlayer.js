@@ -20,7 +20,7 @@ function VideoPlayer({ currentVideo, captionsArr }) {
                 },
               }}
               width='60%' height='auto'
-              style={{ minWidth: '440px' }}
+              style={{ minWidth: '370px' }}
               controls
             />
           </div>
