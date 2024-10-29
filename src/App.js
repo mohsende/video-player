@@ -89,12 +89,13 @@ function App() {
   };
 
   const handleVideoClick = (url) => {
-    const newUrl = `https://anym3u8player.com/mp4-player/?url=${url}`;
-    window.open(newUrl, '_blank');
+    // const newUrl = `https://anym3u8player.com/mp4-player/?url=${url}`;
     const video = videoList.find(video => video.url === url);
     setCurrentVideo(url);
     setShowGoogle(false);
 
+    //window.open(newUrl, '_blank');
+    
     if (video.subtitle) {
       setCaptions([
         {
