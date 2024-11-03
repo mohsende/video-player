@@ -1,15 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './VideoList.css';
 
 
 function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {
+  
+  // const apiUrl = 'https://www.omdbapi.com/?apikey=c3327b94&t=';
+  // const [findMovies, setFindMovies] = useState([]);
+
+  // async function searchMovie(name) {
+  //   const apiUrlMovie = apiUrl + name;
+  //   try {
+  //     const response = await fetch(apiUrlMovie);
+  //     const data = await response.json();
+  //     setFindMovies(data.Search)
+  //   } catch (error) {
+  //     console.error('Error fetching links:', error);
+  //   }
+  // };
+
+
   return (
     <ul className='movieList'>
       {videoList.map((video, index) => (
         <li key={index} className='movieCard'>
-          <img src='/movie-icon-2.png' alt='' onClick={() => handleVideoClick(video.url)} />
-          <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.name}</span>
-          <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
+          <div onClick={() => handleVideoClick(video.url)} style={{
+            backgroundImage: `url(${video.poster})`,
+            width: '150px',
+            height: '200px',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover'
+          }}>
+            <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.name}</span>
+            <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
+          </div>
         </li>
       ))}
     </ul>

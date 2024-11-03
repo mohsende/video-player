@@ -55,3 +55,73 @@ button:hover {
   width: 40px;
   opacity: 0.8;
 }
+
+span {
+  color: whitesmoke;
+}
+
+.movieNameGuesses {
+  padding-bottom: 10px;
+}
+
+.movieNameGuesses li.isSelected {
+  padding-bottom: 10px;
+  color: slategrey;
+}
+
+.movieNameGuesses button {
+  
+}
+
+.isSelected {
+  color: slategrey;
+}
+
+.movie {
+  padding: 20px;
+  color: whitesmoke;
+}
+
+.movie ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.movieName {
+  background-color: slategrey;
+  margin-bottom: 5px;
+  /* border-radius: 50px; */
+}
+.movie li {
+  scale: 0.95;
+  /* display: flex; */
+  /* position: relative; */
+  transition: all 250ms ease-in-out;
+}
+
+h4 {
+  padding: 10px;
+  text-align: center;
+  background-color: rgb(0 0 0 / 40%);
+}
+
+.movie li:hover {
+  scale: 1;
+  cursor: pointer;
+  /* display: flex; */
+  /* position: relative; */
+}
+
+.poster {
+  /* position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; */
+}
+
+.inactive {
+  display: none;
+}

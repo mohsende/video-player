@@ -6,14 +6,19 @@ import VideoPlayer from './VideoPlayer';
 // import GooglePanel from './GooglePanel';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
+const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
 
 function App() {
   const [videoUrl, setVideoUrl] = useState('');
+  const [posterUrl, setPosterUrl] = useState('');
+  const [movieTitle, setMovieTitle] = useState('');
+  const [movieYear, setMovieYear] = useState('');
   const [subtitleFile, setSubtitleFile] = useState(null);
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
   const [captionsArr, setCaptions] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
+  const [showVideoList, setShowVideoList] = useState(true);
   // const [showGoogle, setShowGoogle] = useState(false);
   // const [googleUrl, setGoogleUrl] = useState('https://www.google.com/search?igu=1');
 
@@ -31,33 +36,7 @@ function App() {
     }
   };
 
-  const handleAddVideo = async () => {
-    if (videoUrl && !videoList.some(video => video.url === videoUrl)) {
-      const fileName = videoUrl.split('/').pop();
-      const newVideo = { url: videoUrl, name: fileName };
 
-      const formData = new FormData();
-      formData.append('videoData', JSON.stringify(newVideo));
-      if (subtitleFile) {
-        formData.append('subtitle', subtitleFile);
-      }
-
-      try {
-        await fetch(WORKER_URL, {
-          method: 'POST',
-          body: formData,
-        });
-
-        const updatedList = [...videoList, newVideo];
-        setVideoList(updatedList);
-        setVideoUrl('');
-        setSubtitleFile(null);
-        setShowInputSection(false);
-      } catch (error) {
-        console.error('Error saving links:', error);
-      }
-    }
-  };
 
   const handleDeleteVideo = async (url) => {
     const updatedList = videoList.filter(video => video.url !== url);
@@ -115,31 +94,42 @@ function App() {
   //   setShowGoogle(false);
   // };
 
-  function showHandleClick() {
+  function handleShowInputSectionClick() {
     setShowInputSection(show => !show);
   }
+
+  function handleShowVideoListClick() {
+    setShowVideoList(show => !show);
+  }
+
+  // console.log(movieTitle);
 
   return (
     <div className="App">
       <div className='leftPanel'>
         <h1>MDe Player</h1>
-        <button className='showInputSection' onClick={showHandleClick}>{showInputSection ? 'Hide' : 'Show'}</button>
+        <button className='showInputSection' onClick={handleShowInputSectionClick}>{showInputSection ? 'Hide' : 'Show Input section'}</button>
         {showInputSection && <InputSection
+          WORKER_URL={WORKER_URL}
           videoUrl={videoUrl}
           setVideoUrl={setVideoUrl}
+          subtitleFile={subtitleFile}
           setSubtitleFile={setSubtitleFile}
-          handleAddVideo={handleAddVideo}
           handleClearList={handleClearList}
+          videoList={videoList}
+          setVideoList={setVideoList}
+          setShowInputSection={setShowInputSection}
         />}
-        <VideoList
+        <button className='showVideoList' onClick={handleShowVideoListClick}>{showVideoList ? 'Hide' : 'Show Video list'}</button>
+        {showVideoList && <VideoList
           videoList={videoList}
           handleVideoClick={handleVideoClick}
           handleDeleteVideo={handleDeleteVideo}
-        />
-        <VideoPlayer
+        />}
+        {showVideoList && <VideoPlayer
           currentVideo={currentVideo}
           captionsArr={captionsArr}
-        />
+        />}
       </div>
       {/* <GooglePanel
         showGoogle={showGoogle}
