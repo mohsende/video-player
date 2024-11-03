@@ -1,6 +1,6 @@
 /* InputSection.css */
 .inputSection {
-  padding: 0 20px;
+  padding: 0 10px;
   margin-top: 10px;
   width: 100%;
   display: flex;
@@ -41,7 +41,7 @@ button:hover {
 }
 
 .showInputSection {
-
+  margin-right: 5px;
 }
 
 .addBtn {
@@ -78,7 +78,7 @@ span {
 }
 
 .movie {
-  padding: 20px;
+  padding: 10px;
   color: whitesmoke;
 }
 
@@ -96,10 +96,10 @@ span {
   /* border-radius: 50px; */
 }
 .movie li {
+  transition: all 250ms ease;
   scale: 0.95;
   /* display: flex; */
   /* position: relative; */
-  transition: all 250ms ease-in-out;
 }
 
 h4 {
@@ -109,6 +109,7 @@ h4 {
 }
 
 .movie li:hover {
+  transition: all 250ms ease;
   scale: 1;
   cursor: pointer;
   /* display: flex; */

@@ -23,7 +23,7 @@ function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {
     <ul className='movieList'>
       {videoList.map((video, index) => (
         <li key={index} className='movieCard'>
-          <div onClick={() => handleVideoClick(video.url)} style={{
+          <div className='movieCardContent' onClick={() => handleVideoClick(video.url)} style={{
             backgroundImage: `url(${video.poster})`,
             width: '150px',
             height: '200px',
@@ -31,8 +31,8 @@ function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover'
           }}>
-            <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.name}</span>
-            <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>X</button>
+            <span className='videoName' onClick={() => handleVideoClick(video.url)}>{video.filename}</span>
+            <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>DELETE</button>
           </div>
         </li>
       ))}
