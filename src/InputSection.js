@@ -8,6 +8,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const movieNameSuggestion = fileName.split('.')
   const suggestions = [];
   const [findMovies, setFindMovies] = useState([]);
+  const [newName, setNewName] = useState('');
   const [selectedName, setSelectedName] = useState(null);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [newVideo, setNewVideo] = useState({
@@ -18,36 +19,17 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     poster: ''
   });
 
-  if (fileName !== '') {
+  if (fileName !== '' && newName === '') {
     for (let i = 0; i < (movieNameSuggestion.length > 3 ? 3 : movieNameSuggestion.length); i++) {
       i === 0 ? suggestions.push(movieNameSuggestion[i]) : suggestions.push(suggestions[i - 1] + ' ' + movieNameSuggestion[i])
     }
+  } else if (newName !== '') {
+    suggestions[0] = newName;
   }
 
   function handleNameClick(name) {
     setSelectedName(name);
     searchMovie('s', name);
-  }
-
-  function suggestionNames() {
-    if (fileName !== '') {
-      return (
-        <ul className='movieNameGuesses'>
-          {
-            suggestions.map((name, index) =>
-              <li
-                key={index}>
-                <button
-                  style={{ backgroundColor: selectedName === name ? '#d19172' : '' }}
-                  onClick={() => handleNameClick(name)}>
-                  {name}
-                </button>
-              </li>)}
-        </ul>
-      )
-    }
-    else
-      return null;
   }
 
   async function searchMovie(typeOfSearch, name) {
@@ -71,6 +53,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       year: year,
       poster: poster
     })
+    // console.log(newVideo);
     setSelectedMovie(imdbID);
   }
 
@@ -99,7 +82,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     }
   };
 
-
   return (
     <>
       <div className='inputSection'>
@@ -122,17 +104,39 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         <button className='clearBtn' onClick={handleClearList}>-</button>
       </div>
       <div className='movie'>
-        {suggestionNames()}
+        <p>
+          Movie name
+        </p>
+        <input 
+          type='text'
+          className='newName'
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          placeholder='Movie name'
+          />
+        {fileName !== '' &&
+          <ul className='movieNameGuesses'>
+            {suggestions.map((name, index) =>
+              <li
+                key={index}>
+                <button
+                  style={{ backgroundColor: selectedName === name ? '#d19172' : '' }}
+                  onClick={() => handleNameClick(name)}>
+                  {name}
+                </button>
+              </li>)}
+          </ul>
+        }
         <h3 className={findMovies ? 'inactive' : undefined}>No movie found</h3>
         {findMovies &&
           <ul>
-            {
-              findMovies.map(movie =>
+            {findMovies.map(movie =>
                 <li key={movie.imdbID}>
                   {/* <button onClick={() => findMovieHandleClick(movie.Title)} className='movieName'>{movie.Title}</button> */}
                   <div
                     className='poster'
-                    onClick={() => setMovieData(videoUrl, fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID)} style={{
+                  onClick={() => setMovieData(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID)}
+                  style={{
                       outline: selectedMovie === movie.imdbID ? '2px solid green' : '',
                       backgroundImage: `url(${movie.Poster})`,
                       width: '150px',
@@ -149,8 +153,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                         display: selectedMovie === movie.imdbID ? 'block' : 'none'
                       }}>&#10004;</h2>
                   </div>
-                </li>)
-            }
+              </li>)}
           </ul>}
       </div>
 
