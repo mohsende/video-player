@@ -8,6 +8,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const movieNameSuggestion = fileName.split('.')
   const suggestions = [];
   const [findMovies, setFindMovies] = useState([]);
+  const [selectedName, setSelectedName] = useState(null);
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const [newVideo, setNewVideo] = useState({
     url: undefined,
     filename: '',
@@ -15,14 +17,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     year: '',
     poster: ''
   });
-  const [noMovieFound, setNoMovieFound] = useState('active');
-  const [selectedName, setSelectedName] = useState(null);
-  const [selectedMovie, setSelectedMovie] = useState(null);
 
   if (fileName !== '') {
     for (let i = 0; i < (movieNameSuggestion.length > 3 ? 3 : movieNameSuggestion.length); i++) {
-      i === 0 ? suggestions.push(movieNameSuggestion[i]) : suggestions.push(suggestions[i - 1] + movieNameSuggestion[i])
-      // console.log(suggestions);
+      i === 0 ? suggestions.push(movieNameSuggestion[i]) : suggestions.push(suggestions[i - 1] + ' ' + movieNameSuggestion[i])
     }
   }
 
@@ -52,55 +50,20 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       return null;
   }
 
-  const suggestName = '';
-
-  // Specify the API endpoint for user data
-
-  // function searchMovie1(typeOfSearch, name) {
-  //   const type = typeOfSearch === 't' ? 't=' : 's=';
-  //   const apiUrlMovie = apiUrl + type + name;
-  //   console.log(apiUrlMovie);
-  //   fetch(apiUrlMovie)
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       return response.json();
-  //     })
-  //     .then(userData => {
-  //       // Process the retrieved user data
-  //       if (userData.Response) {
-  //         setFindMovies(userData.Search);
-  //       }
-  //       console.log('User Data:', userData);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error:', error);
-  //     });
-  // }
-  // Make a GET request using the Fetch API
-
   async function searchMovie(typeOfSearch, name) {
     const type = typeOfSearch === 't' ? 't=' : 's=';
     const apiUrlMovie = apiUrl + type + name;
     try {
       const response = await fetch(apiUrlMovie);
       const data = await response.json();
-      setFindMovies(data.Search)
+      setFindMovies(data.Search);
+      setSelectedMovie(null);
     } catch (error) {
       console.error('Error fetching links:', error);
     }
   };
 
-  function handleSuggestionClick(e, name) {
-  }
-
-  function findMovieHandleClick(name) {
-    // const movie =  searchMovie('t', name);
-  }
-
   function setMovieData(url, filename, title, year, poster, imdbID) {
-    // console.log(newVideo);
     setNewVideo({
       url: url,
       filename: filename,
@@ -108,7 +71,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       year: year,
       poster: poster
     })
-    // console.log(newVideo);
     setSelectedMovie(imdbID);
   }
 
@@ -171,15 +133,21 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                   <div
                     className='poster'
                     onClick={() => setMovieData(videoUrl, fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID)} style={{
-                      border: selectedMovie === movie.imdbID ? '5px solid #d19172' : '',
+                      outline: selectedMovie === movie.imdbID ? '2px solid green' : '',
                       backgroundImage: `url(${movie.Poster})`,
                       width: '150px',
                       height: '200px',
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'cover'
+                      backgroundSize: 'cover',
+                      position: 'relative'
                     }}>
                     <h4>{movie.Title} {movie.Year}</h4>
+                    <h2
+                      className='selectedMovie'
+                      style={{
+                        display: selectedMovie === movie.imdbID ? 'block' : 'none'
+                      }}>&#10004;</h2>
                   </div>
                 </li>)
             }

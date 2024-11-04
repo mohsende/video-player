@@ -123,6 +123,19 @@ h4 {
   z-index: -1; */
 }
 
+.selectedMovie {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  margin: 0;
+  text-align: center;
+  color: white;
+  background-color: green;
+  border-radius: 0 0 0 10px;
+}
+
 .inactive {
   display: none;
 }

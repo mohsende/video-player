@@ -108,28 +108,46 @@ function App() {
     <div className="App">
       <div className='leftPanel'>
         <h1>MDe Player</h1>
-        <button className='showInputSection' onClick={handleShowInputSectionClick}>{showInputSection ? 'Hide' : 'Show Input section'}</button>
-        {showInputSection && <InputSection
-          WORKER_URL={WORKER_URL}
-          videoUrl={videoUrl}
-          setVideoUrl={setVideoUrl}
-          subtitleFile={subtitleFile}
-          setSubtitleFile={setSubtitleFile}
-          handleClearList={handleClearList}
-          videoList={videoList}
-          setVideoList={setVideoList}
-          setShowInputSection={setShowInputSection}
-        />}
-        <button className='showVideoList' onClick={handleShowVideoListClick}>{showVideoList ? 'Hide' : 'Show Video list'}</button>
-        {showVideoList && <VideoList
+        <button
+          className='showInputSection'
+          onClick={handleShowInputSectionClick}>
+          {showInputSection ? 'Hide' : 'Show Input section'}
+        </button>
+        {
+          showInputSection &&
+          <InputSection
+            WORKER_URL={WORKER_URL}
+            videoUrl={videoUrl}
+            setVideoUrl={setVideoUrl}
+            subtitleFile={subtitleFile}
+            setSubtitleFile={setSubtitleFile}
+            handleClearList={handleClearList}
+            videoList={videoList}
+            setVideoList={setVideoList}
+            setShowInputSection={setShowInputSection}
+          />
+        }
+
+        <button
+          className='showVideoList'
+          onClick={handleShowVideoListClick}>
+          {showVideoList ? 'Hide' : 'Show Video list'}
+        </button>
+        {
+          showVideoList &&
+          <VideoList
           videoList={videoList}
           handleVideoClick={handleVideoClick}
           handleDeleteVideo={handleDeleteVideo}
-        />}
-        {showVideoList && <VideoPlayer
+          />
+        }
+        {
+          showVideoList &&
+          <VideoPlayer
           currentVideo={currentVideo}
           captionsArr={captionsArr}
-        />}
+          />
+        }
       </div>
       {/* <GooglePanel
         showGoogle={showGoogle}
