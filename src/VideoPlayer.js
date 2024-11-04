@@ -19,7 +19,7 @@ function VideoPlayer({ currentVideo, captionsArr }) {
                   tracks: captionsArr,
                 },
               }}
-              width='60%' height='auto'
+              width='70%' height='auto'
               style={{ minWidth: '370px' }}
               controls
             />
