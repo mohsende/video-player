@@ -16,6 +16,7 @@ function App() {
   const [subtitleFile, setSubtitleFile] = useState(null);
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
+  const [screenSize, setScreenSize] = useState({width: window.innerWidth, height: window.innerHeight});
   const [captionsArr, setCaptions] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
   const [showVideoList, setShowVideoList] = useState(true);
@@ -24,6 +25,7 @@ function App() {
 
   useEffect(() => {
     fetchVideoList();
+    setScreenSize({...screenSize, width: window.innerWidth, height: window.innerHeight});
   }, []);
 
   const fetchVideoList = async () => {
@@ -36,12 +38,11 @@ function App() {
     }
   };
 
-
-
   const handleDeleteVideo = async (url) => {
     const updatedList = videoList.filter(video => video.url !== url);
     setVideoList(updatedList);
-
+    // console.log('delete');
+    setCurrentVideo('');
     try {
       await fetch(WORKER_URL, {
         method: 'DELETE',
@@ -69,8 +70,8 @@ function App() {
 
   const handleVideoClick = (url) => {
     const video = videoList.find(video => video.url === url);
+    // console.log('play');
     setCurrentVideo(url);
-    // setShowGoogle(false);
     
     if (video.subtitle) {
       setCaptions([
@@ -106,6 +107,7 @@ function App() {
 
   return (
     <div className="App">
+      <div className='screenSize' style={{ color: 'whitesmoke', textAlign: 'right' }}><p>Width: {screenSize.width}</p><p>Height: {screenSize.height}</p></div>
       <div className='leftPanel'>
         <h1>MDe Player</h1>
         <button

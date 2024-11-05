@@ -51,14 +51,13 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       filename: filename,
       title: title,
       year: year,
-      poster: poster
+      poster: poster,
     })
-    // console.log(newVideo);
     setSelectedMovie(imdbID);
   }
 
-  const handleAddVideo = async (url, filename, title, year, poster) => {
-    if (newVideo.url && !videoList.some(video => video.url === url)) {
+  const handleAddVideo = async () => {
+    if (newVideo.url && !videoList.some(video => video.url === newVideo.url)) {
 
       const formData = new FormData();
       formData.append('videoData', JSON.stringify(newVideo));
@@ -100,13 +99,9 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             onChange={(e) => setSubtitleFile(e.target.files[0])}
           />
         </div>
-        <button className='addBtn' onClick={handleAddVideo}>+</button>
-        <button className='clearBtn' onClick={handleClearList}>-</button>
+        {/* <button className='clearBtn' onClick={handleClearList}>-</button> */}
       </div>
       <div className='movie'>
-        <p>
-          Movie name
-        </p>
         <input 
           type='text'
           className='newName'
@@ -128,10 +123,12 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
           </ul>
         }
         <h3 className={findMovies ? 'inactive' : undefined}>No movie found</h3>
-        {findMovies &&
-          <ul>
+        {findMovies.length > 0 &&
+          <ul className='findMovieList'>
             {findMovies.map(movie =>
-                <li key={movie.imdbID}>
+              <li
+                className='findMovies' 
+                key={movie.imdbID}>
                   {/* <button onClick={() => findMovieHandleClick(movie.Title)} className='movieName'>{movie.Title}</button> */}
                   <div
                     className='poster'
@@ -155,6 +152,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                   </div>
               </li>)}
           </ul>}
+
+        <button className='addBtn' onClick={handleAddVideo}>Add to my Video List</button>
       </div>
 
     </>

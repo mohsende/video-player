@@ -13,6 +13,7 @@
   width: 100%;
   max-width: 700px;
   flex-direction: column;
+  gap: 5px;
 }
 
 .videoUrl {
@@ -39,7 +40,7 @@ button {
   font-size: 1.2rem;
   outline: none;
   padding: 5px 10px;
-  color: whitesmoke;
+  color: white;
   background-color: rgb(75, 152, 162);
 }
 
@@ -53,7 +54,7 @@ button:hover {
 
 .addBtn {
   background-color: rgb(78, 224, 70);
-  width: 40px;
+  width: 100%;
   opacity: 0.8;
 }
 
@@ -72,7 +73,7 @@ span {
 }
 
 .movie {
-  padding: 10px;
+  padding: 5px 10px 10px;
   color: whitesmoke;
 }
 
@@ -85,6 +86,14 @@ span {
   gap: 10px;
 }
 
+.findMovieList {
+  align-content: center;
+  justify-content: space-between;
+}
+
+.findMovies {
+  width: 46%;
+}
 .movie li {
   transition: all 250ms ease;
   scale: 1;

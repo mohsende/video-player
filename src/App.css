@@ -9,6 +9,13 @@
   display: flex;
   padding-top: 20px;
   height: calc(100vh - 10px) ;
+  position: relative;
+}
+
+.screenSize {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .App h1 {
