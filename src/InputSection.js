@@ -82,7 +82,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   };
 
   return (
-    <>
+    <div className='inputMovie'>
       <div className='inputSection'>
         <div className='input'>
           <input
@@ -101,7 +101,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         </div>
         {/* <button className='clearBtn' onClick={handleClearList}>-</button> */}
       </div>
-      <div className='movie'>
+      <div className='movieSection'>
         <input 
           type='text'
           className='newName'
@@ -136,12 +136,12 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                   style={{
                       outline: selectedMovie === movie.imdbID ? '2px solid green' : '',
                       backgroundImage: `url(${movie.Poster})`,
-                      width: '150px',
-                      height: '200px',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'cover',
-                      position: 'relative'
+                      // width: '150px',
+                      // height: '200px',
+                      // backgroundPosition: 'center',
+                      // backgroundRepeat: 'no-repeat',
+                      // backgroundSize: 'cover',
+                      // position: 'relative'
                     }}>
                     <h4>{movie.Title} {movie.Year}</h4>
                     <h2
@@ -156,7 +156,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         <button className='addBtn' onClick={handleAddVideo}>Add to my Video List</button>
       </div>
 
-    </>
+    </div>
   );
 }
 

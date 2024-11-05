@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import './mediaQuery.css';
 import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
@@ -20,8 +21,6 @@ function App() {
   const [captionsArr, setCaptions] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
   const [showVideoList, setShowVideoList] = useState(true);
-  // const [showGoogle, setShowGoogle] = useState(false);
-  // const [googleUrl, setGoogleUrl] = useState('https://www.google.com/search?igu=1');
 
   useEffect(() => {
     fetchVideoList();
@@ -41,7 +40,6 @@ function App() {
   const handleDeleteVideo = async (url) => {
     const updatedList = videoList.filter(video => video.url !== url);
     setVideoList(updatedList);
-    // console.log('delete');
     setCurrentVideo('');
     try {
       await fetch(WORKER_URL, {
@@ -70,7 +68,6 @@ function App() {
 
   const handleVideoClick = (url) => {
     const video = videoList.find(video => video.url === url);
-    // console.log('play');
     setCurrentVideo(url);
     
     if (video.subtitle) {
@@ -87,14 +84,6 @@ function App() {
     }
   };
 
-  // const handleGoogleClick = () => {
-  //   setShowGoogle(true);
-  // };
-
-  // const handleBackButtonClick = () => {
-  //   setShowGoogle(false);
-  // };
-
   function handleShowInputSectionClick() {
     setShowInputSection(show => !show);
   }
@@ -103,17 +92,15 @@ function App() {
     setShowVideoList(show => !show);
   }
 
-  // console.log(movieTitle);
-
   return (
     <div className="App">
-      <div className='screenSize' style={{ color: 'whitesmoke', textAlign: 'right' }}><p>Width: {screenSize.width}</p><p>Height: {screenSize.height}</p></div>
-      <div className='leftPanel'>
+      <div className='screenSize' style={{ color: 'whitesmoke', textAlign: 'right', opacity: '0.3' }}><p>{screenSize.width}x{screenSize.height}</p></div>
+      <div className='appContainer'>
         <h1>MDe Player</h1>
         <button
           className='showInputSection'
           onClick={handleShowInputSectionClick}>
-          {showInputSection ? 'Hide' : 'Show Input section'}
+          {showInputSection ? 'Hide Input Movie' : 'Show Input Movie'}
         </button>
         {
           showInputSection &&
@@ -133,7 +120,7 @@ function App() {
         <button
           className='showVideoList'
           onClick={handleShowVideoListClick}>
-          {showVideoList ? 'Hide' : 'Show Video list'}
+          {showVideoList ? 'Hide Movie list' : 'Show Movie list'}
         </button>
         {
           showVideoList &&
@@ -151,12 +138,6 @@ function App() {
           />
         }
       </div>
-      {/* <GooglePanel
-        showGoogle={showGoogle}
-        googleUrl={googleUrl}
-        handleGoogleClick={handleGoogleClick}
-        handleBackButtonClick={handleBackButtonClick}
-      /> */}
     </div>
   );
 }

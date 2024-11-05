@@ -7,6 +7,8 @@
 
 .App {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-top: 20px;
   height: calc(100vh - 10px) ;
   position: relative;
@@ -24,6 +26,17 @@
   padding: 0 20px;
 }
 
-.leftPanel {
-  /* width: 100%; */
+.appContainer {
+  width: 90%;
+}
+
+.showInputSection {
+  width: 100%;
+  background-color: rgba(0, 247, 255, 0.302);
+  margin-bottom: 5px;
+}
+
+.showVideoList {
+  width: 100%;
+  background-color: rgba(0, 247, 255, 0.302);
 }

@@ -1,17 +1,23 @@
 /* InputSection.css */
+.inputMovie {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+}
 .inputSection {
   padding: 0 10px;
   margin-top: 10px;
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   justify-content: center;
 }
 
 .input {
   display: flex;
-  min-width: 280px;
+  /* min-width: 280px; */
   width: 100%;
-  max-width: 700px;
+  /* max-width: 700px; */
   flex-direction: column;
   gap: 5px;
 }
@@ -48,10 +54,6 @@ button:hover {
   opacity: 1;
 }
 
-.showInputSection {
-  margin-right: 5px;
-}
-
 .addBtn {
   background-color: rgb(78, 224, 70);
   width: 100%;
@@ -72,12 +74,12 @@ span {
   color: slategrey;
 }
 
-.movie {
+.movieSection {
   padding: 5px 10px 10px;
   color: whitesmoke;
 }
 
-.movie ul {
+.movieSection ul {
   list-style-type: none;
   margin-bottom: 10px;
   padding: 0;
@@ -86,6 +88,17 @@ span {
   gap: 10px;
 }
 
+.movieSection li {
+  transition: all 250ms ease;
+  scale: 1;
+}
+
+.movieSection li:hover {
+  transition: all 250ms ease;
+  scale: 1.05;
+  cursor: pointer;
+
+}
 .findMovieList {
   align-content: center;
   justify-content: space-between;
@@ -94,16 +107,14 @@ span {
 .findMovies {
   width: 46%;
 }
-.movie li {
-  transition: all 250ms ease;
-  scale: 1;
-}
 
-.movie li:hover {
-  transition: all 250ms ease;
-  scale: 1.05;
-  cursor: pointer;
-  
+.poster {
+  width: 100%;
+  height: 200px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
 }
 
 h4 {
