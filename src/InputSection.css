@@ -99,6 +99,11 @@ span {
   cursor: pointer;
 
 }
+
+.SubSection ul{
+  flex-direction: column;
+}
+
 .findMovieList {
   align-content: center;
   justify-content: space-between;

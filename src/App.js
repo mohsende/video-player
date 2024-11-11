@@ -4,7 +4,7 @@ import './mediaQuery.css';
 import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
-// import GooglePanel from './GooglePanel';
+import axios, * as others from 'axios';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
@@ -96,7 +96,7 @@ function App() {
     <div className="App">
       <div className='screenSize' style={{ color: 'whitesmoke', textAlign: 'right', opacity: '0.3' }}><p>{screenSize.width}x{screenSize.height}</p></div>
       <div className='appContainer'>
-        <h1>MDe Player</h1>
+        {/* <h1>MDe Player</h1> */}
         <button
           className='showInputSection'
           onClick={handleShowInputSectionClick}>
