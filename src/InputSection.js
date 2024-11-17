@@ -227,7 +227,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         {fileName !== '' &&
           <ul className='movieNameGuesses'>
             {suggestions.map((name, index) =>
-              <li
+              <li className='movieName'
                 key={index}>
                 <button
                   style={{ backgroundColor: selectedName === name ? '#d19172' : '' }}
@@ -248,7 +248,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
               {(subSearchList && subSearchList.length > 0) &&
                 subSearchList.map((result) =>
                   // console.log(result)
-                  <li key={result.url} onClick={() => searchSubtitleFileApi3(result.downloadAPI)}>
+                  <li className='subSearchItem' key={result.url} onClick={() => searchSubtitleFileApi3(result.downloadAPI)}>
                     <p>{result.title}</p>
                   </li>
                 )}

@@ -86,24 +86,41 @@ span {
   display: flex;
   /* justify-content: center; */
   flex-wrap: wrap;
-  gap: 10px;
 }
 
 .movieNameGuesses {
+  gap: 10px;
   /* flex-direction: column; */
   justify-self: baseline;
 }
 
-.movieSection li {
+.movieName {
   transition: all 250ms ease;
   scale: 1;
 }
 
-.movieSection li:hover {
+.movieName:hover {
   transition: all 250ms ease;
   scale: 1.05;
   cursor: pointer;
+}
 
+.SubSection li {
+  padding: 4px;
+  transition: all 250ms ease;
+  /* scale: 1; */
+}
+
+.SubSection li:hover {
+  transition: all 250ms ease;
+  /* scale: 1.05; */
+  cursor: pointer;
+  color: white;
+  background-color: rgb(120, 56, 131);
+}
+
+.subSearch{
+  /* gap: 0; */
 }
 
 .SubSection ul{
@@ -117,6 +134,7 @@ span {
 .findMovieList {
   align-content: center;
   justify-content: space-evenly;
+  gap: 5px;
 }
 
 .findMovies {
