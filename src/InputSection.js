@@ -239,6 +239,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         }
         {!findMovies && <h3>No movie found</h3>}
         {/* <a className={!subFileAddress ? 'inactive' : undefined} href={subFileAddress}>{subFileAddress}</a> */}
+        {/* Subtitle Search Section */}
         {selectedMovie.title &&
           <div className="SubSection">
             {subSearchList.length === 0 ?
@@ -263,6 +264,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             </ul>
           </div>
         }
+        {/* Movie Search Section */}
         {findMovies &&
           <ul className='findMovieList'>
             {findMovies.map(movie =>
