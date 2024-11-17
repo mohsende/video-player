@@ -276,8 +276,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                     className='poster'
                   onClick={() => setMovieData(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID)}
                   style={{
-                      outline: selectedMovie.imdbID === movie.imdbID ? '2px solid green' : '',
-                    backgroundImage: `url(${movie.Poster})`,
+                      backgroundImage: `url(${movie.Poster})`,
                     }}>
                     <h5>{movie.Title} {movie.Year}</h5>
                     <h2

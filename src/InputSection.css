@@ -134,12 +134,19 @@ span {
 .findMovieList {
   align-content: center;
   justify-content: space-evenly;
-  gap: 5px;
+  gap: 10px;
 }
 
 .findMovies {
   width: 200px;
   height: 290px;
+  /* outline: 3px solid green; */
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 250ms ease;
+}
+.findMovies:hover {
+  scale: 1.02;
 }
 
 .poster {
@@ -160,14 +167,16 @@ h5 {
 .selectedMovie {
   display: none;
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 30px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -30%);
   margin: 0;
+  padding: 10px 30px;
+  font-size: 6rem;
   text-align: center;
-  color: white;
-  background-color: green;
-  border-radius: 0 0 0 10px;
+  color: rgba(160, 255, 109, 0.546);
+  background-color: rgba(109, 151, 79, 0.4);
+  border-radius: 15%;
 }
 
 .inactive {
