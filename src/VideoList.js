@@ -19,8 +19,8 @@ function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {
           }}>
             <span className='videoName' onClick={() => handleVideoClick(video.url)}>
               <p>{video.filename}</p>
-              {video.subtitle && 
-              <span>Sub</span>}
+              {video.subtitle1 && 
+                <p style={{'color': 'yellow'}}><strong>Subtitle</strong></p>}
             </span>
             <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>DELETE</button>
           </div>

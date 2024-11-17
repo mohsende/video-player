@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './InputSection.css';
 import { type } from '@testing-library/user-event/dist/type';
-import SubtitleSection from './SubtitleSection';
 
 const OMDB_API_URL = 'https://www.omdbapi.com/?apikey=c3327b94&';
 // const HAJI_LICENSE = 'aNxVui2gLkJwqJEAadpiOtUXw44zoHR8rop9crfmXSc';
@@ -14,14 +13,9 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const suggestions = [];
   const [findMovies, setFindMovies] = useState([]);
   const [newName, setNewName] = useState('');
-  const [subFileAddress, setSubFileAddress] = useState('');
-  const [subFileAddress2, setSubFileAddress2] = useState('');
   const [selectedName, setSelectedName] = useState(null);
-  
   const [subSearchList, setSubSearchList] = useState([]);
-  const [subFileList, setFileList] = useState([]);
-  // const [subSearchList2, setSubSearchList2] = useState([]);
-  // const [subSearchList, setSubSearchList] = useState([]);
+  const [subSearchFileList, setSubSearchFileList] = useState([]);
   
   const [newVideo, setNewVideo] = useState({
     url: undefined,
@@ -36,6 +30,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     imdbID: null
   });
   
+
   if (fileName !== '' && newName === '') {
     for (let i = 0; i < (movieNameSuggestion.length > 3 ? 3 : movieNameSuggestion.length); i++) {
       i === 0 ? suggestions.push(movieNameSuggestion[i]) : suggestions.push(suggestions[i - 1] + ' ' + movieNameSuggestion[i])
@@ -43,13 +38,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   } else if (newName !== '') {
     suggestions[0] = newName;
   }
-
-  // const handleSearchSubtitle = async (name) => {
-  //   const subtitles = await fetchSubtitles(name);
-  //   console.log("Subtitles:", subtitles);
-  //   console.log("Subtitles:", name);
-  //   // در اینجا می‌توانید زیرنویس‌ها را به کاربر نمایش دهید یا پردازش‌های بعدی را انجام دهید
-  // };
 
   function handleNameClick(name) {
     setSelectedName(name);
@@ -73,6 +61,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     }
   };
 
+  // // Send title to WORKER for searching subtitle
   // async function findSubtitle(title) {
   //   try {
   //     // ارسال درخواست به Worker برای جستجوی زیرنویس
@@ -101,7 +90,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   //   }
   // }
 
-
   const setMovieData = async (url, filename, title, year, poster, imdbID) => {
     const newTitle = title.replaceAll(' ', '+');
     setNewVideo({
@@ -118,63 +106,11 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
     searchSubtitleApi3(newTitle);
 
-    // const subtitleSearchResult = await searchSubtitle(newTitle, HAJI_LICENSE);
-    // const subtitleSearchResult2 = await searchSubtitle2(newTitle, HAJI_LICENSE);
-    // if (subtitleSearchResult) {
-    //   // console.log((subtitleSearchResult && subtitleSearchResult.length > 0) ? subtitleSearchResult : '');
-    //   const link = subtitleSearchResult.map(result => result.link);
-    //   console.log('result1 : ', link);
-    //   // const subFile = await searchSubtitleFile(link, HAJI_LICENSE);
-    //   // setSubFileAddress(subFile);
-    //   // console.log('SubtitleFile = ', subFile);
-    // }
-    // if (subtitleSearchResult2) {
-    //   // console.log((subtitleSearchResult2 && subtitleSearchResult2.length > 0) ? subtitleSearchResult2 : '');
-    //   const link = subtitleSearchResult2.map(result => result.url);
-    //   console.log('result2 : ', link);
-    //   const subFile = await searchSubtitleFile2(link);
-    //   // setSubFileAddress2(subFile);
-    //   console.log('SubtitleFile = ', subFile);
-    // }
   }
 
-  // async function searchSubtitle(title, license) {
-  //   const apiUrl = `https://haji-api.ir/zirnevis/search.php?text=${title}&license=${license}`;
-  //   // await alert(apiUrl);
-  //   try {
-  //     const response = await fetch(apiUrl);
-  //     const data = await response.json();
-  //     if (data.success)
-  //       return data.result;
-  //     else {
-  //       console.log('Subtitle Not Found.', data.success);
-  //       return null;
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  // async function searchSubtitleFile(link, license) {
-  //   const apiUrl = `https://haji-api.ir/zirnevis/?url=${link}&license=${license}`;
-
-  //   try {
-  //     const response = await fetch(apiUrl);
-  //     const data = await response.json();
-  //     if (data.download_link)
-  //       setSubtitleFile(data.download_link);
-  //     else {
-  //       console.log('Subtitle file Not Found.', data.download_link);
-  //       setSubFileAddress('');
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
+  // API Search Subtitle from https://api3.haji-api.ir/
   async function searchSubtitleApi3(title) {
     const apiUrl = `https://api3.haji-api.ir/majid/movie/subtitle/search?s=${title}&license=${HAJI_LICENSE}`;
-    // await alert(apiUrl);
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
@@ -189,37 +125,45 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     }
   }
 
+  // API Search SubtitleFile for download link from https://api3.haji-api.ir/
   async function searchSubtitleFileApi3(downloadAPI) {
-    // const apiUrl = `https://api3.haji-api.ir/majid/movie/subtitle/download?url=${link}&license=${license}`;
-
     try {
       const response = await fetch(downloadAPI);
       const data = await response.json();
       if (data.result)
-        setSubSearchList(data.result);
+        setSubSearchFileList(data.result); 
       else {
         console.log('Subtitle file Not Found.', data.result);
-        setSubSearchList([]);
+        setSubSearchFileList([]);
       }
     } catch (error) {
       console.error(error);
     }
   }
 
+  const handleSubtitle = async (zipUrl) => {
+    
+  }
+
+  // https://dls.bia-inja-film.click/DonyayeSerial/series/Unbelievable/Soft.Sub/S01/720p.Web-DL/Unbelievable.S01E06.720p.WEB-DL.SoftSub.DonyayeSerial.mkv
+
   const handleAddVideo = async () => {
     if (newVideo.url && !videoList.some(video => video.url === newVideo.url)) {
 
       const formData = new FormData();
       formData.append('videoData', JSON.stringify(newVideo));
+      // If subtitle selected for uploading 
       if (subtitleFile) {
-        formData.append('subtitle', subtitleFile);
-      }
+        subtitleFile.forEach((file, index) => {
+          formData.append(`subtitle${index + 1}`, file);
+        });
+      };
+
       try {
         await fetch(WORKER_URL, {
           method: 'POST',
           body: formData,
         });
-
         const updatedList = [...videoList, newVideo];
         setVideoList(updatedList);
         setVideoUrl('');
@@ -228,8 +172,27 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       } catch (error) {
         console.error('Error saving links:', error);
       }
-    }
-  };
+      };
+    };
+
+
+  // function getBaseName(filename) {
+  //   return filename.replace(/\.[^/.]+$/, "");
+  // }
+
+  function handleSubSelected(files) {
+    // const selectedFile = [];
+    // for (const [key, value] of Object.entries(files)){
+    //   selectedFile.push(value);
+    // }
+    // setSubtitleFile(selectedFile);
+    const chosenFiles = Array.prototype.slice.call(files)
+    // console.log(chosenFiles);
+
+    setSubtitleFile(chosenFiles);
+  }
+
+  // console.log(subtitleFile);
 
   return (
     <div className='inputMovie'>
@@ -245,8 +208,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
           <input
             type="file"
             id='fileUpload'
+            multiple
             accept=".vtt"
-            onChange={(e) => setSubtitleFile(e.target.files[0])}
+            // onChange={(e) => setSubtitleFile(e.target.files[0])}
+            onChange={(e) => handleSubSelected(e.target.files)}
           />
         </div>
         {/* <button className='clearBtn' onClick={handleClearList}>-</button> */}
@@ -273,19 +238,28 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
           </ul>
         }
         {!findMovies && <h3>No movie found</h3>}
-        <a className={!subFileAddress ? 'inactive' : undefined} href={subFileAddress}>{subFileAddress}</a>
-        {
+        {/* <a className={!subFileAddress ? 'inactive' : undefined} href={subFileAddress}>{subFileAddress}</a> */}
+        {selectedMovie.title &&
           <div className="SubSection">
-            <h3>Search for {selectedMovie.title}</h3>
-            <ul>
-              {
-                (subSearchList && subSearchList.length) > 0 &&
-                subSearchList.map((result, index) =>
+            {subSearchList.length === 0 ?
+              <h3>Searching for subtitle ... </h3> : <h3>Subtitle for {selectedMovie.title}</h3>}
+            <ul className='subSearch'>
+              {(subSearchList && subSearchList.length > 0) &&
+                subSearchList.map((result) =>
                   // console.log(result)
-                  <li key={index} onClick={() => searchSubtitleFileApi3(result.downloadAPI)}>{!result.status ? result.title : result.url}</li>
-                )
-
-              }
+                  <li key={result.url} onClick={() => searchSubtitleFileApi3(result.downloadAPI)}>
+                    <p>{result.title}</p>
+                  </li>
+                )}
+            </ul>
+            {subSearchFileList.length !== 0 && <h3>Download link</h3>}
+            <ul className='subFileSearch'>
+              {(subSearchFileList && subSearchFileList.length > 0) &&
+                subSearchFileList.map((link) =>
+                  <li key={link.title} onClick={() => handleSubtitle(link.url)}>
+                    <p>{link.url}</p>
+                    {/* <a href={link.url}>{link.url}</a> */}
+                  </li>)}
             </ul>
           </div>
         }
@@ -303,7 +277,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                       outline: selectedMovie.imdbID === movie.imdbID ? '2px solid green' : '',
                     backgroundImage: `url(${movie.Poster})`,
                     }}>
-                    <h4>{movie.Title} {movie.Year}</h4>
+                    <h5>{movie.Title} {movie.Year}</h5>
                     <h2
                       className='selectedMovie'
                       style={{

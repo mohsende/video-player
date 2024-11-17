@@ -14,7 +14,7 @@ function App() {
   const [posterUrl, setPosterUrl] = useState('');
   const [movieTitle, setMovieTitle] = useState('');
   const [movieYear, setMovieYear] = useState('');
-  const [subtitleFile, setSubtitleFile] = useState(null);
+  const [subtitleFile, setSubtitleFile] = useState([]);
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
   const [screenSize, setScreenSize] = useState({width: window.innerWidth, height: window.innerHeight});
@@ -41,6 +41,7 @@ function App() {
     const updatedList = videoList.filter(video => video.url !== url);
     setVideoList(updatedList);
     setCurrentVideo('');
+    // console.log(JSON.stringify({ url }));
     try {
       await fetch(WORKER_URL, {
         method: 'DELETE',
