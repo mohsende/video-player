@@ -70,19 +70,42 @@ function App() {
   const handleVideoClick = (url) => {
     const video = videoList.find(video => video.url === url);
     setCurrentVideo(url);
+    const subtitles = Object.keys(video)
+    .filter(key => key.startsWith("subtitle")) // فقط کلیدهای subtitle
+    .map(key => video[key]);
+    // console.log(subtitles);
+    const newSubs = [];
+    for (const subtitle of subtitles) {
+      newSubs.push({
+        kind: 'subtitles',
+        src: subtitle,
+        srcLang: 'fa'
+      });
+      // setCaptions([...captionsArr, {
+      //   kind: 'subtitles',
+      //   src: subtitle,
+      //   srcLang: 'fa'
+      // }]);
+    };
+    setCaptions(newSubs);
+    // if (subtitles.length > 0) {
+    // } else {
+    //   setCaptions([]);
+    // }
     
-    if (video.subtitle) {
-      setCaptions([
-        {
-          kind: 'subtitles',
-          src: video.subtitle,
-          srcLang: 'fa',
-          default: true,
-        }
-      ]);
-    } else {
-      setCaptions([]);
-    }
+    // console.log(captionsArr);
+    // if (subtitles[0]) {
+    //   setCaptions([
+    //     {
+    //       kind: 'subtitles',
+    //       src: subtitles[0],
+    //       srcLang: 'fa',
+    //       default: true,
+    //     }
+    //   ]);
+    // } else {
+    //   setCaptions([]);
+    // }
   };
 
   function handleShowInputSectionClick() {
