@@ -55,8 +55,10 @@ button:hover {
 }
 
 .addBtn {
-  background-color: rgb(78, 224, 70);
+  margin: 0 auto;
+  background-color: rgb(0, 166, 50);
   width: 100%;
+  border-radius: 5px;
   opacity: 0.8;
 }
 
@@ -141,6 +143,7 @@ span {
   border-radius: 10px;
   overflow: hidden;
   transition: all 250ms ease;
+  aspect-ratio: 2/3;
 }
 .findMovies:hover {
   scale: 1.02;

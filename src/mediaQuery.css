@@ -5,23 +5,23 @@
 
   .findMovies {
     width: 150px;
-    height: 220px;
+    /* height: 220px; */
   }
 
   .movieCard{
     width: 150px;
-    height: 220px;
+    /* height: 220px; */
   }
 }
 @media screen and (min-width: 641px) /* and (max-width: 800px) */ {
   .findMovies {
       width: 200px;
-      height: 300px;
+      /* height: 300px; */
     }
 
     .movieCard {
       width: 200px;
-      height: 300px;
+      /* height: 300px; */
     }
 }
 @media screen and (min-width: 801px) and (max-width: 1024px) {}
@@ -35,6 +35,10 @@
     /* width: 200px; */
   }
 
+    .findMovies {
+      width: 40%;
+      /* height: 220px; */
+    }
 }
 
 /* Portrait */
