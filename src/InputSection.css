@@ -138,9 +138,6 @@ span {
 }
 
 .findMovies {
-  width: 200px;
-  height: 290px;
-  /* outline: 3px solid green; */
   border-radius: 10px;
   overflow: hidden;
   transition: all 250ms ease;
@@ -150,6 +147,8 @@ span {
 }
 
 .poster {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   background-position: center;
@@ -165,18 +164,30 @@ h5 {
 }
 
 .selectedMovie {
-  display: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -30%);
-  margin: 0;
-  padding: 10px 30px;
-  font-size: 6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 5rem;
+  font-weight: 900;
   text-align: center;
-  color: rgba(160, 255, 109, 0.546);
-  background-color: rgba(109, 151, 79, 0.4);
-  border-radius: 15%;
+  color: #00ff2f;
+  background-color: rgba(255, 255, 255, 0.55);
+  /* position: absolute; */
+  /* bottom: 0; */
+  /* left: 0; */
+  /* width: 100%; */
+  /* left: 50%; */
+  /* top: 50%; */
+  /* transform: translate(-50%, -30%); */
+  /* margin: 0; */
+  /* padding: 10px 30px; */
+  /* border-radius: 10px; */
+}
+
+.movieCardContent{
+  width: 100%;
+  height: 100%;
 }
 
 .inactive {

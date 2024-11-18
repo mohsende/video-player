@@ -44,7 +44,6 @@
 }
 
 .videoName {
-  /* width: 200px; */
   height: auto;
   overflow-wrap: break-word;
   hyphens: auto;
@@ -64,6 +63,11 @@
     font-size: 0.7rem;
     background-color: #ffffff1a;
   cursor: pointer;
+}
+
+.isSub {
+  color: yellow;
+  text-shadow: 1px 1px 5px #000;
 }
 
 .deleteBtn {

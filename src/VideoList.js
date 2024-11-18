@@ -11,8 +11,8 @@ function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {
           <div className='movieCardContent'
             style={{
               backgroundImage: `url(${video.poster})`,
-              width: '150px',
-              height: '200px',
+              // width: '150px',
+              // height: '200px',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover'
@@ -20,7 +20,7 @@ function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {
             <span className='videoName' onClick={() => handleVideoClick(video.url)}>
               <p>{video.filename}</p>
               {video.subtitle1 && 
-                <p style={{'color': 'yellow'}}><strong>Subtitle</strong></p>}
+                <span className='isSub'><strong>Subtitle</strong></span>}
             </span>
             <button className='deleteBtn' onClick={() => handleDeleteVideo(video.url)}>DELETE</button>
           </div>

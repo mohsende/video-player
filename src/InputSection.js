@@ -282,8 +282,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                     <h2
                       className='selectedMovie'
                       style={{
-                        display: selectedMovie.imdbID === movie.imdbID ? 'block' : 'none'
-                      }}>&#10004;</h2>
+                        display: selectedMovie.imdbID === movie.imdbID ? undefined : 'none'
+                      }}>&#10003;</h2>
                   </div>
               </li>)}
           </ul>}
