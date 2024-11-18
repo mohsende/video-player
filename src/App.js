@@ -77,6 +77,7 @@ function App() {
     const newSubs = [];
     for (const subtitle of subtitles) {
       newSubs.push({
+        id: parseInt(subtitle.split('/').pop().split('-subtitle').pop().split('.')[0]),
         kind: 'subtitles',
         src: subtitle,
         srcLang: 'fa'
