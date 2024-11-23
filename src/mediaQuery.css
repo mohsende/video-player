@@ -20,8 +20,8 @@
     }
 
     .movieCard {
-      width: 200px;
-      height: 300px;
+      width: 150px;
+      height: 190px;
     }
 }
 @media screen and (min-width: 801px) and (max-width: 1024px) {}
@@ -35,10 +35,10 @@
     /* width: 200px; */
   }
 
-    .findMovies {
+    /* .findMovies {
       width: 40%;
-      height: 220px;
-    }
+      height: 180px;
+    } */
 }
 
 /* Portrait */

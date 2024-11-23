@@ -19,6 +19,7 @@ function App() {
   const [currentVideo, setCurrentVideo] = useState('');
   const [screenSize, setScreenSize] = useState({width: window.innerWidth, height: window.innerHeight});
   const [captionsArr, setCaptions] = useState([]);
+  const [captionsArrTest, setCaptionsTest] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
   const [showVideoList, setShowVideoList] = useState(true);
 
@@ -69,44 +70,29 @@ function App() {
 
   const handleVideoClick = (url) => {
     const video = videoList.find(video => video.url === url);
-    setCurrentVideo(url);
     const subtitles = Object.keys(video)
     .filter(key => key.startsWith("subtitle")) // فقط کلیدهای subtitle
     .map(key => video[key]);
-    // console.log(subtitles);
     const newSubs = [];
     for (const subtitle of subtitles) {
-      newSubs.push({
-        id: parseInt(subtitle.split('/').pop().split('-subtitle').pop().split('.')[0]),
-        // kind: 'subtitles',
-        src: subtitle,
-        srcLang: 'fa'
+      if (newSubs.length === 0) {
+        newSubs.push({
+          label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
+          kind: 'subtitles',
+          src: subtitle,
+          default: true,
       });
-      // setCaptions([...captionsArr, {
-      //   kind: 'subtitles',
-      //   src: subtitle,
-      //   srcLang: 'fa'
-      // }]);
+      } else {
+        newSubs.push({
+          label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
+          kind: 'subtitles',
+          src: subtitle,
+        });
+      }
     };
+
+    setCurrentVideo(video.url);
     setCaptions(newSubs);
-    // if (subtitles.length > 0) {
-    // } else {
-    //   setCaptions([]);
-    // }
-    
-    // console.log(captionsArr);
-    // if (subtitles[0]) {
-    //   setCaptions([
-    //     {
-    //       kind: 'subtitles',
-    //       src: subtitles[0],
-    //       srcLang: 'fa',
-    //       default: true,
-    //     }
-    //   ]);
-    // } else {
-    //   setCaptions([]);
-    // }
   };
 
   function handleShowInputSectionClick() {
@@ -116,7 +102,7 @@ function App() {
   function handleShowVideoListClick() {
     setShowVideoList(show => !show);
   }
-
+  console.log('captionsArr', captionsArr);
   return (
     <div className="App">
       <div className='screenSize' style={{ color: 'whitesmoke', textAlign: 'right', opacity: '0.3' }}><p>{screenSize.width}x{screenSize.height}</p></div>

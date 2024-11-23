@@ -3,7 +3,7 @@ import './VideoList.css';
 
 
 function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {
-
+  
   return (<>
     <ul className='movieList'>
       {videoList.map((video, index) => (

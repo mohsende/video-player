@@ -19,3 +19,18 @@
   height: 100%;
   min-width: 280px;
 }
+.subBtn {
+  padding: 5px 10px;
+  font-size: .8rem;
+  margin: 2px 5px;
+  border-radius: 10px;
+  background-color: #686868;
+}
+
+.subBtn:hover {
+  cursor: pointer;
+}
+
+.btnActive {
+  background-color: #e1b5ea;
+}

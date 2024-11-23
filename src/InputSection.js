@@ -193,7 +193,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   }
 
   // console.log(subtitleFile);
-
+  // console.log('InputSection Reloaded');
   return (
     <div className='inputMovie'>
       <div className='inputSection'>
