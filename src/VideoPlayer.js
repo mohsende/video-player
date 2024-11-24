@@ -25,18 +25,6 @@ function VideoPlayer({currentVideo, captionsArr}) {
   return (
     <div className='videoPlayers'>
       {currentVideo &&
-        // {captionsArr.length > 0 &&
-        //   <div>
-        //     <span>Subtiles</span>
-        //     {captionsArr.map((sub, index) => (
-        //       <button className={selectedCaption === sub.src ? 'subBtn btnActive' : 'subBtn'}
-        //         key={index}
-        //         onClick={() => handleCaptionSelect(sub.src)}>
-        //         {sub.src}
-        //       </button>
-        //     ))}
-        //     <span style={{ 'color': 'white', 'fontSize': '.5rem' }}>{isSubSelected ? selectedCaption : 'nothing'}</span>
-        //   </div>}
         <div className='player'>
           <div className="reactPlayer-wrapper">
             <ReactPlayer

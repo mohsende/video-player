@@ -70,28 +70,70 @@ function App() {
 
   const handleVideoClick = (url) => {
     const video = videoList.find(video => video.url === url);
-    const subtitles = Object.keys(video)
-    .filter(key => key.startsWith("subtitle")) // فقط کلیدهای subtitle
-    .map(key => video[key]);
-    const newSubs = [];
-    for (const subtitle of subtitles) {
-      if (newSubs.length === 0) {
-        newSubs.push({
-          label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
-          kind: 'subtitles',
-          src: subtitle,
-          default: true,
-      });
-      } else {
-        newSubs.push({
-          label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
-          kind: 'subtitles',
-          src: subtitle,
-        });
-      }
-    };
 
-    setCurrentVideo(video.url);
+    // TEST for Proxy video
+    // Generate proxy URL
+    // const proxyUrl = `${WORKER_URL}proxyVideo/${video.filename}`;
+    const proxyUrl = `${WORKER_URL}proxyVideo/${encodeURIComponent(url)}`;
+
+    // Find subtitles
+    const subtitles = Object.keys(video)
+      .filter(key => key.startsWith("subtitle"))
+      .map(key => video[key]);
+
+    // Create subtitle tracks
+    // const newSubs = [];
+    // for (const subtitle of subtitles) {
+    //   if (newSubs.length === 0) {
+    //     newSubs.push({
+    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
+    //       kind: 'subtitles',
+    //       src: subtitle,
+    //       default: true,
+    //     });
+    //   } else {
+    //     newSubs.push({
+    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
+    //       kind: 'subtitles',
+    //       src: subtitle,
+    //     });
+    //   }
+    // };
+
+    // Create subtitle tracks
+    const newSubs = subtitles.map((subtitle, index) => ({
+      label: `Fa ${subtitle.split('/').pop().split('-subtitle').pop().split('.')[0]}`,
+      kind: 'subtitles',
+      src: subtitle,
+      default: index === 0, // Set the first subtitle as default
+    }));
+
+    // End TEST
+
+    // const subtitles = Object.keys(video)
+    // .filter(key => key.startsWith("subtitle")) // فقط کلیدهای subtitle
+    // .map(key => video[key]);
+    // const newSubs = [];
+    // for (const subtitle of subtitles) {
+    //   if (newSubs.length === 0) {
+    //     newSubs.push({
+    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
+    //       kind: 'subtitles',
+    //       src: subtitle,
+    //       default: true,
+    //   });
+    //   } else {
+    //     newSubs.push({
+    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
+    //       kind: 'subtitles',
+    //       src: subtitle,
+    //     });
+    //   }
+    // };
+
+    // setCurrentVideo(video.url);
+    
+    setCurrentVideo(proxyUrl);
     setCaptions(newSubs);
   };
 
@@ -102,7 +144,7 @@ function App() {
   function handleShowVideoListClick() {
     setShowVideoList(show => !show);
   }
-  console.log('captionsArr', captionsArr);
+  
   return (
     <div className="App">
       <div className='screenSize' style={{ color: 'whitesmoke', textAlign: 'right', opacity: '0.3' }}><p>{screenSize.width}x{screenSize.height}</p></div>
