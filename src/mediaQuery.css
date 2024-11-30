@@ -21,7 +21,7 @@
 
     .movieCard {
       width: 150px;
-      height: 190px;
+      height: 220px;
     }
 }
 @media screen and (min-width: 801px) and (max-width: 1024px) {}

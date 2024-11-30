@@ -39,18 +39,20 @@ function App() {
   };
 
   const handleDeleteVideo = async (url) => {
-    const updatedList = videoList.filter(video => video.url !== url);
-    setVideoList(updatedList);
-    setCurrentVideo('');
-    // console.log(JSON.stringify({ url }));
-    try {
-      await fetch(WORKER_URL, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      });
-    } catch (error) {
-      console.error('Error deleting link:', error);
+    if (window.confirm("Are you sure to delete ?")) {
+      const updatedList = videoList.filter(video => video.url !== url);
+      setVideoList(updatedList);
+      setCurrentVideo('');
+      // console.log(JSON.stringify({ url }));
+      try {
+        await fetch(WORKER_URL, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+      } catch (error) {
+        console.error('Error deleting link:', error);
+      }
     }
   };
 
