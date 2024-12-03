@@ -43,3 +43,17 @@
   width: 100%;
   background-color: rgba(0, 247, 255, 0.302);
 }
+
+.TV {
+  margin-top: 10px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+#TV {
+  width: 20px;
+  height: 20px;
+  color: rgb(23, 174, 188);
+  accent-color: #ffff00;
+}

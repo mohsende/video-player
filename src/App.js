@@ -23,6 +23,7 @@ function App() {
   const [captionsArrTest, setCaptionsTest] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
   const [showVideoList, setShowVideoList] = useState(true);
+  const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
   useEffect(() => {
     fetchVideoList();
@@ -34,6 +35,7 @@ function App() {
       mobileMode: rdd.mobileModel,
       isSmartTV: rdd.isSmartTV,
     });
+    // setIsTV(true);
   }, []);
 
   const fetchVideoList = async () => {
@@ -49,11 +51,9 @@ function App() {
   const handleVideoClick = async(url) => {
     const video = videoList.find(video => video.url === url);
     
-    // TEST for Proxy video
     // Generate proxy URL
     const proxyUrl = `${WORKER_URL}proxyVideo/${encodeURIComponent(url)}`;
-    // console.log('proxyUrl:', proxyUrl.split('proxyVideo/').pop());
-
+    
     // Find subtitles
     const subtitles = Object.keys(video)
       .filter(key => key.startsWith("subtitle"))
@@ -67,13 +67,15 @@ function App() {
       default: index === 0, // Set the first subtitle as default
     }));
 
-    // End TEST
 
-    // setCurrentVideo(video.url);
+    // Bypass CORS if using TV otherwise use Cloudflare proxy if using browser
+    if (isTV) {
+      setCurrentVideo(video.url);
+    } else {
+      setCurrentVideo(proxyUrl);
+    }   
     
-    setCurrentVideo(proxyUrl);
     setCaptions(newSubs);
-
   };
 
   const handleDeleteVideo = async (url) => {
@@ -115,7 +117,7 @@ function App() {
   function handleShowVideoListClick() {
     setShowVideoList(show => !show);
   }
-  
+  // console.log('isTV: ',isTV);
   return (
     <div className="App">
       <div className='screenSize'>
@@ -126,9 +128,9 @@ function App() {
         
       </div>
       {/* This section is for getting my TV info for setting CORS */}
-      <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
+      {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
         {JSON.stringify(rdd, null, 2)}
-      </pre>
+      </pre> */}
       <div className='appContainer'>
         {/* <h1>MDe Player</h1> */}
         <button
@@ -164,6 +166,10 @@ function App() {
           handleDeleteVideo={handleDeleteVideo}
           />
         }
+        <div className='TV'>
+          <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
+          <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label>
+        </div>
         {
           showVideoList &&
           <VideoPlayer
