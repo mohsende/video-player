@@ -34,11 +34,9 @@
   .showInputSection{
     /* width: 200px; */
   }
-
-    /* .findMovies {
-      width: 40%;
-      height: 180px;
-    } */
+  .screenSize {
+    font-size: .9rem;
+  }
 }
 
 /* Portrait */

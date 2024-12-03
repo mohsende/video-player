@@ -5,6 +5,7 @@ import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
 import axios, * as others from 'axios';
+import * as rdd from 'react-device-detect';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
@@ -17,7 +18,7 @@ function App() {
   const [subtitleFile, setSubtitleFile] = useState([]);
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
-  const [screenSize, setScreenSize] = useState({width: window.innerWidth, height: window.innerHeight});
+  const [deviceInfo, setDeviceInfo] = useState({});
   const [captionsArr, setCaptions] = useState([]);
   const [captionsArrTest, setCaptionsTest] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
@@ -25,7 +26,14 @@ function App() {
 
   useEffect(() => {
     fetchVideoList();
-    setScreenSize({...screenSize, width: window.innerWidth, height: window.innerHeight});
+    setDeviceInfo({...deviceInfo, 
+      width: window.innerWidth, 
+      height: window.innerHeight,
+      deviceType: rdd.deviceType,
+      browserName: rdd.browserName,
+      mobileMode: rdd.mobileModel,
+      isSmartTV: rdd.isSmartTV,
+    });
   }, []);
 
   const fetchVideoList = async () => {
@@ -36,6 +44,36 @@ function App() {
     } catch (error) {
       console.error('Error fetching links:', error);
     }
+  };
+
+  const handleVideoClick = async(url) => {
+    const video = videoList.find(video => video.url === url);
+    
+    // TEST for Proxy video
+    // Generate proxy URL
+    const proxyUrl = `${WORKER_URL}proxyVideo/${encodeURIComponent(url)}`;
+    // console.log('proxyUrl:', proxyUrl.split('proxyVideo/').pop());
+
+    // Find subtitles
+    const subtitles = Object.keys(video)
+      .filter(key => key.startsWith("subtitle"))
+      .map(key => video[key]);
+
+    // Create subtitle tracks
+    const newSubs = subtitles.map((subtitle, index) => ({
+      label: `Fa ${subtitle.split('/').pop().split('-subtitle').pop().split('.')[0]}`,
+      kind: 'subtitles',
+      src: subtitle,
+      default: index === 0, // Set the first subtitle as default
+    }));
+
+    // End TEST
+
+    // setCurrentVideo(video.url);
+    
+    setCurrentVideo(proxyUrl);
+    setCaptions(newSubs);
+
   };
 
   const handleDeleteVideo = async (url) => {
@@ -70,75 +108,6 @@ function App() {
     }
   };
 
-  const handleVideoClick = (url) => {
-    const video = videoList.find(video => video.url === url);
-
-    // TEST for Proxy video
-    // Generate proxy URL
-    // const proxyUrl = `${WORKER_URL}proxyVideo/${video.filename}`;
-    const proxyUrl = `${WORKER_URL}proxyVideo/${encodeURIComponent(url)}`;
-
-    // Find subtitles
-    const subtitles = Object.keys(video)
-      .filter(key => key.startsWith("subtitle"))
-      .map(key => video[key]);
-
-    // Create subtitle tracks
-    // const newSubs = [];
-    // for (const subtitle of subtitles) {
-    //   if (newSubs.length === 0) {
-    //     newSubs.push({
-    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
-    //       kind: 'subtitles',
-    //       src: subtitle,
-    //       default: true,
-    //     });
-    //   } else {
-    //     newSubs.push({
-    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
-    //       kind: 'subtitles',
-    //       src: subtitle,
-    //     });
-    //   }
-    // };
-
-    // Create subtitle tracks
-    const newSubs = subtitles.map((subtitle, index) => ({
-      label: `Fa ${subtitle.split('/').pop().split('-subtitle').pop().split('.')[0]}`,
-      kind: 'subtitles',
-      src: subtitle,
-      default: index === 0, // Set the first subtitle as default
-    }));
-
-    // End TEST
-
-    // const subtitles = Object.keys(video)
-    // .filter(key => key.startsWith("subtitle")) // فقط کلیدهای subtitle
-    // .map(key => video[key]);
-    // const newSubs = [];
-    // for (const subtitle of subtitles) {
-    //   if (newSubs.length === 0) {
-    //     newSubs.push({
-    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
-    //       kind: 'subtitles',
-    //       src: subtitle,
-    //       default: true,
-    //   });
-    //   } else {
-    //     newSubs.push({
-    //       label: 'Fa ' + subtitle.split('/').pop().split('-subtitle').pop().split('.')[0],
-    //       kind: 'subtitles',
-    //       src: subtitle,
-    //     });
-    //   }
-    // };
-
-    // setCurrentVideo(video.url);
-    
-    setCurrentVideo(proxyUrl);
-    setCaptions(newSubs);
-  };
-
   function handleShowInputSectionClick() {
     setShowInputSection(show => !show);
   }
@@ -149,7 +118,17 @@ function App() {
   
   return (
     <div className="App">
-      <div className='screenSize' style={{ color: 'whitesmoke', textAlign: 'right', opacity: '0.3' }}><p>{screenSize.width}x{screenSize.height}</p></div>
+      <div className='screenSize'>
+        <p>
+          Device: [{rdd.deviceType} / {rdd.browserName}{rdd.isSmartTV && ' / is SmartTV'}{rdd.isDesktop && ' /  Desktop'}{rdd.isBrowser && ' /  isBrowser'}] - 
+          Screen Size: {deviceInfo.width}x{deviceInfo.height}
+        </p>
+        
+      </div>
+      {/* This section is for getting my TV info for setting CORS */}
+      <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
+        {JSON.stringify(rdd, null, 2)}
+      </pre>
       <div className='appContainer'>
         {/* <h1>MDe Player</h1> */}
         <button

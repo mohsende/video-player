@@ -18,6 +18,9 @@
   position: absolute;
   top: 0;
   right: 0;
+  color: whitesmoke; 
+  text-align: 'right'; 
+  opacity: 0.3
 }
 
 .App h1 {
