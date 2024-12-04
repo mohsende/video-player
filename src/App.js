@@ -26,7 +26,7 @@ function App() {
   //const [isTV, setIsTV] = useState(true);
 
   useEffect(() => {
-    fetchVideoList();
+    //fetchVideoList();
     //setDeviceInfo({...deviceInfo, 
       //width: window.innerWidth, 
       //height: window.innerHeight,
