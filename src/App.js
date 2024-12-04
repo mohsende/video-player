@@ -121,9 +121,8 @@ function App() {
   return (
     <div className="App">
       <div className='screenSize'>
-        <p>
-    {/* Device: [{rdd.deviceType} / {rdd.browserName}{rdd.isSmartTV && ' / is SmartTV'}{rdd.isDesktop && ' /  Desktop'}{rdd.isBrowser && ' /  isBrowser'}] - 
-        */}  Screen Size: {deviceInfo.width}x{deviceInfo.height}
+        <p> 123
+    {/* Device: [{rdd.deviceType} / {rdd.browserName}{rdd.isSmartTV && ' / is SmartTV'}{rdd.isDesktop && ' /  Desktop'}{rdd.isBrowser && ' /  isBrowser'}] - Screen Size: {deviceInfo.width}x{deviceInfo.height} */}
         </p>
         
       </div>
