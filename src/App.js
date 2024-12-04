@@ -5,7 +5,7 @@ import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
 import axios, * as others from 'axios';
-import * as rdd from 'react-device-detect';
+//import * as rdd from 'react-device-detect';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
@@ -121,7 +121,7 @@ function App() {
   return (
     <div className="App">
       <div className='screenSize'>
-        <p> 123
+        <p> 123456
     {/* Device: [{rdd.deviceType} / {rdd.browserName}{rdd.isSmartTV && ' / is SmartTV'}{rdd.isDesktop && ' /  Desktop'}{rdd.isBrowser && ' /  isBrowser'}] - Screen Size: {deviceInfo.width}x{deviceInfo.height} */}
         </p>
         
