@@ -69,11 +69,11 @@ function App() {
 
 
     // Bypass CORS if using TV otherwise use Cloudflare proxy if using browser
-    if (isTV) {
+    // if (isTV) {
       setCurrentVideo(video.url);
-    } else {
-      setCurrentVideo(proxyUrl);
-    }   
+    //} else {
+    //  setCurrentVideo(proxyUrl);
+    //}   
     
     setCaptions(newSubs);
   };
