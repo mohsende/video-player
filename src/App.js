@@ -121,13 +121,13 @@ function App() {
   return (
     <div className="App">
       <div className='screenSize'>
-        <p> 123456
+        <p> 12
     {/* Device: [{rdd.deviceType} / {rdd.browserName}{rdd.isSmartTV && ' / is SmartTV'}{rdd.isDesktop && ' /  Desktop'}{rdd.isBrowser && ' /  isBrowser'}] - Screen Size: {deviceInfo.width}x{deviceInfo.height} */}
         </p>
         
       </div>
-      {/* This section is for getting my TV info for setting CORS */}
-      {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
+      {/* This section is for getting my TV info for setting CORS 
+       <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
         {JSON.stringify(rdd, null, 2)}
       </pre> */}
       <div className='appContainer'>
@@ -165,12 +165,10 @@ function App() {
           handleDeleteVideo={handleDeleteVideo}
           />
         }
-        {/*
-        <div className='TV'>
+        {/* <div className='TV'>
           <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
           <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label> 
-        </div>
-        */}
+        </div> */}
         {
           showVideoList &&
           <VideoPlayer
