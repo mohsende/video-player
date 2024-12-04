@@ -23,18 +23,18 @@ function App() {
   const [captionsArrTest, setCaptionsTest] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
   const [showVideoList, setShowVideoList] = useState(true);
-  const [isTV, setIsTV] = useState(true);
+  //const [isTV, setIsTV] = useState(true);
 
   useEffect(() => {
     fetchVideoList();
-    setDeviceInfo({...deviceInfo, 
-      width: window.innerWidth, 
-      height: window.innerHeight,
-      deviceType: rdd.deviceType,
-      browserName: rdd.browserName,
-      mobileMode: rdd.mobileModel,
-      isSmartTV: rdd.isSmartTV,
-    });
+    //setDeviceInfo({...deviceInfo, 
+      //width: window.innerWidth, 
+      //height: window.innerHeight,
+      //deviceType: rdd.deviceType,
+      //browserName: rdd.browserName,
+      //mobileMode: rdd.mobileModel,
+      //isSmartTV: rdd.isSmartTV,
+    //});
     // setIsTV(true);
   }, []);
 
