@@ -16,6 +16,7 @@ function App() {
   const [movieTitle, setMovieTitle] = useState('');
   const [movieYear, setMovieYear] = useState('');
   const [subtitleFile, setSubtitleFile] = useState([]);
+  const [openSubtitle, setOpenSubtitle] = useState([]);
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
   const [deviceInfo, setDeviceInfo] = useState({});
@@ -36,6 +37,8 @@ function App() {
       isSmartTV: rdd.isSmartTV,
     });
     // setIsTV(true);
+    // console.log(openSubtitles('lost'));
+    setOpenSubtitle(searchOpenSubtitles('lost'));
   }, []);
 
   const fetchVideoList = async () => {
@@ -117,14 +120,27 @@ function App() {
   function handleShowVideoListClick() {
     setShowVideoList(show => !show);
   }
+
+  async function searchOpenSubtitles(movie){
+    const url = `${WORKER_URL}searchSubtitle?movie1=${movie}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return(data.data);
+    } catch (error) {
+      console.error(error);
+      return([error]);
+    }
+  }
+  
   // console.log('isTV: ',isTV);
+
   return (
     <div className="App">
       <div className='screenSize'>
-        <p>
-          Device: [{rdd.deviceType} / {rdd.browserName}{rdd.isSmartTV && ' / is SmartTV'}{rdd.isDesktop && ' /  Desktop'}{rdd.isBrowser && ' /  isBrowser'}] - 
-          Screen Size: {deviceInfo.width}x{deviceInfo.height}
-        </p>
+        <span>Device: {rdd.deviceType}|{rdd.browserName}{rdd.isSmartTV && '|is SmartTV'}{rdd.isDesktop && '|Desktop'}{rdd.isBrowser && '|isBrowser'}|
+        </span>
+        <span>Screen Size: {window.innerWidth}x{window.innerHeight}</span>
         
       </div>
       {/* This section is for getting my TV info for setting CORS */}
