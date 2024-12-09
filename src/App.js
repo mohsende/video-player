@@ -27,16 +27,16 @@ function App() {
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
   useEffect(() => {
-    // fetchVideoList();
-    // setDeviceInfo({...deviceInfo, 
-    //   width: window.innerWidth, 
-    //   height: window.innerHeight,
-    //   deviceType: rdd.deviceType,
-    //   browserName: rdd.browserName,
-    //   mobileMode: rdd.mobileModel,
-    //   isSmartTV: rdd.isSmartTV,
-    // });
-    
+    fetchVideoList();
+    setDeviceInfo({...deviceInfo, 
+      width: window.innerWidth, 
+      height: window.innerHeight,
+      deviceType: rdd.deviceType,
+      browserName: rdd.browserName,
+      mobileMode: rdd.mobileModel,
+      isSmartTV: rdd.isSmartTV,
+    });
+
     // setIsTV(true);
     // console.log(searchOpenSubtitles('friends'));
     // searchOpenSubtitles('friends');
