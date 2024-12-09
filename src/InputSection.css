@@ -196,3 +196,9 @@ h5 {
 .inactive {
   display: none;
 }
+
+.typeOfSearch{
+  display: flex;
+  gap: 10px
+  /* justify-content: space-between; */
+}

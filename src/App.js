@@ -27,18 +27,22 @@ function App() {
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
   useEffect(() => {
-    fetchVideoList();
-    setDeviceInfo({...deviceInfo, 
-      width: window.innerWidth, 
-      height: window.innerHeight,
-      deviceType: rdd.deviceType,
-      browserName: rdd.browserName,
-      mobileMode: rdd.mobileModel,
-      isSmartTV: rdd.isSmartTV,
-    });
+    // fetchVideoList();
+    // setDeviceInfo({...deviceInfo, 
+    //   width: window.innerWidth, 
+    //   height: window.innerHeight,
+    //   deviceType: rdd.deviceType,
+    //   browserName: rdd.browserName,
+    //   mobileMode: rdd.mobileModel,
+    //   isSmartTV: rdd.isSmartTV,
+    // });
+    
     // setIsTV(true);
-    // console.log(openSubtitles('lost'));
-    setOpenSubtitle(searchOpenSubtitles('lost'));
+    // console.log(searchOpenSubtitles('friends'));
+    // searchOpenSubtitles('friends');
+    // searchOpenSubtitles('108778');
+    // downloadOpenSubtitles(10115392);
+    // setOpenSubtitle(searchOpenSubtitles('lost'));
   }, []);
 
   const fetchVideoList = async () => {
@@ -122,15 +126,86 @@ function App() {
   }
 
   async function searchOpenSubtitles(movie){
-    const url = `${WORKER_URL}searchSubtitle?movie1=${movie}`;
+    var url = `${WORKER_URL}searchSubtitle?movie=${movie}`;
+    if (parseInt(movie)) {
+      const imdb_id = parseInt(movie);
+      url = `${WORKER_URL}searchSubtitle?imdb_id=${imdb_id}`;
+    } 
+    
+    /* 
+      attributes.feature_details: 
+      {
+        feature_id: 1783327
+        feature_type: "Movie" *
+        imdb_id: 20452218
+        movie_name: "2023 - The Deep Dark"
+        title: "The Deep Dark"
+        tmdb_id: 976830
+        year: 2023
+      }
+
+      {
+        feature_id: 2203588
+        feature_type: "Tvshow"  *
+        imdb_id: 29363690
+        movie_name: "2024 - Dark Night and Dawn"
+        title: "Dark Night and Dawn"
+        tmdb_id: 248818
+        year: 2024
+      }
+
+      {
+        episode_number: 1  *
+        feature_id: 204334
+        feature_type: "Episode"  *
+        imdb_id: 3256392
+        movie_name: "Teen Wolf - S04E01  The Dark Moon"
+        parent_feature_id: 11234
+        parent_imdb_id: 1567432
+        parent_title: "Teen Wolf"  *
+        parent_tmdb_id: 34524
+        season_number: 4  *
+        title: "The Dark Moon"
+        tmdb_id: 990382
+        year: 2014
+      }
+
+    */
+
+
     try {
       const response = await fetch(url);
       const data = await response.json();
+      console.log('data.total_pages: ', data.total_pages);
+      console.log('data.total_count: ', data.total_count);
+      console.log('movie: ', movie.toLowerCase());
+      data.data.map(item => {
+        // const movieName = item.attributes.feature_details.parent_title ?? '';
+        // if (movieName.toLowerCase() === movie.toLowerCase())
+          {console.log(item);}
+      })
       return(data.data);
     } catch (error) {
       console.error(error);
       return([error]);
     }
+  }
+
+  async function downloadOpenSubtitles(file_id) {
+    var url = `${WORKER_URL}downloadSubtitle?file_id=${file_id}`;
+
+    try {
+      const response = await fetch(url, {
+          method: 'POST',
+      });
+      const data = await response.json();
+      console.log(data);
+      return (data);
+    } catch (error) {
+      console.error(error);
+      return ([error]);
+    }
+
   }
   
   // console.log('isTV: ',isTV);
