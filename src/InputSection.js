@@ -19,6 +19,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const [subSearchFileList, setSubSearchFileList] = useState([]);
   const [typeOfSearch, setTypeOfSearch] = useState('t');
   const [api, setApi] = useState('subdl');
+  const [subtitleFileUrl, setSubtitleFileUrl] = useState('');
   const [byIMDB, setByIMDB] = useState(true);
   const [resultsPages, setResultsPages] = useState([]);
   
@@ -41,6 +42,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     }
   } else if (newName !== '') {
     suggestions[0] = newName;
+  }
+
+  function reset(){
+
   }
 
   function handleNameClick(name) {
@@ -80,6 +85,25 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     }
   };
 
+  function handlePosterClick(url, filename, title, year, poster, imdbID) {
+    setSelectedMovie({
+      title: title,
+      imdbID: imdbID
+    });
+    setFindMovies(findMovies.filter(movie => movie.Title === title)); // Show just selected movie when selected
+    const newTitle = title.replaceAll(' ', '+');
+    setNewVideo({
+      url: url,
+      filename: filename,
+      title: newTitle,
+      year: year,
+      poster: poster,
+    })
+
+    setSubSearchList([]); // clear search list for filling new results.
+    searchSubtitle(byIMDB ? imdbID.split('tt').pop() : newTitle)
+  }
+
   // set movieData and search subtitle for it when click on movie card
   const setMovieData = async (url, filename, title, year, poster, imdbID) => {
     const newTitle = title.replaceAll(' ', '+');
@@ -95,8 +119,11 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       imdbID: imdbID
     });
 
+    setSubSearchList([]); // clear search list for filling new results.
     searchSubtitle(byIMDB ? imdbID.split('tt').pop() : newTitle)
   }
+
+  //#region Subtitle Methods
 
 /*   ****** SUB API *******
   // **********************
@@ -232,9 +259,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(api === 'subdl' ? data.subtitles : data.data);
-      setSubSearchList(api === 'subdl' ? data.subtitles : data.data)
-      // console.log('data is',data);
+      // console.log(`data ${api} is`, data, api === 'subdl' ? data.subtitles || [] : data.data);
+      setSubSearchList(api === 'subdl' ? data.subtitles || [] : data.data)
       // if (api === 'subdl') {
         // setSubSearchList(data.subtitles)
         // console.log('name: ', data.results[0].name);
@@ -255,11 +281,23 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
   } 
 
-
+  function handleSubSrcChange(check){
+    setSubSearchList([]); // clear search list for filling new results.
+    setSelectedMovie({ title: null, imdbID: null });
+    setApi(check ? 'subdl' : 'open');
+  }
+  
+  // store selected subtitle files into setSubtitleFile useState
+  function handleSubSelected(files) {
+    const chosenFiles = Array.prototype.slice.call(files);
+    setSubtitleFile(chosenFiles);
+  }
   
   const handleSubtitle = async (zipUrl) => {
     
   }
+  
+  //#endregion
 
   // https://dls.bia-inja-film.click/DonyayeSerial/series/Unbelievable/Soft.Sub/S01/720p.Web-DL/Unbelievable.S01E06.720p.WEB-DL.SoftSub.DonyayeSerial.mkv
   
@@ -293,18 +331,16 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     };
   };
 
-  // store selected subtitle files into setSubtitleFile useState
-  function handleSubSelected(files) {
-    const chosenFiles = Array.prototype.slice.call(files);
-    setSubtitleFile(chosenFiles);
-  }
-
-  function handlePageselected(page) {
+  
+  function handlePageSelected(page) {
     searchMovie(selectedName, page)
   }
 
-  // console.log(subtitleFile);
-  // console.log('InputSection Reloaded');
+  function handleSubSelectChange(event) {
+    console.log(event);
+    setSubtitleFileUrl(event.target.value)
+  }
+
   return (
     <div className='inputMovie'>
       <div className='inputSection'>
@@ -345,7 +381,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             <label htmlFor='byIMDB'>Search Subtitle by IMDB ID</label>
           </div>
           <div>
-            <input id='subSrc' type='checkbox' checked={api === 'subdl'} onChange={(e) => setApi(e.target.checked ? 'subdl' : 'open')} />
+            <input id='subSrc' type='checkbox' checked={api === 'subdl'} onChange={(e) => handleSubSrcChange(e.target.checked)} />
             <label htmlFor='subSrc'>{api === 'subdl' ? 'Subdl' : 'OpenSubtitles'}</label>
           </div>
         </div>
@@ -364,42 +400,19 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         }
         {!findMovies && <h3>No movie found</h3>}
         {/* <a className={!subFileAddress ? 'inactive' : undefined} href={subFileAddress}>{subFileAddress}</a> */}
-        {/* Subtitle Search Section */}
-        {selectedMovie.title &&
-          <div className="SubSection">
-            {subSearchList.length === 0 ?
-              <h3>Searching for subtitle ... </h3> : <h3>Subtitle for {selectedMovie.title}</h3>}
-            <ul className='subSearch'>
-              {(subSearchList && subSearchList.length > 0) &&
-                subSearchList.map((result, index) =>
-                  // console.log(result)
-                  <li className='subSearchItem' key={index} /* onClick={() => searchSubtitleFileApi3(result.downloadAPI)} */ >
-                    <p>{api === 'subdl' ? result.release_name : result.attributes.release}</p>
-                  </li>
-                )}
-            </ul>
-            {subSearchFileList.length !== 0 && <h3>Download link</h3>}
-            <ul className='subFileSearch'>
-              {(subSearchFileList && subSearchFileList.length > 0) &&
-                subSearchFileList.map((link) =>
-                  <li key={link.title} onClick={() => handleSubtitle(link.url)}>
-                    <p>{link.url}</p>
-                    {/* <a href={link.url}>{link.url}</a> */}
-                  </li>)}
-            </ul>
-          </div>
-        }
         {/* Movie Search Section */}
         {findMovies &&
           <ul className='findMovieList'>
-            {findMovies.map(movie =>
+            {findMovies.map(movie => {
+              
+              return(
               <li
                 className='findMovies' 
                 key={movie.imdbID}>
                   {/* <button onClick={() => findMovieHandleClick(movie.Title)} className='movieName'>{movie.Title}</button> */}
                   <div
                     className='poster'
-                  onClick={() => setMovieData(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID)}
+                  onClick={() => handlePosterClick(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID)}
                   style={{
                       backgroundImage: `url(${movie.Poster})`,
                     }}>
@@ -411,15 +424,58 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                         display: selectedMovie.imdbID === movie.imdbID ? undefined : 'none'
                       }}>&#10003;</h2>
                   </div>
-              </li>)}
+              </li>)})}
           </ul>}
         <ul className='pageNumber' style={{ gap: '10px', justifyContent: 'center' }}>
-            {resultsPages.map((page, index) => 
-              <li key={index} 
+            {resultsPages.map((page, index) =>
+              page < 10 &&
+              <li key={index} className='page'
                   style={{ backgroundColor: '#119172', padding: '10px', borderRadius: '5px' }} 
-                  onClick={() => handlePageselected(page)}>{page}</li>
-            )}
-          </ul>
+                  onClick={() => handlePageSelected(page)}>{page}</li>
+              )}
+        </ul>
+
+        {/* Subtitle Search Section */}
+        {selectedMovie.title &&
+          <div className="SubSection">
+            {subSearchList.length === 0 ?
+              <h3>Searching for subtitle ... </h3> : <h3>{subSearchList.length} Subtitle for <span style={{ color: '#03ffc7'}}>{selectedMovie.title}</span></h3>}
+            <select onChange={handleSubSelectChange}>
+                <option>Please select a subtitle</option>
+                {subSearchList.map((result, index) => {
+                  const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
+                  const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
+                  return (
+                    <option key={index} value={file}>{name}</option>
+                  )
+                })}
+              </select>
+            <p>{subtitleFileUrl}</p>
+            {/*
+            <ul className='subSearch'>
+              {(subSearchList && subSearchList.length > 0) &&
+                subSearchList.map((result, index) => {
+                  // console.log(result)
+                  const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
+                  const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
+                  return (
+                    <li className='subSearchItem' key={index}>
+                      <p title={file}>{name}</p>
+                    </li>)
+                  })}
+            </ul>
+            */}
+            {subSearchFileList.length !== 0 && <h3>Download link</h3>}
+            <ul className='subFileSearch'>
+              {(subSearchFileList && subSearchFileList.length > 0) &&
+                subSearchFileList.map((link) =>
+                  <li key={link.title} onClick={() => handleSubtitle(link.url)}>
+                    <p>{link.url}</p>
+                    {/* <a href={link.url}>{link.url}</a> */}
+                  </li>)}
+            </ul>
+          </div>
+        }
 
         <button className='addBtn' onClick={handleAddVideo}>Add to my Video List</button>
       </div>

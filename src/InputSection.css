@@ -175,7 +175,7 @@ h5 {
   font-weight: 900;
   text-align: center;
   color: #00ff2f;
-  background-color: rgba(255, 255, 255, 0.55);
+  background-color: rgba(255, 255, 255, 0.3);
   /* position: absolute; */
   /* bottom: 0; */
   /* left: 0; */
@@ -201,4 +201,8 @@ h5 {
   display: flex;
   gap: 10px
   /* justify-content: space-between; */
+}
+
+.page:hover {
+  cursor: pointer;
 }
