@@ -20,6 +20,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const [typeOfSearch, setTypeOfSearch] = useState('t');
   const [api, setApi] = useState('subdl');
   const [subtitleFileUrl, setSubtitleFileUrl] = useState('');
+  const [openSubtitleFileUrl, setOpenSubtitleFileUrl] = useState('Nothing');
   const [byIMDB, setByIMDB] = useState(true);
   const [resultsPages, setResultsPages] = useState([]);
   
@@ -86,6 +87,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   };
 
   function handlePosterClick(url, filename, title, year, poster, imdbID) {
+    setSubtitleFileUrl('');
     setSelectedMovie({
       title: title,
       imdbID: imdbID
@@ -229,32 +231,35 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       return ([error]);
     }
   }
+  
+  */
 
   async function downloadOpenSubtitles(file_id) {
     var url = `${WORKER_URL}downloadSubtitle?file_id=${file_id}`;
-
+    console.log(url);
     try {
       const response = await fetch(url, {
         method: 'POST',
       });
       const data = await response.json();
-      console.log(data);
-      return (data);
+      // console.log(data);
+      // return (data.link);
+      setOpenSubtitleFileUrl(data.link);
     } catch (error) {
-      console.error(error);
+      console.error('download error', error);
+      setOpenSubtitleFileUrl('Not Found!!!');
       return ([error]);
     }
 
   }
 
-*/
 
 // *************************************  
 // ****** General Subtitle Search ******
 // *************************************  
   async function searchSubtitle(movieOrImdbID) {
     var url = `${WORKER_URL}searchSubtitle?api=${api}&${byIMDB ? `imdb_id` : `movie`}=${movieOrImdbID}`;
-    console.log(url);
+    // console.log(url);
 
     try {
       const response = await fetch(url);
@@ -296,6 +301,38 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const handleSubtitle = async (zipUrl) => {
     
   }
+
+  // Show subtitle file link when select a subtitle
+  async function handleSubSelectChange(event) {
+    setSubtitleFileUrl('');
+    setOpenSubtitleFileUrl('')
+    console.log(event.target.value);
+    if (event.target.value !== 'Please select a subtitle') {
+      var url = ``;
+      if (api === 'subdl') {
+        url = `https://dl.subdl.com${event.target.value}`;
+        setSubtitleFileUrl(url);
+      } else if (api === 'open') {
+        url = `${event.target.value}`;
+        await downloadOpenSubtitles(url);
+        // setSubtitleFileUrl(openSubtitleFileUrl);
+      }
+    } else {
+      // setSubtitleFileUrl('');
+      // setOpenSubtitleFileUrl('')
+    }
+    console.log('open ......', openSubtitleFileUrl);
+  }
+
+  async function handleSubtileDownload() {
+
+    // if (api === 'subdl') {
+
+    // } else if (api === 'open') {
+    //   const srtLink = await downloadOpenSubtitles(subtitleFileUrl);
+    //   console.log('srtLink: ', srtLink.link);
+    // }
+  }
   
   //#endregion
 
@@ -336,10 +373,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     searchMovie(selectedName, page)
   }
 
-  function handleSubSelectChange(event) {
-    console.log(event);
-    setSubtitleFileUrl(event.target.value)
-  }
+  
 
   return (
     <div className='inputMovie'>
@@ -439,18 +473,18 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         {selectedMovie.title &&
           <div className="SubSection">
             {subSearchList.length === 0 ?
-              <h3>Searching for subtitle ... </h3> : <h3>{subSearchList.length} Subtitle for <span style={{ color: '#03ffc7'}}>{selectedMovie.title}</span></h3>}
-            <select onChange={handleSubSelectChange}>
+              <h3>Searching for subtitle ... </h3> : <h3>Subtitle for <span className='subtitleFound'>{selectedMovie.title} - {subSearchList.length}</span> </h3>}
+            <select className='subtitlesSelect' onChange={handleSubSelectChange}>
                 <option>Please select a subtitle</option>
                 {subSearchList.map((result, index) => {
                   const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
                   const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
-                  return (
-                    <option key={index} value={file}>{name}</option>
-                  )
+                  return <option key={index} value={file}>{name}</option>
                 })}
-              </select>
-            <p>{subtitleFileUrl}</p>
+            </select>
+            {(subtitleFileUrl !== '' || openSubtitleFileUrl) && 
+              <p className='subtitleFileUrl' 
+                onClick={handleSubtileDownload}>{api === 'subdl' ? subtitleFileUrl : openSubtitleFileUrl}</p>}
             {/*
             <ul className='subSearch'>
               {(subSearchList && subSearchList.length > 0) &&

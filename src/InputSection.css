@@ -206,3 +206,22 @@ h5 {
 .page:hover {
   cursor: pointer;
 }
+
+.subtitleFound {
+  color: #d0cda8;
+}
+
+.subtitlesSelect{
+  outline: none;
+  padding: 5px;
+  background-color: #84a2a7;
+  /* margin-bottom: 10px; */
+}
+
+.subtitleFileUrl{
+  margin-top: 5px;
+  padding: 5px;
+  color: #f2fcba;
+  background-color: #505050;
+  cursor: pointer;
+}
