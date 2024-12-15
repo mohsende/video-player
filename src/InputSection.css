@@ -212,16 +212,20 @@ h5 {
 }
 
 .subtitlesSelect{
+  font-size: .9rem;
   outline: none;
   padding: 5px;
-  background-color: #84a2a7;
+  color: #fff777;
+  background-color: slategray;
+  border-radius: 5px;
   /* margin-bottom: 10px; */
 }
 
 .subtitleFileUrl{
   margin-top: 5px;
   padding: 5px;
-  color: #f2fcba;
-  background-color: #505050;
+  color: #fff777;
+  background-color: slategray;
+  border-radius: 5px;
   cursor: pointer;
 }

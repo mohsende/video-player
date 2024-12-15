@@ -337,6 +337,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   //#endregion
 
   // https://dls.bia-inja-film.click/DonyayeSerial/series/Unbelievable/Soft.Sub/S01/720p.Web-DL/Unbelievable.S01E06.720p.WEB-DL.SoftSub.DonyayeSerial.mkv
+
+  // https://upmediaa.upera.tv/2766450-11-720.mp4?ref=7wIA
   
 
   // Add videoData and subtitle if selected into formData and send it to WORKER for saving 
@@ -348,7 +350,9 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       // If subtitle selected for uploading 
       if (subtitleFile) {
         subtitleFile.forEach((file, index) => {
-          formData.append(`subtitle${index + 1}`, file);
+          const random_id = Math.floor(Math.random() * 100);
+          const type = file.name.endsWith('srt') ? 'srt' : 'vtt';
+          formData.append(`subtitle${index + 1}_${type}_${random_id}`, file); // add type of subtitle (srt or vtt) to file name 
         });
       };
 
@@ -390,7 +394,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             type="file"
             id='fileUpload'
             multiple
-            accept=".vtt"
+            accept=".vtt,.srt"
             // onChange={(e) => setSubtitleFile(e.target.files[0])}
             onChange={(e) => handleSubSelected(e.target.files)}
           />

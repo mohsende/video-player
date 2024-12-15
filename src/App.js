@@ -87,17 +87,18 @@ function App() {
 
   const handleDeleteVideo = async (url) => {
     if (window.confirm("Are you sure to delete ?")) {
-      const updatedList = videoList.filter(video => video.url !== url);
-      setVideoList(updatedList);
       setCurrentVideo('');
-      // console.log(JSON.stringify({ url }));
+      console.log(JSON.stringify({ url }));
       try {
         await fetch(WORKER_URL, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url }),
         });
+        const updatedList = videoList.filter(video => video.url !== url);
+        setVideoList(updatedList);
       } catch (error) {
+        alert(`Fail to delete:\n${url}`)
         console.error('Error deleting link:', error);
       }
     }
