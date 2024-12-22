@@ -139,6 +139,13 @@ span {
   background-color: #ffe15dcd; */
 }
 
+.SubSection {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+
 .SubSection li {
   padding: 4px;
   transition: all 250ms ease;

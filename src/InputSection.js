@@ -55,6 +55,12 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     setVideoUrl(value);
   }
 
+  // Open Dialog : select and store selected subtitle files into setSubtitleFile useState
+  // function handleSubSelected(files) {
+  //   const chosenFiles = Array.prototype.slice.call(files);
+  //   setSubtitleFile(chosenFiles);
+  // }
+
   function handleNameClick(name) {
     setSelectedName(name);
     searchMovie(name);
@@ -89,6 +95,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     }
   };
 
+  // set movieData and search subtitle for it when click on movie card
   function handlePosterClick(url, filename, title, year, poster, imdbID) {
     setSubtitleFileUrl('');
     setOpenSubtitleFileUrl('');
@@ -111,64 +118,12 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     searchSubtitle(byIMDB ? imdbID.split('tt').pop() : newTitle)
   }
 
-  // set movieData and search subtitle for it when click on movie card
-  const setMovieData = async (url, filename, title, year, poster, imdbID) => {
-    const newTitle = title.replaceAll(' ', '+');
-    setNewVideo({
-      url: url,
-      filename: filename,
-      title: newTitle,
-      year: year,
-      poster: poster,
-    })
-    setSelectedMovie({
-      title: title, 
-      imdbID: imdbID
-    });
-
-    setSubSearchList([]); // clear search list for filling new results.
-    searchSubtitle(byIMDB ? imdbID.split('tt').pop() : newTitle)
-  }
-
+  
   //#region Subtitle Methods
 
 /*   ****** SUB API *******
   // **********************
-  // ****** HAJI-API ******
-  // **********************
-  // API Search Subtitle from https://api3.haji-api.ir/
-
-  async function searchSubtitleApi3(title) {
-    const apiUrl = `https://api3.haji-api.ir/majid/movie/subtitle/search?s=${title}&license=${HAJI_LICENSE}`;
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-      if (data.result)
-        setSubSearchList(data.result);
-      else {
-        console.log('Subtitle Not Found.', data.result);
-        setSubSearchList([]);;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  // API Search SubtitleFile for download link from https://api3.haji-api.ir/
-  async function searchSubtitleFileApi3(downloadAPI) {
-    try {
-      const response = await fetch(downloadAPI);
-      const data = await response.json();
-      if (data.result)
-        setSubSearchFileList(data.result); 
-      else {
-        console.log('Subtitle file Not Found.', data.result);
-        setSubSearchFileList([]);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  
       
   // ***************************
   // ****** SUBDL.COM API ******
@@ -291,24 +246,16 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
   } 
 
+  // set the setApi useState which source for searching subtitle [ subdl / opensubtitles ]
   function handleSubSrcChange(check){
     setSubSearchList([]); // clear search list for filling new results.
     setSelectedMovie({ title: null, imdbID: null });
     setApi(check ? 'subdl' : 'open');
   }
   
-  // store selected subtitle files into setSubtitleFile useState
-  function handleSubSelected(files) {
-    const chosenFiles = Array.prototype.slice.call(files);
-    setSubtitleFile(chosenFiles);
-  }
-  
-  const handleSubtitle = async (zipUrl) => {
-    
-  }
 
   // Show subtitle file link when select a subtitle
-  async function handleSubSelectChange(event) {
+  async function handleSubtitleSelectChange(event) {
     setVttFileList([]);
     setSubtitleFileUrl('');
     setOpenSubtitleFileUrl('');
@@ -331,200 +278,45 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     console.log('open ......', openSubtitleFileUrl);
   }
 
-  async function handleSubtileDownload(event) {
-
-    handleZipFile(event.target.innerText);
-
-    // try{
-    //   const vttBlob = await extractSubtitleFromZip(event.target.innerText);
-    //   const vttUrl = URL.createObjectURL(vttBlob);
-    //   const a = document.createElement('a');
-    //   a.href = vttUrl;
-    //   a.download = 'output.vtt';
-    //   a.click();
-    //   console.log('vttUrl:', vttUrl);
-    //   URL.revokeObjectURL(vttUrl)
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    
-    
-    // extractSubtitleFromZip(event.target.innerText);
-    
-    
-    
-    // if (api === 'subdl') {
-
-    // } else if (api === 'open') {
-    //   const srtLink = await downloadOpenSubtitles(subtitleFileUrl);
-    //   console.log('srtLink: ', srtLink.link);
-    // }
-  }
-
-  // ***********************
-  // start part 1
-
   
-  async function extractSubtitleFromZip(zipUrl) {
-    try {
-      console.log('zipUrl', zipUrl);
-      // دانلود فایل ZIP از URL
-      const zipResponse = await fetch(zipUrl);
-      const zipData = await zipResponse.arrayBuffer();
-
-      // باز کردن فایل ZIP
-      const jszip = new JSZip();
-      const zip = await jszip.loadAsync(zipData);
-      const subtitles = [];
-
-      // جستجوی فایل‌های SRT و تبدیل به VTT
-      for (const [filename, file] of Object.entries(zip.files)) {
-        console.log(filename);
-        if (filename.endsWith('.srt')) {
-          const srtContent = await file.async('string');
-          const vttContent = `WEBVTT\n\n${srtContent
-            .replace(/\r\n|\r|\n/g, '\n') // Normalize line breaks
-            .replace(
-              /(\d{2}:\d{2}:\d{2}),(\d{3})/g,
-              '$1.$2' // Replace commas with dots in timestamps
-            )}`;
-
-          // Return the VTT content
-          return new Blob([vttContent], { type: 'text/vtt' });
-        
-          // const vttContent = convertSrtToVtt(srtContent);
-
-          subtitles.push({ filename: filename.replace('.srt', '.vtt'), content: vttContent });
-        }
-      }
-
-      console.log(subtitles)
-      // در صورتی که زیرنویسی یافت نشد
-      // if (subtitles.length === 0) return new Response('No subtitles found in ZIP', { status: 404 });
-
-      // برگرداندن نتیجه در قالب JSON
-      // return new Response(JSON.stringify(subtitles), {
-      //   headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      // });
-    } catch (error) {
-      console.log(error);
-      throw error;
-      // return new Response('Error processing ZIP file', { status: 500 });
-    }
-  }
-
-  async function extractSubtitleFromZip(zipUrl) {
-    try {
-      console.log('zipUrl', zipUrl);
-      // دانلود فایل ZIP از URL
-      const zipResponse = await fetch(zipUrl);
-      const zipData = await zipResponse.arrayBuffer();
-
-      // باز کردن فایل ZIP
-      const jszip = new JSZip();
-      const zip = await jszip.loadAsync(zipData);
-      const subtitles = [];
-
-      // جستجوی فایل‌های SRT و تبدیل به VTT
-      for (const [filename, file] of Object.entries(zip.files)) {
-        console.log(filename);
-        if (filename.endsWith('.srt')) {
-          const srtContent = await file.async('string');
-          const vttContent = convertSrtToVtt(srtContent);
-
-          subtitles.push({ filename: filename.replace('.srt', '.vtt'), content: vttContent });
-        }
-      }
-
-      console.log(subtitles)
-      // در صورتی که زیرنویسی یافت نشد
-      // if (subtitles.length === 0) return new Response('No subtitles found in ZIP', { status: 404 });
-
-      // برگرداندن نتیجه در قالب JSON
-      // return new Response(JSON.stringify(subtitles), {
-      //   headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      // });
-    } catch (error) {
-      console.log(error);
-      // return new Response('Error processing ZIP file', { status: 500 });
-    }
-  }
-
-  // تبدیل SRT به VTT
-  function convertSrtToVtt(srtContent) {
-    let vttContent = 'WEBVTT\n\n';
-    vttContent += srtContent
-      .replace(/\r\n/g, '\n')
-      .replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2'); // تبدیل فرمت زمان
-    return vttContent;
-  }
-
-  // TEST convert srtUrl to vtt file
-  async function convertSrtToVtt(srtUrl) {
-    try {
-      // Fetch the SRT file from the given URL
-      const response = await fetch(srtUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch the SRT file: ${response.statusText}`);
-      }
-
-      const srtContent = await response.text();
-
-      // Convert SRT to VTT format
-      const vttContent = `WEBVTT\n\n${srtContent
-        .replace(/\r\n|\r|\n/g, '\n') // Normalize line breaks
-        .replace(
-          /(\d{2}:\d{2}:\d{2}),(\d{3})/g,
-          '$1.$2' // Replace commas with dots in timestamps
-        )}`;
-
-      // Return the VTT content
-      return new Blob([vttContent], { type: 'text/vtt' });
-    } catch (error) {
-      console.error('Error during SRT to VTT conversion:', error);
-      throw error;
-    }
-  }
-
-  // end part 1
-  // ***********************
-
-
-  // ***********************
-  // start part 2
-
+  // unzip from a url and convert srt to vtt
   async function handleZipFile(zipUrl) {
-    const zipResponse = await fetch(zipUrl);
-    const zipData = await zipResponse.arrayBuffer();
-    const zip = await JSZip.loadAsync(zipData);
-    const vttFiles = [];
-    const vttFilesContent = [];
-
-    for (const [filename, file] of Object.entries(zip.files)) {
-      if (filename.endsWith('.srt')) {
-        const srtContent = await file.async("string");
-        const vttContent = convertSrtToVtt(srtContent);
-        const vttFilename = filename.replace('.srt', '.vtt');
-
-        // fill select for choosing a vtt to add to movieData
-        vttFilesContent.push({ vttFilename: vttFilename, vttContent: vttContent });
-        
-        
-        // await saveFileToCloudflare(vttFilename, vttContent);
-        vttFiles.push(`/subs/${vttFilename}`);
+    try{
+      const zipResponse = await fetch(zipUrl);
+      const zipData = await zipResponse.arrayBuffer();
+      const zip = await JSZip.loadAsync(zipData);
+      const vttFiles = [];
+      const vttFilesContent = [];
+      
+      for (const [filename, file] of Object.entries(zip.files)) {
+        if (filename.endsWith('.srt')) {
+          const srtContent = await file.async("string");
+          const vttContent = convertSrtToVtt(srtContent);
+          const vttFilename = filename.replace('.srt', '.vtt');
+          
+          // fill select for choosing a vtt to add to movieData
+          vttFilesContent.push({ vttFilename: vttFilename, vttContent: vttContent });
+          
+          
+          // await saveFileToCloudflare(vttFilename, vttContent);
+          vttFiles.push(`/subs/${vttFilename}`);
+        }
       }
+      
+      setVttFileList(vttFilesContent);
+      return vttFiles;
+    } catch (error) {
+      console.log(error);
     }
-    
-    setVttFileList(vttFilesContent);
-    return vttFiles;
   }
 
+  // convert srt to vtt
   function convertSrtToVtt(srtContent) {
     return 'WEBVTT\n\n' + srtContent.replace(/\r\n|\n/g, '\n').replace(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/g, '$1:$2:$3.$4');
   }
 
-
-  function handleVttSelection(filename) {
+  // add vtt subtitle to subtitleFile useState
+  function handleVttSelectChange(filename) {
     const vttFile = vttFileList.filter(vtt => vtt.vttFilename === filename);
     // console.log(vttFile);
     const { vttFilename, vttContent } = vttFile[0];
@@ -534,16 +326,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       const blob = new Blob([vttContent], { type: 'text/vtt' });
       const file = new File([blob], vttFilename, { type: 'text/vtt' });
       
-      console.log('blob:', blob);
-      console.log('file:', file);
       // اضافه کردن فایل به setSubtitleFile
       setSubtitleFile((prevFiles) => [...prevFiles, file]);
-    }
+    } 
   }
-
-  // end part 2
-  // ***********************
-  
 
   //#endregion
 
@@ -587,8 +373,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     searchMovie(selectedName, page)
   }
 
-
-
   async function getFileNameFromUrl(url) {
     // const oldFilename = new URL(url).pathname.split('/').pop();
     try {
@@ -620,14 +404,14 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             onChange={(e) => handleVideoUrlChange(e.target.value)}
             placeholder="Enter video URL"
           />
-          <input
+          {/* <input
             type="file"
             id='fileUpload'
             multiple
             accept=".vtt"
             // onChange={(e) => setSubtitleFile(e.target.files[0])}
             onChange={(e) => handleSubSelected(e.target.files)}
-          />
+          /> */}
         </div>
         {/* <button className='clearBtn' onClick={handleClearList}>-</button> */}
       </div>
@@ -711,7 +495,9 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
           <div className="SubSection">
             {subSearchList.length === 0 ?
               <h3>Searching for subtitle ... </h3> : <h3>Subtitle for <span className='subtitleFound'>{selectedMovie.title} - {subSearchList.length}</span> </h3>}
-            <select className='subtitlesSelect' onChange={handleSubSelectChange}>
+
+              {/* List of subtitles that found based of selected source [ subdl / opensubtitles ] */}
+            <select className='subtitlesSelect' onChange={handleSubtitleSelectChange}>
                 <option>Please select a subtitle</option>
                 {subSearchList.map((result, index) => {
                   const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
@@ -722,23 +508,21 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             
 
 
-
-
-
             {(subtitleFileUrl !== '' || openSubtitleFileUrl) && 
             <div>
-              <p className='subtitleFileUrl' style={{display: 'none'}}
-                onClick={handleSubtileDownload}>{api === 'subdl' ? subtitleFileUrl : openSubtitleFileUrl}</p>
-                <select className='vttSelect' defaultValue='select' onChange={(event) => handleVttSelection(event.target.value)}>
-                  <option value='select'>Please select a vtt subtitle</option>
+              {/* Show the URL of zip file or srt subtitle */}
+              {/* <p className='subtitleFileUrl' style={{display: ''}}
+                onClick={handleSubtileDownload}>{api === 'subdl' ? subtitleFileUrl : openSubtitleFileUrl}</p> */}
+
+                {/* list of vtt files that unzip from zip which selected  */}
+                <select className='vttSelect' defaultValue='defult' onChange={(event) => handleVttSelectChange(event.target.value)}>
+                  <option value='defult'>Please select a vtt subtitle</option>
                   {subtitleFileUrl && vttFileList.map((result, index) => {
                     const content = api === 'subdl' ? result.vttContent : 'No subdl';
                     const name = api === 'subdl' ? result.vttFilename : result.attributes.release ?? result.attributes.slug;
                     // const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
                     return <option key={index} title={content} value={name}>{name}</option>
                 })}
-                  
-
               </select>
             </div>}
             {/*
@@ -759,14 +543,12 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
 
             {/*subSearchFileList.length !== 0 && <h3>Download link</h3>*/}
-            <ul className='subFileSearch'>
+            {/* <ul className='subFileSearch'>
               {(subSearchFileList && subSearchFileList.length > 0) &&
-                subSearchFileList.map((link) =>
-                  <li key={link.title} onClick={() => handleSubtitle(link.url)}>
-                    <p>{link.url}</p>
-                    {/* <a href={link.url}>{link.url}</a> */}
-                  </li>)}
-            </ul>
+                subSearchFileList.map((link) => <li key={link.title} onClick={() => handleSubtitle(link.url)}><p>{link.url}</p></li>)}
+            </ul> */}
+
+
           </div>
         }
 
