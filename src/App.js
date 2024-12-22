@@ -98,7 +98,7 @@ function App() {
         const updatedList = videoList.filter(video => video.url !== url);
         setVideoList(updatedList);
       } catch (error) {
-        alert(`Fail to delete:\n${url}`)
+        alert(`Fail to delete:\n ${url}`)
         console.error('Error deleting link:', error);
       }
     }
@@ -209,6 +209,20 @@ function App() {
 
   }
   
+  const urls = [
+    'https://s4.irdanlod.ir/files/Serial/T/Tomorrow/S01/Tomorrow.S01E01.720p.Farsi.Subbed.mkv',
+    'https://upmediaa.upera.tv/3007344-0-720.mp4?ref=7wIA',
+    'https://dlmoovie.ir/content/download/c6627fc4-8a50-49f8-37d4-08daf0099b3d/481cd73e-aee1-4a7b-9b84-bb90ba37d911/HSHD720',
+  ];
+
+  // "https://s40.upera.net/3007344-0-Spellbound-720.mp4?owner=6945754&bs=28&ref=1794068&id=30073441046055732"
+  // https://dlmoovie.ir/content/download/c6627fc4-8a50-49f8-37d4-08daf0099b3d/481cd73e-aee1-4a7b-9b84-bb90ba37d911/HSHD720
+  // https://upmediaa.upera.tv/3007344-0-720.mp4?ref=7wIA
+  // https://d2qguwbxlx1sbt.cloudfront.net/TextInMotion-VideoSample-720p.mp4
+
+
+
+
   // console.log('isTV: ',isTV);
 
   return (

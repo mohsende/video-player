@@ -51,6 +51,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
   }
 
+  async function handleVideoUrlChange(value) {
+    setVideoUrl(value);
+  }
+
   function handleNameClick(name) {
     setSelectedName(name);
     searchMovie(name);
@@ -63,12 +67,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     try {
       const response = await fetch(apiUrlMovie);
       const data = await response.json();
-      // console.log('data.response', data);
       if (data.Response) {
         if (typeOfSearch === 't') {
           setResultsPages([]);
           setFindMovies(new Array(data)); 
-          // console.log(data);
         } else {
           const totalPages = parseInt(data.totalResults / 10)
           const pages = new Array();
@@ -77,7 +79,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
           }
           setResultsPages(pages);
           setFindMovies(data.Search); 
-          // console.log('pages:',pages);
         }
       } else {
         setFindMovies([]);
@@ -522,19 +523,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     return 'WEBVTT\n\n' + srtContent.replace(/\r\n|\n/g, '\n').replace(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/g, '$1:$2:$3.$4');
   }
 
-  async function saveFileToCloudflare(filename, content) {
-    console.log('filename:', filename);
-    try{
-      await fetch(`https://videolinks.bugatichapi.workers.dev/subs/${filename}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'text/vtt' },
-        body: content
-      });
-    } catch(error) {
-      console.log(error);
-    }
-    
-  }
 
   function handleVttSelection(filename) {
     const vttFile = vttFileList.filter(vtt => vtt.vttFilename === filename);
@@ -599,6 +587,23 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     searchMovie(selectedName, page)
   }
 
+
+
+  async function getFileNameFromUrl(url) {
+    // const oldFilename = new URL(url).pathname.split('/').pop();
+    try {
+      const response = await fetch(url, { method: 'GET', headers: { Range: 'bytes=0-10' } });
+      if (response.ok) {
+        const newFilename = new URL(response.url).pathname.split('/').pop();
+        const cleanedFilename = newFilename.replace(/^\d+-\d+-/, '');
+        return (cleanedFilename);
+      }
+    } catch (error) {
+      console.log("Error fetching file name:", error);
+    }
+  }
+
+
   // console.log('subtitleFileUrl',subtitleFileUrl);
   // console.log('openSubtitleFileUrl',openSubtitleFileUrl);
 
@@ -612,14 +617,14 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             type="text"
             className='videoUrl'
             value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
+            onChange={(e) => handleVideoUrlChange(e.target.value)}
             placeholder="Enter video URL"
           />
           <input
             type="file"
             id='fileUpload'
             multiple
-            accept=".vtt,.srt"
+            accept=".vtt"
             // onChange={(e) => setSubtitleFile(e.target.files[0])}
             onChange={(e) => handleSubSelected(e.target.files)}
           />
@@ -637,11 +642,11 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         <div className='typeOfSearch'>
           <div>
             <input id='typeOfSearch' type='checkbox' checked={typeOfSearch === 's'} onChange={(e) => setTypeOfSearch(e.target.checked ? 's' : 't')} />
-            <label htmlFor='typeOfSearch'>Search all Movies</label>
+            <label htmlFor='typeOfSearch'>All Movies</label>
           </div>
           <div>
             <input id='byIMDB' type='checkbox' checked={byIMDB} onChange={(e) => setByIMDB(e.target.checked)} />
-            <label htmlFor='byIMDB'>Search Subtitle by IMDB ID</label>
+            <label htmlFor='byIMDB'>By IMDB ID</label>
           </div>
           <div>
             <input id='subSrc' type='checkbox' checked={api === 'subdl'} onChange={(e) => handleSubSrcChange(e.target.checked)} />
@@ -680,12 +685,14 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                       <div className='movieData'>
                         <span className='title'>{movie.Title}</span>
                       <div className='type'><span>{movie.Type && movie.Type.toUpperCase()}</span> <span className='year'>{movie.Year}</span></div>
-                        {movie.imdbRating && <span className='imdbRating'>IMDB: {movie.imdbRating}/10</span>}
-                        {movie.Metascore && <span className='Metascore'>Metascore: {movie.Metascore}</span>}
-                        {movie.Plot && <span className='plot'>{movie.Plot}</span>}
+                        {movie.imdbRating && 
+                          <span className='imdbRating'>IMDB: {movie.imdbRating}/10</span>}
+                        {movie.Metascore && 
+                          <span className='Metascore'>Metascore: {movie.Metascore}</span>}
+                        {movie.Plot && 
+                          <span className='plot'>{movie.Plot}</span>}
                         <div className='vttSelected'>
-                          
-                        {subtitleFile.map((file, index) => <p key={index}><span className='vvtFile' >{file.name}</span></p>)}
+                          {subtitleFile.map((file, index) => <p key={index}><span className='vvtFile' >{file.name}</span></p>)}
                         </div>
                       </div>
                   </div>
