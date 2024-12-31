@@ -1,12 +1,13 @@
 @media screen and (max-width: 640px) {
   .appContainer{
     width: 100%;
+    /* width: var(--find-movie-width, 400px); */
   }
 
   .findMovies {
-    width: 375px;
-    height: 585px;
-  }
+    width: var(--find-movie-width, 400px);
+    /* height: 585px; */
+  } 
 
   .movieCard{
     width: 150px;

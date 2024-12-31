@@ -27,9 +27,11 @@ function App() {
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
   useEffect(() => {
+
     fetchVideoList();
-    setDeviceInfo({...deviceInfo, 
-      width: window.innerWidth, 
+    setDeviceInfo({
+      ...deviceInfo,
+      width: window.innerWidth,
       height: window.innerHeight,
       deviceType: rdd.deviceType,
       browserName: rdd.browserName,
@@ -37,12 +39,23 @@ function App() {
       isSmartTV: rdd.isSmartTV,
     });
 
-    // setIsTV(true);
-    // console.log(searchOpenSubtitles('friends'));
-    // searchOpenSubtitles('friends');
-    // searchOpenSubtitles('108778');
-    // downloadOpenSubtitles(10115392);
-    // setOpenSubtitle(searchOpenSubtitles('lost'));
+    const updateCSSVariable = () => {
+      const deviceWidth = rdd.isMobile ? window.innerWidth : window.innerWidth;
+
+      if (deviceWidth < 400) {
+        document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 20}px`);
+      } else {
+        // document.documentElement.style.setProperty("--find-movie-width", "350px");
+      }
+    };
+
+    // تنظیم مقدار اولیه
+    updateCSSVariable();
+
+    // گوش دادن به تغییر سایز صفحه
+    window.addEventListener("resize", updateCSSVariable);
+    return () => window.removeEventListener("resize", updateCSSVariable);
+
   }, []);
 
   const fetchVideoList = async () => {
@@ -55,12 +68,12 @@ function App() {
     }
   };
 
-  const handleVideoClick = async(url) => {
+  const handleVideoClick = async (url) => {
     const video = videoList.find(video => video.url === url);
-    
+
     // Generate proxy URL
     const proxyUrl = `${WORKER_URL}proxyVideo/${encodeURIComponent(url)}`;
-    
+
     // Find subtitles
     const subtitles = Object.keys(video)
       .filter(key => key.startsWith("subtitle"))
@@ -80,8 +93,8 @@ function App() {
       setCurrentVideo(video.url);
     } else {
       setCurrentVideo(proxyUrl);
-    }   
-    
+    }
+
     setCaptions(newSubs);
   };
 
@@ -126,13 +139,13 @@ function App() {
     setShowVideoList(show => !show);
   }
 
-  async function searchOpenSubtitles(movie){
+  async function searchOpenSubtitles(movie) {
     var url = `${WORKER_URL}searchSubtitle?movie=${movie}`;
     if (parseInt(movie)) {
       const imdb_id = parseInt(movie);
       url = `${WORKER_URL}searchSubtitle?imdb_id=${imdb_id}`;
-    } 
-    
+    }
+
     /* 
       attributes.feature_details: 
       {
@@ -183,12 +196,12 @@ function App() {
       data.data.map(item => {
         // const movieName = item.attributes.feature_details.parent_title ?? '';
         // if (movieName.toLowerCase() === movie.toLowerCase())
-          {console.log(item);}
+        { console.log(item); }
       })
-      return(data.data);
+      return (data.data);
     } catch (error) {
       console.error(error);
-      return([error]);
+      return ([error]);
     }
   }
 
@@ -197,7 +210,7 @@ function App() {
 
     try {
       const response = await fetch(url, {
-          method: 'POST',
+        method: 'POST',
       });
       const data = await response.json();
       console.log(data);
@@ -208,7 +221,7 @@ function App() {
     }
 
   }
-  
+
   const urls = [
     'https://s4.irdanlod.ir/files/Serial/T/Tomorrow/S01/Tomorrow.S01E01.720p.Farsi.Subbed.mkv',
     'https://upmediaa.upera.tv/3007344-0-720.mp4?ref=7wIA',
@@ -231,7 +244,7 @@ function App() {
         <span>Device: {rdd.deviceType}|{rdd.browserName}{rdd.isSmartTV && '|is SmartTV'}{rdd.isDesktop && '|Desktop'}{rdd.isBrowser && '|isBrowser'}|
         </span>
         <span>Screen Size: {window.innerWidth}x{window.innerHeight}</span>
-        
+
       </div>
       {/* This section is for getting my TV info for setting CORS */}
       {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
@@ -267,9 +280,9 @@ function App() {
         {
           showVideoList &&
           <VideoList
-          videoList={videoList}
-          handleVideoClick={handleVideoClick}
-          handleDeleteVideo={handleDeleteVideo}
+            videoList={videoList}
+            handleVideoClick={handleVideoClick}
+            handleDeleteVideo={handleDeleteVideo}
           />
         }
         <div className='TV'>
@@ -279,8 +292,8 @@ function App() {
         {
           showVideoList &&
           <VideoPlayer
-          currentVideo={currentVideo}
-          captionsArr={captionsArr}
+            currentVideo={currentVideo}
+            captionsArr={captionsArr}
           />
         }
       </div>

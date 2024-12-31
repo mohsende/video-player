@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Children } from 'react';
 import JSZip from 'jszip';
 import './InputSection.css';
 import { type } from '@testing-library/user-event/dist/type';
+import userEvent from '@testing-library/user-event';
 
 const OMDB_API_URL = 'https://www.omdbapi.com/?apikey=c3327b94&';
 // const HAJI_LICENSE = 'aNxVui2gLkJwqJEAadpiOtUXw44zoHR8rop9crfmXSc';
@@ -21,10 +22,16 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const [vttFileList, setVttFileList] = useState([]);
   const [typeOfSearch, setTypeOfSearch] = useState('t');
   const [api, setApi] = useState('subdl');
+  const [fileType, setFileType] = useState('mp4');
   const [subtitleFileUrl, setSubtitleFileUrl] = useState('');
   const [openSubtitleFileUrl, setOpenSubtitleFileUrl] = useState('');
   const [byIMDB, setByIMDB] = useState(true);
   const [resultsPages, setResultsPages] = useState([]);
+  const [fileData, setFileData] = useState({
+    filename: 'filename',
+    season: 1,
+    episode: 1,
+  });
   
   const [newVideo, setNewVideo] = useState({
     url: undefined,
@@ -47,6 +54,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     suggestions[0] = newName;
   }
 
+  const mp4Ref = useRef(null);
+  const mkvRef = useRef(null);
   // console.log('findMovies:', findMovies);
 
   useEffect(() => {
@@ -84,6 +93,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         if (typeOfSearch === 't') {
           setResultsPages([]);
           setFindMovies(new Array(data)); 
+
         } else {
           const totalPages = parseInt(data.totalResults / 10)
           const pages = new Array();
@@ -92,6 +102,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
           }
           setResultsPages(pages);
           setFindMovies(data.Search); 
+          console.log(pages);
         }
         myRef.current.scrollIntoView({
           behavior: 'smooth'
@@ -110,10 +121,24 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     setSubtitleFileUrl('');
     setOpenSubtitleFileUrl('');
     setSubtitleFile([]);
+    setSubSearchList([])
+    setVttFileList([]);
+  }
+
+  function handleFileTypeClick(type) {
+    if (type === 'mkv') {
+      mkvRef.current.className = 'selected';
+      mp4Ref.current.className = '';
+    } else {
+      mp4Ref.current.className = 'selected';
+      mkvRef.current.className = '';
+    }
+    setFileType(type);
   }
 
   // set movieData and search subtitle for it when click on movie card
-  function handlePosterClick(url, filename, title, year, poster, imdbID) {
+  function handlePosterClick(url, filename, title, year, poster, imdbID, e) {
+    const className = e.target.parentElement?.className;
     reset();
     setSelectedMovie({
       title: title,
@@ -128,12 +153,22 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       year: year,
       poster: poster,
     })
+  }
 
+  function handleSearchSubtitleClick(event, imdbID, title) {
     setSubSearchList([]); // clear search list for filling new results.
-    searchSubtitle(byIMDB ? imdbID.split('tt').pop() : newTitle)
+    setSelectedMovie({
+      title: title,
+      imdbID: imdbID
+    });
+    searchSubtitle(byIMDB ? imdbID.split('tt').pop() : title)
+    event.stopPropagation();
   }
 
   
+  // https://film2movie.upera.tv/2759169-0-720.mp4?ref=lKB6
+
+
   //#region Subtitle Methods
 
 /*   ****** SUB API *******
@@ -275,7 +310,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     }
   }
 
-  
   // unzip from a url and convert srt to vtt
   async function handleZipFile(zipUrl) {
     try{
@@ -315,9 +349,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   // add vtt subtitle to subtitleFile useState
   function handleVttSelectChange(filename) {
     const vttFile = vttFileList.filter(vtt => vtt.vttFilename === filename);
-    // console.log(vttFile);
     const { vttFilename, vttContent } = vttFile[0];
-    if (window.confirm(`This is Okey ?\n${vttContent}`)) {
+    if (window.confirm(`This is Okey ?\n${vttContent.substring(0, 100)}`)) {
 
       // تبدیل VTT content به فایل Blob
       const blob = new Blob([vttContent], { type: 'text/vtt' });
@@ -334,6 +367,40 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
   // https://upmediaa.upera.tv/2766450-11-720.mp4?ref=7wIA
   
+
+  // set Season and Episode number
+  function handleSeasonEpisodeClick(op, isSeason) {
+    if (isSeason) {
+      if (op === "-") {
+        if (fileData.season > 1) {
+          setFileData({
+            ...fileData,
+            season: fileData.season - 1,
+          });
+        }
+      } else {
+        setFileData({
+          ...fileData,
+          season: fileData.season + 1,
+        });
+      }
+    } else {
+      if (op === "-") {
+        if (fileData.episode > 1) {
+          setFileData({
+            ...fileData,
+            episode: fileData.episode - 1,
+          });
+        }
+      } else {
+        setFileData({
+          ...fileData,
+          episode: fileData.episode + 1,
+        });
+      };
+    };
+  };
+
 
   // Add videoData and subtitle if selected into formData and send it to WORKER for saving 
   const handleAddVideo = async () => {
@@ -385,7 +452,20 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   }
 
 
-  // console.log('subtitleFileUrl',subtitleFileUrl);
+  function handleSubtitleClick(filename) {
+    const newList = subtitleFile.filter(file => file.name !== filename);
+    setSubtitleFile(newList);
+  }
+
+
+
+
+  function handleFileDataClick(event) {
+    event.stopPropagation();
+  }
+
+  // console.log(subtitleFile);
+  // console.log('subtitleFile',subtitleFile);
   // console.log('openSubtitleFileUrl',openSubtitleFileUrl);
 
 
@@ -423,7 +503,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         <div className='typeOfSearch'>
           <div>
             <input id='typeOfSearch' type='checkbox' checked={typeOfSearch === 's'} onChange={(e) => setTypeOfSearch(e.target.checked ? 's' : 't')} />
-            <label htmlFor='typeOfSearch'>All Movies</label>
+            <label htmlFor='typeOfSearch'>All</label>
           </div>
           <div>
             <input id='byIMDB' type='checkbox' checked={byIMDB} onChange={(e) => setByIMDB(e.target.checked)} />
@@ -471,21 +551,82 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                     {/* <button onClick={() => findMovieHandleClick(movie.Title)} className='movieName'>{movie.Title}</button> */}
                     <div
                       className='poster'
-                      onClick={() => handlePosterClick(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID)}
+                      onClick={(e) => handlePosterClick(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID, e)}
                       style={{ backgroundImage: `url(${movie.Poster})`, }}>
                       <div className='movieData'>
                         <span className='title'>{movie.Title}</span>
-                        <div className='type'><span>{movie.Type && movie.Type.toUpperCase()}</span> <span className='year'>{movie.Year}</span></div>
-                        {movie.imdbRating &&
-                          <span className='imdbRating'>IMDB: {movie.imdbRating}/10</span>}
-                        {movie.Metascore &&
-                          <span className='Metascore'>Metascore: {movie.Metascore}</span>}
-                        {movie.Plot &&
-                          <span className='plot'>{movie.Plot}</span>}
-                        <div className='vttSelected'>
-                          {subtitleFile.map((file, index) => <p key={index}><span className='vvtFile' >{file.name}</span></p>)}
+                        <div className='type'>
+                          <span>{movie.Type && movie.Type.toUpperCase()}</span> <span className='year'>{movie.Year}</span>
                         </div>
+                        {movie.imdbRating && <span className='imdbRating'>IMDB: {movie.imdbRating}/10</span>}
+                        {movie.Metascore && <span className='Metascore'>Metascore: {movie.Metascore}</span>}
+                        {movie.Plot && <span className='plot'>{movie.Plot}</span>}
+                        <button onClick={(event) => handleSearchSubtitleClick(event, movie.imdbID, movie.Title)} className='search-subtitle-btn'>Search Subtitle</button>
+
                       </div>
+
+
+
+
+
+                      {selectedMovie.title &&
+                        <div className='fileData' onClick={(event) => handleFileDataClick(event)}>
+                          <div className='section-row file-name'>
+                            <span>File name</span>
+                            <input className='' style={{ width: 'auto' }}
+                              type='text'
+                              value={movie.Type === 'series' ? movie.Title + '-S' + fileData.season + 'E' + fileData.episode : movie.Title}
+                              // value=`${fileData.season}S${fileData.season}E${fileData.episode}`
+                              onChange={(e) => setFileData({ ...fileData, filename: e.target.value })}
+                            />
+                          </div>
+
+                          {movie.Type === 'series' && <>
+                            <div className="section-row season-episode">
+                              <span className="title">Season</span>
+                              <div className="picker">
+                                <button onClick={() => handleSeasonEpisodeClick("-", true)}>
+                                  -
+                                </button>
+                                <span>{fileData.season}</span>
+                                <button onClick={() => handleSeasonEpisodeClick("+", true)}>
+                                  +
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="section-row season-episode">
+                              <span className="title">Episode</span>
+                              <div className="picker">
+                                <button onClick={() => handleSeasonEpisodeClick("-", false)}>
+                                  -
+                                </button>
+                                <span>{fileData.episode}</span>
+                                <button onClick={() => handleSeasonEpisodeClick("+", false)}>
+                                  +
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className='section-row file-type'>
+                              <button ref={mkvRef} className='' onClick={() => handleFileTypeClick('mkv')}>mkv</button>
+                              <button ref={mp4Ref} className='' onClick={() => handleFileTypeClick('mp4')}>mp4</button>
+                            </div></>
+                          }
+
+                          {subtitleFile.length > 0 &&
+                            <div className='vttSelected'>
+                              {subtitleFile.map((file, index) => <p key={index}
+                                className='vttFile section-row'
+                                onClick={() => handleSubtitleClick(file.name)}>
+                                {file.name}
+                              </p>)}
+                            </div>
+                          }
+                        </div>
+                      }
+
+
                     </div>
                   </li>)
               })}
@@ -493,9 +634,12 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         }
 
 
+
+
+
         {/* Page numbers */}
         {(findMovies && findMovies.length > 1) &&
-          <ul className='pageNumber' style={{ gap: '10px', justifyContent: 'center' }}>
+          <ul className='pageNumber'>
             {resultsPages.map((page, index) =>
               page < 10 &&
               <li key={index} className='page'
@@ -508,8 +652,16 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
 
 
+
+
+
+
+
+
+
+
         {/* Subtitle Search Section */}
-        {selectedMovie.title &&
+        {subSearchList.length !== 0 &&
           <div className="SubSection">
             {subSearchList.length === 0 ?
               <h3>Searching for subtitle ... </h3> : <h3>Subtitle for <span className='subtitleFound'>{selectedMovie.title} - {subSearchList.length}</span> </h3>}
@@ -526,9 +678,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
             
 
 
-
-
-            {(subtitleFileUrl !== '' || openSubtitleFileUrl) && 
+          {/* {(subtitleFileUrl !== '' || openSubtitleFileUrl) &&  */}
+          {(vttFileList.length > 0) && 
             <div>
               {/* Show the URL of zip file or srt subtitle */}
               {/* <p className='subtitleFileUrl' style={{display: ''}}
@@ -541,31 +692,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                     const content = api === 'subdl' ? result.vttContent : 'No subdl';
                     const name = api === 'subdl' ? result.vttFilename : result.attributes.release ?? result.attributes.slug;
                     // const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
-                    return <option key={index} title={content} value={name}>{name}</option>
+                    return <option key={index} /*title={content}*/ value={name}>{name}</option>
                 })}
               </select>
             </div>}
-            {/*
-            <ul className='subSearch'>
-              {(subSearchList && subSearchList.length > 0) &&
-                subSearchList.map((result, index) => {
-                  // console.log(result)
-                  const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
-                  const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
-                  return (
-                    <li className='subSearchItem' key={index}>
-                      <p title={file}>{name}</p>
-                    </li>)
-                  })}
-            </ul>
-            */}
-
-            {/*subSearchFileList.length !== 0 && <h3>Download link</h3>*/}
-            {/* <ul className='subFileSearch'>
-              {(subSearchFileList && subSearchFileList.length > 0) &&
-                subSearchFileList.map((link) => <li key={link.title} onClick={() => handleSubtitle(link.url)}><p>{link.url}</p></li>)}
-            </ul> */}
-
           </div>
         }
       <div style={{ padding: '5px 10px' }}>

@@ -146,22 +146,130 @@ span {
 
 .movieData .plot {
   font-size: 0.8rem;
-  /* opacity: 0.7; */
-  /* color: #3d3d3dd3;
-  background-color: #ffe15dcd; */
+}
+
+.fileData {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 5px;
+
+  font-weight: bold;
+  line-height: 30px;
+}
+
+
+.file-name {
+  display: flex;
+  padding: 5px;
+}
+
+.file-name span {
+  /* width: 100px; */
+}
+
+.file-name input {
+  padding: 0;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.season-episode {
+  padding: 5px;
+  /* width: 100%; */
+  /* border: 1px solid blue; */
+  /* display: flex; */
+  justify-content: space-between;
+}
+
+.season-episode .title {
+  /* width: 100px; */
+}
+
+.picker {
+  display: flex;
+  gap: 5px;
+  /* width: 150px; */
+  /* height: 30px; */
+}
+
+.picker button,
+.picker span {
+  width: 30px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+}
+
+.picker button {
+  background-color: gray;
+  color: white;
+}
+
+.picker span {
+  border: 1px solid gray;
+  background-color: #ffffffb4;
+  color: rgb(39, 39, 39);
+  width: 50px;
+  text-align: center;
+}
+
+.section-culomn,
+.section-row {
+  display: flex;
+  background: #0000008c;
+  border-radius: 10px;
+
+}
+
+.section-culomn {
+  gap: 5px;
+  flex-direction: column;
+}
+
+.section-row {
+  flex-direction: row;
+  gap: 7px;
+}
+
+.file-type {
+  /* justify-content: space-around; */
+  /* align-self: flex-end; */
+  padding: 5px;
+}
+
+.file-type button {
+  flex-grow: 1;
+  line-height: 22px;
+  border-radius: 7px;
+  background-color: rgba(255, 255, 255, 0.27);
+}
+
+.file-type button.selected {
+  background-color: #ff6557;
+}
+
+.season input,
+.episode input {
+  /* width: 50px; */
+  /* padding: 10px; */
+  /* font-size: 1rem; */
+  /* background-color: transparent; */
+  /* color: #ffffff; */
+  /* font-weight: bold; */
 }
 
 .SubSection {
   display: flex;
-  gap: 5px;
   flex-direction: column;
+  gap: 5px;
   margin-bottom: 5px;
+  padding: 5px 10px;
 }
 
 .SubSection li {
   padding: 4px;
   transition: all 250ms ease;
-  /* scale: 1; */
 }
 
 .SubSection li:hover {
@@ -185,18 +293,20 @@ span {
 }
 
 .findMovieList {
+  margin-top: 10px;
   list-style-type: none;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 0;
+  align-items: center;
   /* align-content: center; */
   /* justify-content: space-evenly; */
   /* gap: 10px; */
 }
 
 .findMovies {
-  /* border-radius: 10px; */
+  border-radius: 10px;
   overflow: hidden;
   transition: all 250ms ease;
   aspect-ratio: 2/3;
@@ -213,6 +323,7 @@ span {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  justify-content: space-between;
   position: relative;
 }
 
@@ -260,14 +371,22 @@ h5 {
 
 .typeOfSearch{
   display: flex;
-  gap: 10px
+  gap: 10px;
+    justify-content: space-between;
+  }
+  
+  .typeOfSearch div {
+    display: flex;
+    gap: 5px;
   /* justify-content: space-between; */
 }
 
 .pageNumber{
   list-style-type: none;
   display: flex;
+  justify-content: center;
   gap: 10px;
+  margin-top: 10px;
   padding: 0;
 }
 
@@ -290,22 +409,19 @@ h5 {
   /* margin-bottom: 10px; */
 }
 
-.vttSelect span {
-  margin-top: 10px;
+.vttSelected {
+  /* padding: 5px; */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.vttSelected span {
-  margin-right: 5px;
-  font-size: .8rem;
-  background-color: rgba(255, 0, 0, 0.687);
-}
-
-.vttSelected p {
-  padding-bottom: 5px;
-}
-
-.vvtFile {
-  
+.vttFile {
+  padding: 5px;
+  font-size: 10px;
+  line-height: normal;
+  line-break: anywhere;
+  color: #fffb20;
 }
 
 .subtitleFileUrl{
@@ -316,4 +432,13 @@ h5 {
   background-color: slategray;
   border-radius: 5px;
   cursor: pointer;
+}
+.search-subtitle-btn {
+  width: 100%;
+  line-height: 35px;
+  font-weight: bold;
+  background-color: rgba(52, 124, 196, 0.832);
+  color: #ffffff;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
