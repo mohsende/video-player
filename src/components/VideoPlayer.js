@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import './VideoPlayer.css'
+// import './VideoPlayer.css'
+import './VideoPlayer.scss'
 
 function VideoPlayer({currentVideo, captionsArr}) {
   // const [selectedCaption, setSelectedCaption] = useState([]);
@@ -23,13 +24,13 @@ function VideoPlayer({currentVideo, captionsArr}) {
   // };
 
   return (
-    <div className='videoPlayers'>
+    <div className='video-players'>
       {currentVideo &&
         <div className='player'>
-          <div className="reactPlayer-wrapper">
+          <div className="react-player-wrapper">
             <ReactPlayer
-              className='reactPlayer'
-                url={currentVideo}
+              className='react-player'
+              url={currentVideo}
               config={{
                 file: {
                   attributes: {
@@ -38,8 +39,8 @@ function VideoPlayer({currentVideo, captionsArr}) {
                     tracks: captionsArr,
                 },
               }}
-              width='70%' height='auto'
-              style={{ minWidth: '370px' }}
+              width='100%' height='auto'
+              style={{ minWidth: '375px' }}
               controls
             />
           </div>

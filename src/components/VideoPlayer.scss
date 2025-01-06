@@ -1,0 +1,19 @@
+@import '../styles.scss';
+@import './App.scss';
+
+.video-players {
+  text-align: justify;
+  padding-top: 10px;
+  .player {
+    .react-player-wrapper {
+      position: relative;
+      max-width: 100%;
+      height: auto;
+      .react-player {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+}

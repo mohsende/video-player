@@ -1,5 +1,5 @@
 /* VideoList.css */
-.movieList {
+/* .movieList {
   padding: 0 5px ;
   margin-top: 20px;
   text-align: justify;
@@ -7,14 +7,13 @@
   display: flex;
   flex-wrap: wrap;
   flex-basis: 33%;
-}
+} */
 
-.movieCard {
+/* .movieCard {
   margin: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* aspect-ratio: 2/3; */
   font-size: 1.2rem;
   background-color: rgba(255, 255, 255, 0.045);
   border-radius: 10px;
@@ -25,28 +24,19 @@
   -ms-transition: opacity 200ms ease-in-out;
   -o-transition: opacity 200ms ease-in-out;
   transition: opacity 200ms ease-in-out;
-  
-}
+} */
 
-.movieCard:hover {
+/* .movieCard:hover {
   background-color: rgba(255, 255, 255, 0.121);
   opacity: 1;
-}
+} */
 
-.movieCardContent {
+/* .movieCardContent {
   display: flex;
   flex-direction: column;
-  /* border-radius: 10px 10px 0 0; */
-}
-.movieCard img {
-  width: 100px;
-}
+} */
 
-.movieCard img:hover {
-  cursor: pointer;
-}
-
-.videoName {
+/* .videoName {
   height: auto;
   overflow-wrap: break-word;
   hyphens: auto;
@@ -56,59 +46,38 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: auto;
-    /* -webkit-line-clamp: auto; */
   -webkit-box-orient: vertical;
-  
-}
+} */
 
-.videoName {
+/* .videoName {
   padding: 5px;
-    font-size: 0.7rem;
-    background-color: #ffffff1a;
+  font-size: 0.7rem;
+  background-color: #ffffff1a;
   cursor: pointer;
-}
+} */
 
-.isSub {
+/* .isSub {
   color: yellow;
   text-shadow: 1px 1px 5px #000;
-}
+} */
 
-.deleteBtn {
+/* .deleteBtn {
   width: 100%;
-    margin: 0;
-    padding: 5px;
+  margin: 0;
+  padding: 5px;
   color: white;
   background-color: rgb(161, 68, 86);
-    font-size: 1rem;
-    opacity: 0.2;
-    -webkit-transition: opacity 200ms ease-in-out;
-    -moz-transition: opacity 200ms ease-in-out;
-    -ms-transition: opacity 200ms ease-in-out;
-    -o-transition: opacity 200ms ease-in-out;
-    transition: opacity 200ms ease-in-out;
-}
+  font-size: 1rem;
+  opacity: 0.2;
+  -webkit-transition: opacity 200ms ease-in-out;
+  -moz-transition: opacity 200ms ease-in-out;
+  -ms-transition: opacity 200ms ease-in-out;
+  -o-transition: opacity 200ms ease-in-out;
+  transition: opacity 200ms ease-in-out;
+} */
 
-.deleteBtn:hover {
+/* .deleteBtn:hover {
   cursor: pointer;
   color: white;
   opacity: 0.6;
-}
-.ulTest {
-  display: flex;
-  gap: 10px;
-  padding: 10px 0;
-}
-
-.rel {
-  position: relative;
-  width: 200px;
-}
-.abs {
-  position: absolute;
-  width: 100%;
-  padding-top: calc(3 / 2 * 100%);
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
-}
+} */

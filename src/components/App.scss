@@ -1,0 +1,93 @@
+@import '../styles.scss';
+
+$breakpoint-mobile: 400px;
+$breakpoint-tablet: 1024px;
+$showHidebtnColor: rgba(0, 247, 255, 0.302);
+
+* {
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: rgb(71, 71, 71);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  height: calc(100vh - 10px);
+  position: relative;
+  .screen-size {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: whitesmoke;
+    text-align: 'right';
+    opacity: 0.3
+  }
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    .show {
+      &-input-section,
+      &-video-list {
+        font-size: 1.2rem;
+        outline: none;
+        padding: 5px 10px;
+        color: white;
+      }
+      &-input-section {
+        background-color: $showHidebtnColor;
+        margin-bottom: 5px;
+      }
+      &-video-list {
+        background-color: $showHidebtnColor;
+      }
+    }
+    .TV {
+      margin-top: 10px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      #TV {
+        width: 20px;
+        height: 20px;
+        color: rgb(23, 174, 188);
+        accent-color: #ffff00;
+      }
+    }
+
+  }
+
+  @media screen and (max-width: $breakpoint-mobile) {
+    .app-container {
+      width: 100%;
+      // width: var(--find-movie-width, 400px); 
+    }
+    .video-player {
+      width: 320px;
+    }
+  }
+  @media screen and (min-width: $breakpoint-mobile) {
+    .app-container {
+      width: 90%;
+      // width: var(--find-movie-width, 400px);
+    }
+
+  }
+  
+  
+  
+  
+  
+  
+  
+
+}

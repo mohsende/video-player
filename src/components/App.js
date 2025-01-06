@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
-import './mediaQuery.css';
+// import './mediaQuery.css';
+// import './mediaQuery.scss';
+// import './App.css';
+import './App.scss';
 import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
@@ -23,7 +25,7 @@ function App() {
   const [captionsArr, setCaptions] = useState([]);
   const [captionsArrTest, setCaptionsTest] = useState([]);
   const [showInputSection, setShowInputSection] = useState(false);
-  const [showVideoList, setShowVideoList] = useState(true);
+  const [showVideoList, setShowVideoList] = useState(rdd.isSmartTV);
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
   useEffect(() => {
@@ -240,7 +242,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className='screenSize'>
+      <div className='screen-size'>
         <span>Device: {rdd.deviceType}|{rdd.browserName}{rdd.isSmartTV && '|is SmartTV'}{rdd.isDesktop && '|Desktop'}{rdd.isBrowser && '|isBrowser'}|
         </span>
         <span>Screen Size: {window.innerWidth}x{window.innerHeight}</span>
@@ -250,10 +252,10 @@ function App() {
       {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
         {JSON.stringify(rdd, null, 2)}
       </pre> */}
-      <div className='appContainer'>
+      <div className='app-container'>
         {/* <h1>MDe Player</h1> */}
         <button
-          className='showInputSection'
+          className='show-input-section'
           onClick={handleShowInputSectionClick}>
           {showInputSection ? 'Hide Input Movie' : 'Show Input Movie'}
         </button>
@@ -273,7 +275,7 @@ function App() {
         }
 
         <button
-          className='showVideoList'
+          className='show-video-list'
           onClick={handleShowVideoListClick}>
           {showVideoList ? 'Hide Movie list' : 'Show Movie list'}
         </button>

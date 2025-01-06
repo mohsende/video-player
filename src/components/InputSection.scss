@@ -1,0 +1,298 @@
+@import '../styles.scss';
+
+.input-movie {
+  display: flex;
+  flex-direction: column;
+  input {
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    text-align: center;
+  }
+  input[type=file] {
+    color: rgb(72, 72, 72);
+    background-color: rgb(241, 241, 241);
+  }
+  button {
+    font-size: 1.2rem;
+    outline: none;
+    padding: 5px 10px;
+    color: white;
+    background-color: rgb(75, 152, 162);
+    &:hover {
+      opacity: 1;
+    }
+  }
+  span {
+    color: whitesmoke;
+  }
+  .input-section {
+    padding: 0 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    .input {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      gap: 5px;
+      .video-url {
+        flex-grow: 1.2;
+        font-size: 1.2rem;
+        padding: 10px;
+        outline: none;
+        background-color: whitesmoke;
+      }
+    }
+  }
+  .movie-section {
+    padding: 5px 10px 0px;
+    color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .new-name {
+      padding: 5px;
+      font-size: 1rem;
+    }
+    .type-of-search {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      div {
+        display: flex;
+        gap: 5px;
+      }
+    }
+    .movie-name-guesses {
+      padding: 0;
+      gap: 10px;
+      justify-self: baseline;
+      .movie-name {
+        transition: all 250ms ease;
+        scale: 1;
+        &:hover {
+          transition: all 250ms ease;
+          scale: 1.05;
+          cursor: pointer;
+        }
+        button {
+          border-radius: 5px;
+          padding: 2px 10px;
+        }
+      }
+    }
+  }
+  .find-movie-section {
+    .selected {
+      box-shadow: 1px 1px 20px 0px rgba(136, 136, 136, 0.5);
+      color: #fff306;
+    }
+    .find-movie-list {
+      margin-top: 10px;
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0;
+      align-items: center;
+      .find-movies {
+        width: var(--find-movie-width, 400px);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 250ms ease;
+        aspect-ratio: 2/3;
+        &:hover {  }
+        .poster {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          justify-content: space-between;
+          position: relative;
+          .movie-data {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            span {
+              opacity: 0.6;
+              font-weight: 600;
+              padding: 2px 8px;
+              border-radius: 5px;
+              color: #ffffff;
+              background-color: #000000c3;
+            }
+            .title {
+              font-size: 1.4rem;
+              opacity: 0.8;
+            }
+            .plot {
+              font-size: 0.8rem;
+            }
+            .search-subtitle-btn {
+              width: 100%;
+              line-height: 35px;
+              font-weight: bold;
+              background-color: rgba(52, 124, 196, 0.832);
+              color: #ffffff;
+              border-radius: 5px;
+              box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            }
+          }
+          .file-data {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            gap: 5px;
+            font-weight: bold;
+            line-height: 30px;
+            .section {
+              &-column,
+              &-row {
+                display: flex;
+                background: #0000008c;
+                border-radius: 10px;
+              }
+              &-column {
+                gap: 5px;
+                flex-direction: column;
+              }
+              &-row {
+                flex-direction: row;
+                gap: 7px;
+              }
+            }
+            .file-name {
+              display: flex;
+              padding: 5px;
+              input {
+                padding: 0;
+                text-align: center;
+                flex-grow: 1;
+              }
+            }
+            .season-episode {
+              padding: 5px;
+              justify-content: space-between;
+              .title {  }
+              .picker {
+                display: flex;
+                gap: 5px;
+                button,
+                span {
+                  outline: none;
+                  border-radius: 5px;
+                }
+                button {
+                  width: 30px;
+                  color: white;
+                  background-color: gray;
+                  border: none;
+                }
+                span {
+                  width: 50px;
+                  text-align: center;
+                  color: rgb(39, 39, 39);
+                  background-color: #ffffffb4;
+                  border: 1px solid gray;
+                }
+              }
+            }
+            .file-type {
+              padding: 5px;
+              button {
+                flex-grow: 1;
+                line-height: 22px;
+                border-radius: 7px;
+                background-color: rgba(255, 255, 255, 0.27);
+              }
+            }
+            .vtt-selected {
+              display: flex;
+              flex-direction: column;
+              gap: 5px;
+              .vtt-file {
+                padding: 5px;
+                font-size: 10px;
+                line-height: normal;
+                line-break: anywhere;
+                color: #fffb20;
+              }
+            }
+          }
+        }
+      }
+    }
+    .page-number {
+      margin-top: 10px;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      list-style-type: none;
+      gap: 10px;
+      color: #fff;
+    }
+  }
+  .sub-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    li {
+      padding: 4px;
+      transition: all 250ms ease;
+      &:hover {
+        transition: all 250ms ease;
+        /* scale: 1.05; */
+        cursor: pointer;
+        color: white;
+        background-color: rgb(120, 56, 131);
+      }
+    }
+    h3 {
+      .subtitle-found {
+        color: #fffbbd;
+      }
+    }
+    .subtitles-select,
+    .vtt-select {
+      width: -webkit-fill-available;
+      font-size: .9rem;
+      outline: none;
+      padding: 5px;
+      color: #fff777;
+      background-color: slategray;
+      border-radius: 5px;
+    }
+  }
+  .add-button {
+    .add-btn {
+      margin: 5px auto;
+      background-color: rgb(0, 166, 50);
+      width: 100%;
+      border-radius: 5px;
+    }
+  }
+
+
+
+
+
+
+  
+
+}
+
+
+

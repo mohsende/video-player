@@ -1,73 +1,69 @@
 /* InputSection.css */
-.inputMovie {
+/* .inputMovie {
   width: 100%;
   display: flex;
   flex-direction: column;
-}
+} */
 
-input{
+/* input{
   border: none;
   outline: none;
   border-radius: 5px;
   text-align: center;
-}
+} */
 
-.inputSection {
-  padding: 0 10px;
-  margin-top: 10px;
-  /* width: 100%; */
-  display: flex;
-  justify-content: center;
-}
-
-.input {
-  display: flex;
-  /* min-width: 280px; */
-  width: 100%;
-  /* max-width: 700px; */
-  flex-direction: column;
-  gap: 5px;
-}
-
-.videoUrl {
-  flex-grow: 1.2;
-  font-size: 1.2rem;
-  padding: 10px;
-  outline: none;
-  background-color: whitesmoke;
-}
-
-input[type=file] {
+/* input[type=file] {
   color: rgb(72, 72, 72);
   background-color: rgb(241, 241, 241);
-}
+} */
 
-.newName {
-  
-  padding: 5px;
-  font-size: 1rem;
-  /* margin-bottom: 5px; */
-}
-
-button {
+/* button {
   font-size: 1.2rem;
   outline: none;
   padding: 5px 10px;
   color: white;
   background-color: rgb(75, 152, 162);
-}
+} */
 
-button:hover {
+/* button:hover {
   opacity: 1;
-}
+} */
 
-.addBtn {
+/* span {
+  color: whitesmoke;
+} */
+
+/* .inputSection {
+  padding: 0 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+} */
+
+/* .input {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 5px;
+} */
+
+/* .videoUrl {
+  flex-grow: 1.2;
+  font-size: 1.2rem;
+  padding: 10px;
+  outline: none;
+  background-color: whitesmoke;
+} */
+
+
+
+
+/* .addBtn {
   margin: 5px auto;
   background-color: rgb(0, 166, 50);
   width: 100%;
   border-radius: 5px;
-  /* opacity: 0.8; */
-}
+} */
 
 .clearBtn {
   background-color: rgb(255, 98, 50);
@@ -75,80 +71,81 @@ button:hover {
   opacity: 0.8;
 }
 
-span {
-  color: whitesmoke;
-}
+
 
 .isSelected {
   color: slategrey;
 }
 
-.movieSection {
+/* .newName {
+  padding: 5px;
+  font-size: 1rem;
+} */
+
+/* .movieSection {
   padding: 5px 10px 10px;
   color: whitesmoke;
   display: flex;
   flex-direction: column;
   gap: 5px;
-}
+} */
 
-.movieSection ul {
+/* .movieSection ul {
   list-style: none;
   display: flex;
-  /* justify-content: center; */
   flex-wrap: wrap;
-}
+} */
 
-.movieNameGuesses {
+/* .movieNameGuesses {
   padding: 0;
   gap: 10px;
-  /* flex-direction: column; */
   justify-self: baseline;
-}
+} */
 
-.movieName {
+/* .movieName {
   transition: all 250ms ease;
   scale: 1;
-}
+} */
 
-.movieName button {
+/* .movieName button {
   border-radius: 5px;
   padding: 2px 10px;
-}
+} */
 
-.movieName:hover {
+/* .movieName:hover {
   transition: all 250ms ease;
   scale: 1.05;
   cursor: pointer;
-}
+} */
 
-.movieData {
+/* .movieData {
   padding: 15px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
   
-}
+} */
 
-.movieData span {
+/* .movieData span {
   opacity: 0.6;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 5px;
   color: #ffffff;
   background-color: #000000c3;
-}
+} */
 
-.movieData .title {
+/* .movieData .title {
   font-size: 1.4rem;
   opacity: 0.8;
-}
+} */
 
-.movieData .plot {
+/* .movieData .plot {
   font-size: 0.8rem;
-}
+} */
 
-.fileData {
+/* .fileData {
   display: flex;
   flex-direction: column;
   padding: 15px;
@@ -156,98 +153,91 @@ span {
 
   font-weight: bold;
   line-height: 30px;
-}
+} */
 
 
-.file-name {
+/* .file-name {
   display: flex;
   padding: 5px;
-}
+} */
 
 .file-name span {
   /* width: 100px; */
 }
 
-.file-name input {
+/* .file-name input {
   padding: 0;
   text-align: center;
   flex-grow: 1;
-}
+} */
 
-.season-episode {
+/* .season-episode {
   padding: 5px;
-  /* width: 100%; */
-  /* border: 1px solid blue; */
-  /* display: flex; */
   justify-content: space-between;
-}
+} */
 
 .season-episode .title {
   /* width: 100px; */
 }
 
-.picker {
+/* .picker {
   display: flex;
   gap: 5px;
-  /* width: 150px; */
-  /* height: 30px; */
-}
+} */
 
-.picker button,
+/* .picker button,
 .picker span {
   width: 30px;
   outline: none;
   border: none;
   border-radius: 5px;
-}
+} */
 
-.picker button {
+/* .picker button {
   background-color: gray;
   color: white;
-}
+} */
 
-.picker span {
+/* .picker span {
   border: 1px solid gray;
   background-color: #ffffffb4;
   color: rgb(39, 39, 39);
   width: 50px;
   text-align: center;
-}
+} */
 
-.section-culomn,
+/* .section-culomn,
 .section-row {
   display: flex;
   background: #0000008c;
   border-radius: 10px;
 
-}
+} */
 
-.section-culomn {
+/* .section-culomn {
   gap: 5px;
   flex-direction: column;
-}
+} */
 
-.section-row {
+/* .section-row {
   flex-direction: row;
   gap: 7px;
-}
+} */
 
-.file-type {
-  /* justify-content: space-around; */
-  /* align-self: flex-end; */
+/* .file-type {
   padding: 5px;
-}
+} */
 
-.file-type button {
+/* .file-type button {
   flex-grow: 1;
   line-height: 22px;
   border-radius: 7px;
   background-color: rgba(255, 255, 255, 0.27);
-}
+} */
 
-.file-type button.selected {
+/* .file-type button.selected {
   background-color: #ff6557;
-}
+} */
 
 .season input,
 .episode input {
@@ -259,40 +249,39 @@ span {
   /* font-weight: bold; */
 }
 
-.SubSection {
+/* .SubSection {
   display: flex;
   flex-direction: column;
   gap: 5px;
   margin-bottom: 5px;
   padding: 5px 10px;
-}
+} */
 
-.SubSection li {
+/* .SubSection li {
   padding: 4px;
   transition: all 250ms ease;
-}
+} */
 
-.SubSection li:hover {
+/* .SubSection li:hover {
   transition: all 250ms ease;
-  /* scale: 1.05; */
   cursor: pointer;
   color: white;
   background-color: rgb(120, 56, 131);
-}
+} */
 
-.subSearch{
-  /* gap: 0; */
-}
+/* .subSearch{
+  
+} */
 
-.SubSection ul{
+/* .SubSection ul{
   flex-direction: column;
-}
+} */
 
-.subFileSearch a {
+/* .subFileSearch a {
   color: white;
-}
+} */
 
-.findMovieList {
+/* .findMovieList {
   margin-top: 10px;
   list-style-type: none;
   display: flex;
@@ -300,22 +289,20 @@ span {
   gap: 10px;
   padding: 0;
   align-items: center;
-  /* align-content: center; */
-  /* justify-content: space-evenly; */
-  /* gap: 10px; */
-}
+} */
 
-.findMovies {
+/* .findMovies {
   border-radius: 10px;
   overflow: hidden;
   transition: all 250ms ease;
   aspect-ratio: 2/3;
-}
-.findMovies:hover {
-  /* scale: 1.02; */
-}
+} */
 
-.poster {
+/* .findMovies:hover {
+
+} */
+
+/* .poster {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -325,20 +312,19 @@ span {
   background-size: cover;
   justify-content: space-between;
   position: relative;
-}
+} */
 
-h5 {
+/* h5 {
   padding: 10px;
   text-align: center;
   background-color: rgb(0 0 0 / 40%);
-}
+} */
 
-.selected{
-  /* border: 2px solid #00ff2f; */
+/* .selected {
   box-shadow: 1px 1px 20px 0px rgba(136, 136, 136, 0.5);
-}
+} */
 
-.selectedMovie {
+/* .selectedMovie {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -348,57 +334,46 @@ h5 {
   text-align: center;
   color: #00ff2f;
   background-color: rgba(255, 255, 255, 0.3);
-  /* position: absolute; */
-  /* bottom: 0; */
-  /* left: 0; */
-  /* width: 100%; */
-  /* left: 50%; */
-  /* top: 50%; */
-  /* transform: translate(-50%, -30%); */
-  /* margin: 0; */
-  /* padding: 10px 30px; */
-  /* border-radius: 10px; */
-}
+} */
 
-.movieCardContent{
+/* .movieCardContent{
   width: 100%;
   height: 100%;
-}
+} */
 
-.inactive {
+/* .inactive {
   display: none;
-}
+} */
 
-.typeOfSearch{
+/* .typeOfSearch{
   display: flex;
   gap: 10px;
-    justify-content: space-between;
-  }
+  justify-content: space-between;
+} */
   
-  .typeOfSearch div {
-    display: flex;
-    gap: 5px;
-  /* justify-content: space-between; */
-}
+/* .typeOfSearch div {
+  display: flex;
+  gap: 5px;
+} */
 
-.pageNumber{
+/* .pageNumber{
   list-style-type: none;
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
   padding: 0;
-}
+} */
 
-.page:hover {
+/* .page:hover {
   cursor: pointer;
-}
+} */
 
-.subtitleFound {
+/* .subtitleFound {
   color: #d0cda8;
-}
+} */
 
-.subtitlesSelect, .vttSelect{
+/* .subtitlesSelect, .vttSelect{
   width: -webkit-fill-available;
   font-size: .9rem;
   outline: none;
@@ -406,34 +381,32 @@ h5 {
   color: #fff777;
   background-color: slategray;
   border-radius: 5px;
-  /* margin-bottom: 10px; */
-}
+} */
 
-.vttSelected {
-  /* padding: 5px; */
+/* .vttSelected {
   display: flex;
   flex-direction: column;
   gap: 5px;
-}
+} */
 
-.vttFile {
+/* .vttFile {
   padding: 5px;
   font-size: 10px;
   line-height: normal;
   line-break: anywhere;
   color: #fffb20;
-}
+} */
 
-.subtitleFileUrl{
-  
+/* .subtitleFileUrl{
   margin-top: 5px;
   padding: 5px;
   color: #fff777;
   background-color: slategray;
   border-radius: 5px;
   cursor: pointer;
-}
-.search-subtitle-btn {
+} */
+
+/* .search-subtitle-btn {
   width: 100%;
   line-height: 35px;
   font-weight: bold;
@@ -441,4 +414,4 @@ h5 {
   color: #ffffff;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
+} */
