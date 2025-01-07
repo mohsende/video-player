@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef, Children } from 'react';
 import JSZip from 'jszip';
-import './InputSection.css';
-import './InputSection.scss';
-import { type } from '@testing-library/user-event/dist/type';
-import userEvent from '@testing-library/user-event';
+import '../styles/InputSection.scss';
+// import { type } from '@testing-library/user-event/dist/type';
+// import userEvent from '@testing-library/user-event';
 
-const OMDB_API_URL = 'https://www.omdbapi.com/?apikey=c3327b94&';
 // const HAJI_LICENSE = 'aNxVui2gLkJwqJEAadpiOtUXw44zoHR8rop9crfmXSc';
+const OMDB_API_URL = 'https://www.omdbapi.com/?apikey=c3327b94&';
 const HAJI_LICENSE = 'Os0vxtpXI1RyggywxkJBrufpSYat3aAZn3w6H2qUgaqJu14znW7t1';
 const SUBDL_API_URL = 'https://api.subdl.com/api/v1/subtitles?api_key=h11PHJkLrVYI9ha6crzlKtt-UDAD_2OF&languages=fa&';
 

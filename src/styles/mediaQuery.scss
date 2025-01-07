@@ -1,32 +1,31 @@
 @media screen and (max-width: 640px) {
-  .app-container {
-    width: 100%;
-    /* width: var(--find-movie-width, 400px); */
-  }
+  // .app-container {
+  //   width: 100%;
+  //   /* width: var(--find-movie-width, 400px); */
+  // }
 
-  .findMovies {
-    width: var(--find-movie-width, 400px);
-    /* height: 585px; */
-  }
+  // .findMovies {
+  //   width: var(--find-movie-width, 400px);
+  //   /* height: 585px; */
+  // }
 
-  .movieCard {
-    width: 150px;
-    height: 220px;
-  }
+  // .movieCard {
+  //   width: 150px;
+  //   height: 220px;
+  // }
 }
 
-@media screen and (min-width: 641px)
-/* and (max-width: 800px) */
+@media screen and (min-width: 641px) /* and (max-width: 800px) */
   {
-  .findMovies {
-    width: 200px;
-    height: 300px;
-  }
+  // .findMovies {
+  //   width: 200px;
+  //   height: 300px;
+  // }
 
-  .movieCard {
-    width: 150px;
-    height: 220px;
-  }
+  // .movieCard {
+  //   width: 150px;
+  //   height: 220px;
+  // }
 }
 
 @media screen and (min-width: 801px) and (max-width: 1024px) {}
@@ -37,13 +36,13 @@
 
 /* Portrait and Landscape */
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2) {
-  .showInputSection {
-    /* width: 200px; */
-  }
+  // .showInputSection {
+  //   width: 200px;
+  // }
 
-  .screenSize {
-    font-size: .9rem;
-  }
+  // .screenSize {
+  //   font-size: .9rem;
+  // }
 }
 
 /* Portrait */

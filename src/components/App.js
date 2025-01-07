@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-// import './mediaQuery.css';
-// import './mediaQuery.scss';
-// import './App.css';
-import './App.scss';
+import '../styles/App.scss';
 import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
-import axios, * as others from 'axios';
 import * as rdd from 'react-device-detect';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// import './VideoList.css';
-import './VideoList.scss';
+import '../styles/VideoList.scss';
 
 
 function VideoList({ videoList, handleVideoClick, handleDeleteVideo }) {

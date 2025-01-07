@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-// import './VideoPlayer.css'
-import './VideoPlayer.scss'
+import '../styles/VideoPlayer.scss'
 
 function VideoPlayer({currentVideo, captionsArr}) {
   // const [selectedCaption, setSelectedCaption] = useState([]);
