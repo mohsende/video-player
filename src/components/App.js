@@ -9,18 +9,12 @@ const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
 
 function App() {
-  const [videoUrl, setVideoUrl] = useState('');
-  const [posterUrl, setPosterUrl] = useState('');
-  const [movieTitle, setMovieTitle] = useState('');
-  const [movieYear, setMovieYear] = useState('');
-  const [subtitleFile, setSubtitleFile] = useState([]);
   const [openSubtitle, setOpenSubtitle] = useState([]);
   const [videoList, setVideoList] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
   const [deviceInfo, setDeviceInfo] = useState({});
   const [captionsArr, setCaptions] = useState([]);
-  const [captionsArrTest, setCaptionsTest] = useState([]);
-  const [showInputSection, setShowInputSection] = useState(false);
+  const [showInputSection, setShowInputSection] = useState(!rdd.isSmartTV);
   const [showVideoList, setShowVideoList] = useState(rdd.isSmartTV);
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
@@ -36,12 +30,13 @@ function App() {
       mobileMode: rdd.mobileModel,
       isSmartTV: rdd.isSmartTV,
     });
-
     const updateCSSVariable = () => {
       const deviceWidth = rdd.isMobile ? window.innerWidth : window.innerWidth;
+      const deviceHeight = rdd.isMobile ? window.innerWidth : window.innerHeight;
 
       if (deviceWidth < 400) {
         document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 20}px`);
+        document.documentElement.style.setProperty("--find-movie-height", `${deviceHeight - 20}px`);
       } else {
         // document.documentElement.style.setProperty("--find-movie-width", "350px");
       }
@@ -49,10 +44,11 @@ function App() {
 
     // تنظیم مقدار اولیه
     updateCSSVariable();
-
+    
     // گوش دادن به تغییر سایز صفحه
     window.addEventListener("resize", updateCSSVariable);
     return () => window.removeEventListener("resize", updateCSSVariable);
+
 
   }, []);
 
@@ -96,10 +92,10 @@ function App() {
     setCaptions(newSubs);
   };
 
-  const handleDeleteVideo = async (url) => {
+  const handleDeleteVideo = async (event, url) => {
+    event.stopPropagation();
     if (window.confirm("Are you sure to delete ?")) {
       setCurrentVideo('');
-      console.log(JSON.stringify({ url }));
       try {
         await fetch(WORKER_URL, {
           method: 'DELETE',
@@ -259,10 +255,10 @@ function App() {
           showInputSection &&
           <InputSection
             WORKER_URL={WORKER_URL}
-            videoUrl={videoUrl}
-            setVideoUrl={setVideoUrl}
-            subtitleFile={subtitleFile}
-            setSubtitleFile={setSubtitleFile}
+            // videoUrl={videoUrl}
+            // setVideoUrl={setVideoUrl}
+            // subtitleFile={subtitleFile}
+            // setSubtitleFile={setSubtitleFile}
             handleClearList={handleClearList}
             videoList={videoList}
             setVideoList={setVideoList}

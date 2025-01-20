@@ -1,6 +1,12 @@
-import React, { useEffect, useState, useRef, Children } from 'react';
+import React, { useEffect, useState, useRef, Children, useCallback } from 'react';
 import JSZip from 'jszip';
 import '../styles/InputSection.scss';
+import Modal from './Modal.js';
+
+// Modal.setAppElement('#root');
+// import { BottomSheet } from 'react-spring-bottom-sheet';
+// import 'react-spring-bottom-sheet/dist/style.css';
+
 // import { type } from '@testing-library/user-event/dist/type';
 // import userEvent from '@testing-library/user-event';
 
@@ -10,7 +16,10 @@ const HAJI_LICENSE = 'Os0vxtpXI1RyggywxkJBrufpSYat3aAZn3w6H2qUgaqJu14znW7t1';
 const SUBDL_API_URL = 'https://api.subdl.com/api/v1/subtitles?api_key=h11PHJkLrVYI9ha6crzlKtt-UDAD_2OF&languages=fa&';
 
 
-function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubtitleFile, videoList, setVideoList, setShowInputSection, handleClearList }) {
+function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection, handleClearList }) {
+  const [videoUrl, setVideoUrl] = useState('');
+  const [subtitleFile, setSubtitleFile] = useState([]);
+
   const fileName = videoUrl.split('/').pop();
   const movieNameSuggestion = fileName.split('.')
   const suggestions = [];
@@ -18,7 +27,10 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   const [newName, setNewName] = useState('');
   const [selectedName, setSelectedName] = useState(null);
   const [subSearchList, setSubSearchList] = useState([]);
-  const [subSearchFileList, setSubSearchFileList] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // const [subSearchFileList, setSubSearchFileList] = useState([]);
   const [vttFileList, setVttFileList] = useState([]);
   const [typeOfSearch, setTypeOfSearch] = useState('t');
   const [api, setApi] = useState('subdl');
@@ -32,7 +44,6 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     season: 1,
     episode: 1,
   });
-
   const [newVideo, setNewVideo] = useState({
     url: undefined,
     filename: '',
@@ -40,11 +51,71 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     year: '',
     poster: ''
   });
-
   const [selectedMovie, setSelectedMovie] = useState({
     title: null,
     imdbID: null
   });
+
+
+  const mp4Ref = useRef(null);
+  const mkvRef = useRef(null);
+  const movieSectionRef = useRef(null);
+
+
+
+  const [hasMore, setHasMore] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  // const observer = useRef();
+
+  // const [addLastMovieRef, setAddLastMovieRef] = useState(true)
+
+  // const lastMovieRef = useCallback(
+  //   (node) => {
+  //     // console.log("CALLBACK: page", page);
+  //     if (typeOfSearch !== 't' && node && !loading && hasMore && isSearching) {
+  //       if (observer.current) observer.current.disconnect();
+  //       observer.current = new IntersectionObserver(entries => {
+  //         if (entries[0].isIntersecting) {
+  //           setPage((prevPage) => prevPage + 1);
+  //           // console.log("CALLBACK: page increament ", page);
+  //           setAddLastMovieRef(false);
+  //         }
+  //       });
+  //       observer.current.observe(node);
+  //     }
+  //   }, [loading, addLastMovieRef, typeOfSearch, hasMore, isSearching]);
+
+
+  useEffect(() => {
+    // console.log("useEffect: page", page);
+    if (selectedName && isSearching) {
+      searchMovie(selectedName, page);
+      // console.log("useEffect: totalPages", totalPages);
+    }
+  }, [page, isSearching,  selectedName]);
+  
+  useEffect(() => {
+    if (page === 1 && findMovies.length > 0 && movieSectionRef.current) {
+      movieSectionRef.current.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
+  }, [page, findMovies]);
+
+
+
+
+  // useEffect(() => {
+  //   // init();
+  //   if (findMovies.length > 0) {
+  //     movieSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  //   // console.log('useEffect');
+  // }, [findMovies] );
+
+
 
   if (fileName !== '' && newName === '') {
     for (let i = 0; i < (movieNameSuggestion.length > 3 ? 3 : movieNameSuggestion.length); i++) {
@@ -54,25 +125,17 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     suggestions[0] = newName;
   }
 
-  const mp4Ref = useRef(null);
-  const mkvRef = useRef(null);
-
-  useEffect(() => {
-    // init();
-    if (findMovies.length > 0) {
-      myRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [findMovies] );
-
-  const myRef = useRef(null);
-
   // reset all data
   function reset() {
+    setFindMovies([]);
     setSubtitleFileUrl('');
     setOpenSubtitleFileUrl('');
+    setFileType('mp4');
     setSubtitleFile([]);
     setSubSearchList([])
     setVttFileList([]);
+    setIsSearching(false);
+    setHasMore(true);
   }
 
   function init() {
@@ -124,6 +187,9 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
   // Handle type url into url input
   async function handleVideoUrlChange(value) {
+    if (findMovies.length > 0) {
+      setFindMovies([]);
+    }
     setVideoUrl(value);
   }
 
@@ -136,71 +202,109 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
   // Handle guess name click
   function handleNameClick(name) {
     reset();
+    setIsSearching(true);
     setSelectedName(name);
-    searchMovie(name);
+    setPage(1);
+    searchMovie(name, 1);
+    
   };
 
   // Find movie data by OMDB API
-  async function searchMovie(name, page = 1) {
-    const apiUrlMovie = `${OMDB_API_URL}${typeOfSearch}=${name}&page=${page}`;
+  async function searchMovie(name, pageNo = 1) {
+    if (!name || !isSearching || (totalPages && pageNo > totalPages)) return;
+    setLoading(true);
+    const apiUrlMovie = `${OMDB_API_URL}${typeOfSearch}=${name}&page=${pageNo}`;
+    // console.log(apiUrlMovie);
     try {
       const response = await fetch(apiUrlMovie);
       const data = await response.json();
       if (data.Response === 'True') {
         if (typeOfSearch === 't') {
-          setResultsPages([]);
-          setFindMovies(new Array(data));
+          // setResultsPages([]);
+          // setFindMovies(new Array(data));
+          setHasMore(false);
+          setFindMovies([data]);
 
         } else {
-          const totalPages = parseInt(data.totalResults / 10)
-          const pages = new Array();
-          for (let i = 0; i < totalPages; i++) {
-            pages.push(i + 1);
+          // const totalPages = parseInt(data.totalResults / 10)
+          // const pages = new Array();
+          // for (let i = 0; i < totalPages; i++) {
+          //   pages.push(i + 1);
+          // }
+          // setResultsPages(pages); 
+          if (pageNo === 1) {
+            const pages = Math.floor(data.totalResults % 10 > 0 ? data.totalResults / 10 + 1 : data.totalResults / 10);
+            setTotalPages(pages)
+            setFindMovies(data.Search);
+          } else {
+            // console.log(data.Search);
+            setFindMovies((prevFindMovies) => [...prevFindMovies, ...data.Search]);
           }
-          setResultsPages(pages);
-          setFindMovies(data.Search);
-          console.log(pages);
+          // console.log('Search: page', pageNo, 'Total:', data.totalResults);
+          if (data.Search.length < 10) {
+            setHasMore(false);
+          } else {
+            setHasMore(true);
+          }
         }
-        myRef.current.scrollIntoView({
-          behavior: 'smooth'
-        });
+        // if (pageNo === 1) {
+        //   movieSectionRef.current.scrollIntoView({
+        //     behavior: 'smooth',
+        //   });
+        // }
       } else {
         setFindMovies([]);
+        setHasMore(false);
       }
       setSelectedMovie({ title: null, imdbID: null });
     } catch (error) {
       console.error('Error fetching links:', error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
     }
 
   };
 
   // Handle Poster click set movieData and search subtitle for it when click on movie card
   function handlePosterClick(url, filename, title, year, poster, imdbID, e) {
-    const className = e.target.parentElement?.className;
-    reset();
-    setSelectedMovie({
-      title: title,
-      imdbID: imdbID
-    });
-    setFindMovies(findMovies.filter(movie => movie.Title === title)); // Show just selected movie when selected
-    const newTitle = title.replaceAll(' ', '+');
-    setNewVideo({
-      url: url,
-      filename: filename,
-      title: newTitle,
-      year: year,
-      poster: poster,
-    })
+    // console.log(`poster clicked -> imdbID: ${imdbID} - prevIMDB: ${selectedMovie.imdbID ?? 'null'}`);
+    if (selectedMovie.imdbID !== imdbID) {
+      // const className = e.target.parentElement?.className;
+      reset();
+      setSelectedMovie({
+        title: title,
+        imdbID: imdbID
+      });
+
+      setIsSearching(false);
+      setHasMore(false);
+
+      setFindMovies(findMovies.filter(movie => movie.Title === title)); // Show just selected movie when selected
+      const newTitle = title.replaceAll(' ', '+');
+      setNewVideo({
+        url: url,
+        filename: filename,
+        title: newTitle,
+        year: year,
+        poster: poster,
+      })
+    }
   }
 
   // Handle Search Subtitle button
   function handleSearchSubtitleClick(event, imdbID, title) {
+    setVttFileList([]);
+    setSubtitleFileUrl('');
+    setOpenSubtitleFileUrl('');
     setSubSearchList([]); // clear search list for filling new results.
     setSelectedMovie({
       title: title,
       imdbID: imdbID
     });
     searchSubtitle(byIMDB ? imdbID.split('tt').pop() : title)
+    // setIsSearching(true);
+    setIsModalOpen(true);
     event.stopPropagation();
   }
 
@@ -219,6 +323,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     try {
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data);
       setSubSearchList(api === 'subdl' ? data.subtitles || [] : data.data)
     } catch (error) {
       console.error(error);
@@ -269,7 +374,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
       setVttFileList(vttFilesContent);
       return vttFiles;
     } catch (error) {
-      console.log(error);
+      console.log('fetch zip file error:', error);
     }
   }
 
@@ -362,15 +467,17 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
     };
   };
   
-  function handleFileTypeClick(type) {
-    if (type === 'mkv') {
+  function handleFileTypeClick(target) {
+    // console.log(target.innerText);
+    if (target.innerText === 'mkv') {
       mkvRef.current.className = 'selected';
       mp4Ref.current.className = '';
     } else {
       mp4Ref.current.className = 'selected';
       mkvRef.current.className = '';
     }
-    setFileType(type);
+    setFileType(target.innerText);
+    console.log(target.innerText);
   }
   
   // Handle click on subtitle to remove it
@@ -387,36 +494,50 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
   // Add videoData and subtitle if selected into formData and send it to WORKER for saving 
   const handleAddVideo = async () => {
-    if (newVideo.url && !videoList.some(video => video.url === newVideo.url)) {
+    if (videoUrl !== '') {
+      if (newVideo.url) {
+        if (!videoList.some(video => video.url === newVideo.url)) {
+          const formData = new FormData();
+          formData.append('videoData', JSON.stringify(newVideo));
+          // If subtitle selected for uploading 
+          if (subtitleFile) {
+            subtitleFile.forEach((file, index) => {
+              const random_id = Math.floor(Math.random() * 100);
+              const type = file.name.endsWith('srt') ? 'srt' : 'vtt';
+              formData.append(`subtitle${index + 1}_${type}_${random_id}`, file); // add type of subtitle (srt or vtt) to file name 
+            });
+          };
 
-      const formData = new FormData();
-      formData.append('videoData', JSON.stringify(newVideo));
-      // If subtitle selected for uploading 
-      if (subtitleFile) {
-        subtitleFile.forEach((file, index) => {
-          const random_id = Math.floor(Math.random() * 100);
-          const type = file.name.endsWith('srt') ? 'srt' : 'vtt';
-          formData.append(`subtitle${index + 1}_${type}_${random_id}`, file); // add type of subtitle (srt or vtt) to file name 
-        });
+          try {
+            await fetch(WORKER_URL, {
+              method: 'POST',
+              body: formData,
+            });
+            const updatedList = [...videoList, newVideo];
+            setVideoList(updatedList);
+            setVideoUrl('');
+            setSubtitleFile([]);
+            setShowInputSection(false);
+          } catch (error) {
+            console.error('Error saving links:', error);
+          };
+        } else {
+          alert('This url already exist in your movie list!');
+        }
+      } else {
+        alert('Please select your movie or serie from list.');
       };
-
-      try {
-        await fetch(WORKER_URL, {
-          method: 'POST',
-          body: formData,
-        });
-        const updatedList = [...videoList, newVideo];
-        setVideoList(updatedList);
-        setVideoUrl('');
-        setSubtitleFile(null);
-        setShowInputSection(false);
-      } catch (error) {
-        console.error('Error saving links:', error);
-      };
-    };
+    } else {
+      alert('Please insert your movie or serie url.');
+    }
   };
 
-  // console.log(subtitleFile);
+  function handleTypeOfSearchChanged(event) {
+    setIsSearching(false);
+    setTypeOfSearch(event.target.checked ? 's' : 't');
+  }
+
+  // console.log('subSearchList', subSearchList);
   // console.log('selectedMovie', selectedMovie);
   // console.log('findMovies', findMovies);
   // console.log('openSubtitleFileUrl',openSubtitleFileUrl);
@@ -425,7 +546,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
   return (
     <div className='input-movie'>
-      <div className='input-section'>
+      <div className='url-section'>
         <div className='input'>
           <input
             type="text"
@@ -455,7 +576,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         />
         <div className='type-of-search'>
           <div>
-            <input id='typeOfSearch' type='checkbox' checked={typeOfSearch === 's'} onChange={(e) => setTypeOfSearch(e.target.checked ? 's' : 't')} />
+            <input id='typeOfSearch' type='checkbox' checked={typeOfSearch === 's'} onChange={(e) => handleTypeOfSearchChanged(e)} />
             <label htmlFor='typeOfSearch'>All</label>
           </div>
           <div>
@@ -469,21 +590,19 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
         </div>
 
 
-        <div>
-          {fileName !== '' &&
-            <ul className='movie-name-guesses'>
-              {suggestions.map((name, index) =>
-                <li className='movie-name'
-                  key={index}>
-                  <button
-                    style={{ backgroundColor: selectedName === name ? '#d19172' : '' }}
-                    onClick={() => handleNameClick(name)}>
-                    {name}
-                  </button>
-                </li>)}
-            </ul>
-          }
-        </div>
+        {fileName !== '' &&
+          <ul className='movie-name-guesses'>
+            {suggestions.map((name, index) =>
+              <li className='movie-name'
+                key={index}>
+                <button className='names'
+                  style={{ backgroundColor: selectedName === name ? '#d19172' : '' }}
+                  onClick={() => handleNameClick(name)}>
+                  {name}
+                </button>
+              </li>)}
+          </ul>
+        }
 
 
 
@@ -493,20 +612,20 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
 
       </div>
       {/* ***** Movie Search Section ***** */}
-      <div ref={myRef} className='find-movie-section'>
-        {findMovies.length > 0 && findMovies[0].Response !== 'False' &&
+      <div ref={movieSectionRef} className='find-movie-section'>
+        {findMovies.length > 0 && findMovies[0].Response !== 'False' && <>
           <ul className='find-movie-list'>
-            {findMovies.map(movie => {
+            {findMovies.map((movie, index) => {
+              const isLastMovie = index === findMovies.length - 1;
               return (
-                <li
-                  className={selectedMovie.imdbID === movie.imdbID ? 'find-movies selected' : 'find-movies'}
-                  key={movie.imdbID}>
+                <li className='find-movie' key={index}>
                   {/* <button onClick={() => findMovieHandleClick(movie.Title)} className='movieName'>{movie.Title}</button> */}
                   <div
                     className='poster'
                     onClick={(e) => handlePosterClick(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID, e)}
                     style={{ backgroundImage: `url(${movie.Poster})`, }}>
                     <div className='movie-data'>
+                      {/* <span className='title'>{index + '/' + findMovies.length}</span> */}
                       <span className='title'>{movie.Title}</span>
                       <div className='type'>
                         <span>{movie.Type && movie.Type.toUpperCase()}</span> <span className='year'>{movie.Year}</span>
@@ -514,10 +633,8 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                       {movie.imdbRating && <span className='imdb-rating'>IMDB: {movie.imdbRating}/10</span>}
                       {movie.Metascore && <span className='meta-score'>Metascore: {movie.Metascore}</span>}
                       {movie.Plot && <span className='plot'>{movie.Plot}</span>}
-                      <button onClick={(event) => handleSearchSubtitleClick(event, movie.imdbID, movie.Title)} className='search-subtitle-btn'>Search Subtitle</button>
 
                     </div>
-
 
 
 
@@ -528,7 +645,7 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                           <span>File name</span>
                           <input className='' style={{ width: 'auto' }}
                             type='text'
-                            value={movie.Type === 'series' ? movie.Title + '-S' + fileData.season + 'E' + fileData.episode : movie.Title}
+                            value={movie.Type === 'series' ? `${movie.Title}-S${fileData.season}E${fileData.episode}.${fileType}` : `${movie.Title}.${fileType}`}
                             // value=`${fileData.season}S${fileData.season}E${fileData.episode}`
                             onChange={(e) => setFileData({ ...fileData, filename: e.target.value })}
                           />
@@ -560,12 +677,70 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                               </button>
                             </div>
                           </div>
-                          </>
+                        </>
                         }
                         <div className='section-row file-type'>
-                          <button ref={mkvRef} className='' onClick={() => handleFileTypeClick('mkv')}>mkv</button>
-                          <button ref={mp4Ref} className='' onClick={() => handleFileTypeClick('mp4')}>mp4</button>
+                          {/* <span className="title">File type</span> */}
+                          <button ref={mkvRef} className={fileType === 'mkv' ? 'selected' : undefined}
+                            onClick={(e) => handleFileTypeClick(e.target)}>mkv</button>
+                          <button ref={mp4Ref} className={fileType === 'mp4' ? 'selected' : undefined}
+                            onClick={(e) => handleFileTypeClick(e.target)}>mp4</button>
+                          {selectedMovie.title &&
+                            <button onClick={(event) => handleSearchSubtitleClick(event, movie.imdbID, movie.Title)}
+                              className='search-subtitle-btn'>Search Sub</button>
+                          }
                         </div>
+
+
+
+                        {/* Subtitle Search Section */}
+                        {subSearchList.length >= 0 &&
+                          <Modal
+                            isOpen={isModalOpen}
+                            onClose={() => setIsModalOpen(false)}
+                          >
+                            <div className="sub-section">
+                              {subSearchList.length === 0 ? <span className='subtitle-nothing-found'>Nothing</span> :
+                              <>
+                              {/* List of subtitles that found based of selected source [ subdl / opensubtitles ] */}
+                              <select className='subtitles-select' onChange={handleSubtitleSelectChange}>
+                                <option>Please select a subtitle</option>
+                                {subSearchList.map((result, index) => {
+                                  const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
+                                  const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
+                                  return <option key={index} value={file}>{name}</option>
+                                })}
+                              </select>
+
+
+
+                              {/* {(subtitleFileUrl !== '' || openSubtitleFileUrl) &&  */}
+                              {(vttFileList.length > 0) &&
+                                <div className='vtt-section'>
+                                  {/* Show the URL of zip file or srt subtitle */}
+                                  {/* <p className='subtitleFileUrl' style={{display: ''}}
+                                onClick={handleSubtileDownload}>{api === 'subdl' ? subtitleFileUrl : openSubtitleFileUrl}</p> */}
+
+
+
+                                  {/* list of vtt files that unzip from zip which selected  */}
+                                  <select className='vtt-select' defaultValue='defult' onChange={(event) => handleVttSelectChange(event.target.value)}>
+                                    <option value='defult'>Please select a vtt subtitle</option>
+                                    {subtitleFileUrl && vttFileList.map((result, index) => {
+                                      const content = api === 'subdl' ? result.vttContent : 'No subdl';
+                                      const name = api === 'subdl' ? result.vttFilename : result.attributes.release ?? result.attributes.slug;
+                                      // const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
+                                      return <option key={index} /*title={content}*/ value={name}>{name}</option>
+                                    })}
+                                  </select>
+                                </div>}
+                              </>}
+                            </div>
+                          </Modal>
+                        }
+
+
+
 
                         {subtitleFile.length > 0 &&
                           <div className='vtt-selected'>
@@ -576,85 +751,39 @@ function InputSection({ WORKER_URL, videoUrl, setVideoUrl, subtitleFile, setSubt
                             </p>)}
                           </div>
                         }
+
+
+
                       </div>
                     }
+                    <div className='add-button'>
+                      <button className='add-btn' onClick={handleAddVideo}>Add to my Video List</button>
+                    </div>
                   </div>
+                  {/* {isLastMovie && <div className='last' ref={lastMovieRef} />} */}
                 </li>)
             })}
           </ul>
-        }
 
-
-
-
+          {!loading && typeOfSearch === 's' && hasMore && <div className='load-more' onClick={() => setPage(prevPage => prevPage + 1)}>Load more</div>}
+        </>}
+        {loading && <div className='loading' > Loading ...</div>}
 
         {/* Page numbers */}
+        {/*         
         {(findMovies && findMovies.length > 1) &&
-          <ul className='page-number'>
-            {resultsPages.map((page, index) =>
-              page < 10 &&
-              <li key={index} className='page'
-                style={{ backgroundColor: '#119172', padding: '10px', borderRadius: '5px' }}
-                onClick={() => handlePageSelected(page)}>{page}</li>
-            )}
-          </ul>}
-
-      </div>
-
-
-
-
-
-
-
-
-
-
-
-      {/* Subtitle Search Section */}
-      {subSearchList.length !== 0 &&
-        <div className="sub-section">
-          {subSearchList.length === 0 ?
-            <h3>Searching for subtitle ... </h3> : <h3>Subtitle for <span className='subtitle-found'>{selectedMovie.title} - {subSearchList.length}</span> </h3>}
-
-          {/* List of subtitles that found based of selected source [ subdl / opensubtitles ] */}
-          <select className='subtitles-select' onChange={handleSubtitleSelectChange}>
-            <option>Please select a subtitle</option>
-            {subSearchList.map((result, index) => {
-              const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
-              const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
-              return <option key={index} value={file}>{name}</option>
-            })}
-          </select>
-
-
-
-          {/* {(subtitleFileUrl !== '' || openSubtitleFileUrl) &&  */}
-          {(vttFileList.length > 0) &&
-            <div className='vtt-section'>
-              {/* Show the URL of zip file or srt subtitle */}
-              {/* <p className='subtitleFileUrl' style={{display: ''}}
-                onClick={handleSubtileDownload}>{api === 'subdl' ? subtitleFileUrl : openSubtitleFileUrl}</p> */}
-
-              {/* list of vtt files that unzip from zip which selected  */}
-              <select className='vtt-select' defaultValue='defult' onChange={(event) => handleVttSelectChange(event.target.value)}>
-                <option value='defult'>Please select a vtt subtitle</option>
-                {subtitleFileUrl && vttFileList.map((result, index) => {
-                  const content = api === 'subdl' ? result.vttContent : 'No subdl';
-                  const name = api === 'subdl' ? result.vttFilename : result.attributes.release ?? result.attributes.slug;
-                  // const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
-                  return <option key={index} /*title={content}*/ value={name}>{name}</option>
-                })}
-              </select>
-            </div>}
-        </div>
-      }
-      <div className='add-button' style={{ padding: '5px 10px' }}>
-        <button className='add-btn' onClick={handleAddVideo}>Add to my Video List</button>
+        <ul className='page-number'>
+          {resultsPages.map((pageNo, index) =>
+            pageNo < 10 &&
+            <li key={index} className='page'
+              style={{ backgroundColor: '#119172', padding: '10px', borderRadius: '5px' }}
+              onClick={() => handlePageSelected(pageNo)}>{pageNo}</li>
+          )}
+        </ul>
+        } 
+        */}
       </div>
     </div>
-
-
   );
 }
 

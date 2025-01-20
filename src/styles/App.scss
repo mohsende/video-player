@@ -35,6 +35,7 @@ body {
   .app-container {
     display: flex;
     flex-direction: column;
+    gap: 5px;
     .show {
       &-input-section,
       &-video-list {
@@ -45,7 +46,6 @@ body {
       }
       &-input-section {
         background-color: $showHidebtnColor;
-        margin-bottom: 5px;
       }
       &-video-list {
         background-color: $showHidebtnColor;

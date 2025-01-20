@@ -1,0 +1,54 @@
+@import './styles.scss';
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  .modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: rgba(204, 204, 204, 0.9);
+    padding: 20px 10px;
+    border-radius: 15px 15px 0 0;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.5s ease-in-out, opacity 0.3s ease-in-out;
+    pointer-events: auto;
+    opacity: 0;
+
+    .close {
+      align-self: center;
+      border-radius: 5px;
+      width: 95%;
+      background-color: dodgerblue;
+      box-shadow: rgb(255 255 255 / 49%) 0px 2px 14px 1px
+    }
+  }
+
+  &.open {
+    pointer-events: auto;
+    opacity: 1;
+
+    .modal {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+  }
+
+}
