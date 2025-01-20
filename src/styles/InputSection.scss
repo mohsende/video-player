@@ -111,6 +111,10 @@
 
   .find-movie-section {
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     .loading, 
     .load-more {
       width: var(--find-movie-width, 400px);
