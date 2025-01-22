@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, Children, useCallback } from 'react
 import JSZip from 'jszip';
 import '../styles/InputSection.scss';
 import Modal from './Modal.js';
+import Skaleton from './Skaleton';
 
 // Modal.setAppElement('#root');
 // import { BottomSheet } from 'react-spring-bottom-sheet';
@@ -613,8 +614,10 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       </div>
       {/* ***** Movie Search Section ***** */}
       <div ref={movieSectionRef} className='find-movie-section'>
+        {loading && <Skaleton />}
+        {loading && <Skaleton />}
         {findMovies.length > 0 && findMovies[0].Response !== 'False' && <>
-          <ul className='find-movie-list'>
+          <ul className='find-movie-list'> 
             {findMovies.map((movie, index) => {
               const isLastMovie = index === findMovies.length - 1;
               return (

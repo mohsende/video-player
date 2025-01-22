@@ -4,6 +4,7 @@ import InputSection from './InputSection';
 import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
 import * as rdd from 'react-device-detect';
+import Skaleton from './Skaleton';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
@@ -17,10 +18,11 @@ function App() {
   const [showInputSection, setShowInputSection] = useState(!rdd.isSmartTV);
   const [showVideoList, setShowVideoList] = useState(rdd.isSmartTV);
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
 
-    fetchVideoList();
+    // fetchVideoList();
     setDeviceInfo({
       ...deviceInfo,
       width: window.innerWidth,
@@ -53,12 +55,15 @@ function App() {
   }, []);
 
   const fetchVideoList = async () => {
+    setLoading(true);
     try {
       const response = await fetch(WORKER_URL);
       const data = await response.json();
       setVideoList(data || []);
     } catch (error) {
       console.error('Error fetching links:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -274,9 +279,14 @@ function App() {
         {
           showVideoList &&
           <VideoList
-            videoList={videoList}
-            handleVideoClick={handleVideoClick}
-            handleDeleteVideo={handleDeleteVideo}
+            WORKER_URL={WORKER_URL}
+            // videoList={videoList}
+            // loading={loading}
+            // handleVideoClick={handleVideoClick}
+            // handleDeleteVideo={handleDeleteVideo}
+            setCaptions={setCaptions}
+            setCurrentVideo={setCurrentVideo}
+            isTV={isTV}
           />
         }
         <div className='TV'>
