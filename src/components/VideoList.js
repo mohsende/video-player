@@ -10,7 +10,6 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
 
   useEffect(()=> {
     fetchVideoList();
-
   }, []);
 
   const fetchVideoList = async () => {
@@ -76,7 +75,7 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
   
   return (<>
     <ul className='movie-list'>
-      {loading && <><Skaleton /> <Skaleton /></>}
+      {loading && <><li className=''><Skaleton /></li><li><Skaleton /></li></>}
       {videoList.map((video, index) => {
         const jsonVideo = JSON.stringify(video);
         var hasSub = jsonVideo.includes(`subtitle`); //Check for having subtitle
@@ -89,10 +88,12 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
               }} 
               onClick={() => handleVideoClick(video.url)}>
             <span className='video-name'>
-              <p>{video.filename}</p>
+              <p>{video.title}</p>
+              <p>{video.type === 'series' && `S:${video.season}   E:${video.episode}`}</p>
               {hasSub && 
               <span className={hasSub ? 'is-sub' : undefined}>Subtitle</span>}
             </span>
+            
             <button className='delete-btn' onClick={(event) => handleDeleteVideo(event, video.url)}>DELETE</button>
           </div>
         </li>

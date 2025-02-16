@@ -12,17 +12,19 @@ import Skaleton from './Skaleton';
 // import userEvent from '@testing-library/user-event';
 
 // const HAJI_LICENSE = 'aNxVui2gLkJwqJEAadpiOtUXw44zoHR8rop9crfmXSc';
+// const HAJI_LICENSE = 'Os0vxtpXI1RyggywxkJBrufpSYat3aAZn3w6H2qUgaqJu14znW7t1';
+// const SUBDL_API_URL = 'https://api.subdl.com/api/v1/subtitles?api_key=h11PHJkLrVYI9ha6crzlKtt-UDAD_2OF&languages=fa&';
+
 const OMDB_API_URL = 'https://www.omdbapi.com/?apikey=c3327b94&';
-const HAJI_LICENSE = 'Os0vxtpXI1RyggywxkJBrufpSYat3aAZn3w6H2qUgaqJu14znW7t1';
-const SUBDL_API_URL = 'https://api.subdl.com/api/v1/subtitles?api_key=h11PHJkLrVYI9ha6crzlKtt-UDAD_2OF&languages=fa&';
 
-
-function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection, handleClearList }) {
+function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection }) {
   const [videoUrl, setVideoUrl] = useState('');
   const [subtitleFile, setSubtitleFile] = useState([]);
 
   const fileName = videoUrl.split('/').pop();
-  const movieNameSuggestion = fileName.split('.')
+
+  // fileName = fileName.replace(/%20|_/g, '.');
+  const movieNameSuggestion = fileName.replace(/%20|_|-/g, '.').split('.')
   const suggestions = [];
   const [findMovies, setFindMovies] = useState([]);
   const [newName, setNewName] = useState('');
@@ -40,15 +42,20 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   const [openSubtitleFileUrl, setOpenSubtitleFileUrl] = useState('');
   const [byIMDB, setByIMDB] = useState(true);
   const [resultsPages, setResultsPages] = useState([]);
-  const [fileData, setFileData] = useState({
-    filename: 'filename',
-    season: 1,
-    episode: 1,
-  });
+
+  // const [fileData, setFileData] = useState({
+  //   filename: 'filename',
+  //   season: 1,
+  //   episode: 1,
+  // });
+
   const [newVideo, setNewVideo] = useState({
     url: undefined,
-    filename: '',
+    // filename: '',
     title: '',
+    type: '',
+    // season: '',
+    // episode: '',
     year: '',
     poster: ''
   });
@@ -105,6 +112,19 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     }
   }, [page, findMovies]);
 
+  // useEffect(() => {
+  //   console.log('newVideo', newVideo);
+  //   console.log('newName',newName);
+  // }, [newVideo])
+  
+  // useEffect(() => {
+  //   setNewVideo({
+  //     ...newVideo,
+  //     filename: `${newVideo.title}-S${newVideo.season}E${newVideo.episode}`,
+  //   })
+  // }, [newVideo.episode, newVideo.season])
+  
+
 
 
 
@@ -119,7 +139,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
 
   if (fileName !== '' && newName === '') {
-    for (let i = 0; i < (movieNameSuggestion.length > 3 ? 3 : movieNameSuggestion.length); i++) {
+    for (let i = 0; i < (movieNameSuggestion.length > 5 ? 5 : movieNameSuggestion.length); i++) {
       i === 0 ? suggestions.push(movieNameSuggestion[i]) : suggestions.push(suggestions[i - 1] + ' ' + movieNameSuggestion[i])
     }
   } else if (newName !== '') {
@@ -179,7 +199,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     });
     setNewVideo({
       url: 'dark',
-      filename: 'dark',
+      // filename: 'dark',
       title: 'Dark',
       year: '2017–2020',
       poster: 'https: //m.media-amazon.com/images/M/MV5BM2RhZGVlZG…WIwMGUtMWYxOGIwNjA0MjNmXkEyXkFqcGc@._V1_SX300.jpg',
@@ -268,7 +288,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   };
 
   // Handle Poster click set movieData and search subtitle for it when click on movie card
-  function handlePosterClick(url, filename, title, year, poster, imdbID, e) {
+  function handlePosterClick(url, filename, title, type, year, poster, imdbID, e) {
     // console.log(`poster clicked -> imdbID: ${imdbID} - prevIMDB: ${selectedMovie.imdbID ?? 'null'}`);
     if (selectedMovie.imdbID !== imdbID) {
       // const className = e.target.parentElement?.className;
@@ -280,15 +300,15 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
       setIsSearching(false);
       setHasMore(false);
-
       setFindMovies(findMovies.filter(movie => movie.Title === title)); // Show just selected movie when selected
       const newTitle = title.replaceAll(' ', '+');
       setNewVideo({
         url: url,
-        filename: filename,
-        title: newTitle,
+        title: title,
+        type: type,
         year: year,
         poster: poster,
+        ...(type === 'series' && { season: 1, episode: 1})
       })
     }
   }
@@ -321,6 +341,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   // General Subtitle Search by WORKER
   async function searchSubtitle(movieOrImdbID) {
     var url = `${WORKER_URL}searchSubtitle?api=${api}&${byIMDB ? `imdb_id` : `movie`}=${movieOrImdbID}`;
+    console.log(url, newVideo);
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -437,32 +458,33 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   
   // set Season and Episode number
   function handleSeasonEpisodeClick(op, isSeason) {
+    console.log(op, isSeason);
     if (isSeason) {
       if (op === "-") {
-        if (fileData.season > 1) {
-          setFileData({
-            ...fileData,
-            season: fileData.season - 1,
+        if (newVideo.season > 1) {
+          setNewVideo({
+            ...newVideo,
+            season: newVideo.season - 1,
           });
         }
       } else {
-        setFileData({
-          ...fileData,
-          season: fileData.season + 1,
+        setNewVideo({
+          ...newVideo,
+          season: newVideo.season + 1,
         });
       }
     } else {
       if (op === "-") {
-        if (fileData.episode > 1) {
-          setFileData({
-            ...fileData,
-            episode: fileData.episode - 1,
+        if (newVideo.episode > 1) {
+          setNewVideo({
+            ...newVideo,
+            episode: newVideo.episode - 1,
           });
         }
       } else {
-        setFileData({
-          ...fileData,
-          episode: fileData.episode + 1,
+        setNewVideo({
+          ...newVideo,
+          episode: newVideo.episode + 1,
         });
       };
     };
@@ -614,21 +636,18 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       </div>
       {/* ***** Movie Search Section ***** */}
       <div ref={movieSectionRef} className='find-movie-section'>
-        {loading && <Skaleton />}
-        {loading && <Skaleton />}
+        {loading && <><Skaleton /><Skaleton /></>}
         {findMovies.length > 0 && findMovies[0].Response !== 'False' && <>
           <ul className='find-movie-list'> 
             {findMovies.map((movie, index) => {
               const isLastMovie = index === findMovies.length - 1;
               return (
                 <li className='find-movie' key={index}>
-                  {/* <button onClick={() => findMovieHandleClick(movie.Title)} className='movieName'>{movie.Title}</button> */}
                   <div
                     className='poster'
-                    onClick={(e) => handlePosterClick(videoUrl, newName !== '' ? movie.Title : fileName, movie.Title, movie.Year, movie.Poster, movie.imdbID, e)}
+                    onClick={(e) => handlePosterClick(videoUrl, movie.Type === 'series' ? `${movie.Title}-S${newVideo.season}E${newVideo.episode}` : `${movie.Title}`, movie.Title, movie.Type, movie.Year, movie.Poster, movie.imdbID, e)}
                     style={{ backgroundImage: `url(${movie.Poster})`, }}>
                     <div className='movie-data'>
-                      {/* <span className='title'>{index + '/' + findMovies.length}</span> */}
                       <span className='title'>{movie.Title}</span>
                       <div className='type'>
                         <span>{movie.Type && movie.Type.toUpperCase()}</span> <span className='year'>{movie.Year}</span>
@@ -644,15 +663,15 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
                     {selectedMovie.title &&
                       <div className='file-data' onClick={(event) => handleFileDataClick(event)}>
-                        <div className='section-row file-name'>
-                          <span>File name</span>
-                          <input className='' style={{ width: 'auto' }}
+                        {/* <div className='section-row file-name'> */}
+                          {/* <span>File name</span> */}
+                          {/* <input className='' style={{ width: 'auto' }} 
                             type='text'
-                            value={movie.Type === 'series' ? `${movie.Title}-S${fileData.season}E${fileData.episode}.${fileType}` : `${movie.Title}.${fileType}`}
+                            value={movie.Type === 'series' ? `${newVideo.title}-S${newVideo.season}E${newVideo.episode}` : `${newVideo.title}`}
                             // value=`${fileData.season}S${fileData.season}E${fileData.episode}`
-                            onChange={(e) => setFileData({ ...fileData, filename: e.target.value })}
-                          />
-                        </div>
+                            onChange={(e) => setNewVideo({ ...newVideo, filename: e.target.value })}
+                          /> */}
+                        {/* </div> */}
 
                         {movie.Type === 'series' && <>
                           <div className="section-row season-episode">
@@ -661,7 +680,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                               <button onClick={() => handleSeasonEpisodeClick("-", true)}>
                                 -
                               </button>
-                              <span>{fileData.season}</span>
+                              <span>{newVideo.season}</span>
                               <button onClick={() => handleSeasonEpisodeClick("+", true)}>
                                 +
                               </button>
@@ -674,7 +693,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                               <button onClick={() => handleSeasonEpisodeClick("-", false)}>
                                 -
                               </button>
-                              <span>{fileData.episode}</span>
+                              <span>{newVideo.episode}</span>
                               <button onClick={() => handleSeasonEpisodeClick("+", false)}>
                                 +
                               </button>
