@@ -51,11 +51,8 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
   const [newVideo, setNewVideo] = useState({
     url: undefined,
-    // filename: '',
     title: '',
     type: '',
-    // season: '',
-    // episode: '',
     year: '',
     poster: ''
   });
@@ -77,6 +74,8 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   const [loading, setLoading] = useState(false);
   // const observer = useRef();
 
+  const [subTotalPages, setSubTotalPages] = useState(1);
+  const [subCurrentPage, setSubCurrentPage] = useState(1);
   // const [addLastMovieRef, setAddLastMovieRef] = useState(true)
 
   // const lastMovieRef = useCallback(
@@ -112,10 +111,12 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     }
   }, [page, findMovies]);
 
-  // useEffect(() => {
-  //   console.log('newVideo', newVideo);
-  //   console.log('newName',newName);
-  // }, [newVideo])
+  useEffect(() => {
+    if (selectedMovie.imdbID) {
+      searchSubtitle(byIMDB ? selectedMovie.imdbID.split('tt').pop() : selectedMovie.title);
+    }
+    console.log('subCurrentPage', subCurrentPage);
+  }, [subCurrentPage])
   
   // useEffect(() => {
   //   setNewVideo({
@@ -323,7 +324,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       title: title,
       imdbID: imdbID
     });
-    searchSubtitle(byIMDB ? imdbID.split('tt').pop() : title)
+    searchSubtitle(byIMDB ? imdbID.split('tt').pop() : title);
     // setIsSearching(true);
     setIsModalOpen(true);
     event.stopPropagation();
@@ -340,13 +341,17 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
   // General Subtitle Search by WORKER
   async function searchSubtitle(movieOrImdbID) {
-    var url = `${WORKER_URL}searchSubtitle?api=${api}&${byIMDB ? `imdb_id` : `movie`}=${movieOrImdbID}`;
+    const query = byIMDB ? `imdb_id` : `movie`;
+    const season_number = newVideo.season ? `&season=${newVideo.season}` : '';
+    var url = `${WORKER_URL}searchSubtitle?api=${api}&${query}=${movieOrImdbID}${season_number}&page=${subCurrentPage}`;
     console.log(url, newVideo);
     try {
       const response = await fetch(url);
       const data = await response.json();
       console.log(data);
       setSubSearchList(api === 'subdl' ? data.subtitles || [] : data.data)
+      setSubTotalPages(api === 'subdl' ? data.totalPages || 1 : 1);
+      // setSubCurrentPage(api === 'subdl' ? data.currentPages || 1 : 1);
     } catch (error) {
       console.error(error);
       return ([error]);
@@ -358,7 +363,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     setVttFileList([]);
     setSubtitleFileUrl('');
     setOpenSubtitleFileUrl('');
-    if (event.target.value !== 'Please select a subtitle') {
+    if (event.target.value !== 'Please select a subtitle' && event.target.value !== 'nextPage' && event.target.value !== 'prevPage') {
       var url = ``;
       if (api === 'subdl') {
         url = `https://dl.subdl.com${event.target.value}`;
@@ -368,11 +373,23 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
         url = `${event.target.value}`;
         await downloadOpenSubtitles(url);
         // setSubtitleFileUrl(openSubtitleFileUrl);
-      }
+      };
+      return;
+    } 
+
+    if (event.target.value === 'Please select a subtitle') { return; }
+
+    if (event.target.value === 'nextPage') {
+      setSubCurrentPage(prevSubCurrentPage => prevSubCurrentPage + 1);
     } else {
-      // setSubtitleFileUrl('');
-      // setOpenSubtitleFileUrl('')
+      setSubCurrentPage(prevSubCurrentPage => prevSubCurrentPage - 1);
     }
+  }
+
+  function handleModalClose() {
+    setSubCurrentPage(1);
+    setSubTotalPages(1);
+    setIsModalOpen(false);
   }
 
   // Unzip from a SUBDL url and convert all srt file into vtt
@@ -458,7 +475,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   
   // set Season and Episode number
   function handleSeasonEpisodeClick(op, isSeason) {
-    console.log(op, isSeason);
+    // console.log(op, isSeason);
     if (isSeason) {
       if (op === "-") {
         if (newVideo.season > 1) {
@@ -719,7 +736,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                         {subSearchList.length >= 0 &&
                           <Modal
                             isOpen={isModalOpen}
-                            onClose={() => setIsModalOpen(false)}
+                            onClose={handleModalClose}
                           >
                             <div className="sub-section">
                               {subSearchList.length === 0 ? <span className='subtitle-nothing-found'>Nothing</span> :
@@ -732,6 +749,8 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                                   const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
                                   return <option key={index} value={file}>{name}</option>
                                 })}
+                                    {subCurrentPage < subTotalPages && <option key='nextPage' value='nextPage'>... next page</option>}
+                                    {subCurrentPage > 1 && <option key='prevPage' value='prevPage'>... previous page</option>}
                               </select>
 
 
