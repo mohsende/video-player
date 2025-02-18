@@ -20,6 +20,7 @@ const OMDB_API_URL = 'https://www.omdbapi.com/?apikey=c3327b94&';
 function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection }) {
   const [videoUrl, setVideoUrl] = useState('');
   const [subtitleFile, setSubtitleFile] = useState([]);
+  const [subtitleUploadedFile, setSubtitleUploadedFile] = useState([]);
 
   const fileName = videoUrl.split('/').pop();
 
@@ -116,8 +117,14 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       searchSubtitle(byIMDB ? selectedMovie.imdbID.split('tt').pop() : selectedMovie.title);
     }
     console.log('subCurrentPage', subCurrentPage);
-  }, [subCurrentPage])
-  
+  }, [subCurrentPage]);
+
+  useEffect(() => {
+
+    console.log('subtitleUploadedFile', subtitleUploadedFile);
+  }, [subtitleUploadedFile]);
+
+
   // useEffect(() => {
   //   setNewVideo({
   //     ...newVideo,
@@ -215,11 +222,13 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     setVideoUrl(value);
   }
 
-  // Open Dialog : select and store selected subtitle files into setSubtitleFile useState
-  // function handleSubSelected(files) {
-  //   const chosenFiles = Array.prototype.slice.call(files);
-  //   setSubtitleFile(chosenFiles);
-  // }
+  // Open Dialog : select and store selected subtitle files into setSubtitleUploadedFile useState
+  function handleSubSelected(event) {
+    console.log(event.target.value); // the path of uploaded file
+    const chosenFile = Array.prototype.slice.call(event.target.files[0]);
+    setSubtitleUploadedFile(chosenFile);
+    fileToVtt(chosenFile);
+  }
 
   // Handle guess name click
   function handleNameClick(name) {
@@ -360,29 +369,53 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
   // Show subtitle file link when select a subtitle
   async function handleSubtitleSelectChange(event) {
+    // console.log(event);
+    // const isUploadedFile = event.target.id !== '';
     setVttFileList([]);
     setSubtitleFileUrl('');
     setOpenSubtitleFileUrl('');
-    if (event.target.value !== 'Please select a subtitle' && event.target.value !== 'nextPage' && event.target.value !== 'prevPage') {
-      var url = ``;
-      if (api === 'subdl') {
-        url = `https://dl.subdl.com${event.target.value}`;
-        setSubtitleFileUrl(url);
-        handleZipFile(url);
-      } else if (api === 'open') {
-        url = `${event.target.value}`;
-        await downloadOpenSubtitles(url);
-        // setSubtitleFileUrl(openSubtitleFileUrl);
-      };
+    const value = event.target.value;
+    // if (!isUploadedFile) {
+      if (value !== 'Please select a subtitle' && value !== 'nextPage' && value !== 'prevPage') {
+        await linkToVtt(value);
+        return;
+      } 
+      if (value === 'Please select a subtitle') { return; }
+      if (value === 'nextPage') {
+        setSubCurrentPage(prevSubCurrentPage => prevSubCurrentPage + 1);
+      } else {
+        setSubCurrentPage(prevSubCurrentPage => prevSubCurrentPage - 1);
+      }
+    // }
+  }
+
+  async function linkToVtt (link) {
+    var url = ``;
+    if (api === 'subdl') {
+      url = `https://dl.subdl.com${link}`;
+      setSubtitleFileUrl(url);
+      handleZipFile(url);
+    } else if (api === 'open') {
+      url = `${link}`;
+      await downloadOpenSubtitles(url);
+      // setSubtitleFileUrl(openSubtitleFileUrl);
+    };
+  }
+
+  async function fileToVtt (file) {
+    const type_of_file = file.split('.').pop();
+    if (type_of_file === 'zip') {
+      setSubtitleFileUrl(file);
+      handleZipFile(file);
       return;
-    } 
+    }
 
-    if (event.target.value === 'Please select a subtitle') { return; }
+    if (type_of_file === 'srt') {
+      return;
+    }
 
-    if (event.target.value === 'nextPage') {
-      setSubCurrentPage(prevSubCurrentPage => prevSubCurrentPage + 1);
-    } else {
-      setSubCurrentPage(prevSubCurrentPage => prevSubCurrentPage - 1);
+    if (type_of_file === 'vtt') {
+      return;
     }
   }
 
@@ -394,9 +427,16 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
   // Unzip from a SUBDL url and convert all srt file into vtt
   async function handleZipFile(zipUrl) {
+    console.log(zipUrl);
     try {
-      const zipResponse = await fetch(zipUrl);
-      const zipData = await zipResponse.arrayBuffer();
+      let zipResponse;
+      let zipData;
+      if (zipUrl.startsWith('http')) {
+        zipResponse = await fetch(zipUrl);
+        zipData = await zipResponse.arrayBuffer();
+      } else {
+        zipData = await subtitleUploadedFile.arrayBuffer();
+      }
       const zip = await JSZip.loadAsync(zipData);
       const vttFiles = [];
       const vttFilesContent = [];
@@ -411,6 +451,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
         }
       }
       setVttFileList(vttFilesContent);
+      console.log(vttFiles);
       return vttFiles;
     } catch (error) {
       console.log('fetch zip file error:', error);
@@ -739,7 +780,17 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                             onClose={handleModalClose}
                           >
                             <div className="sub-section">
-                              {subSearchList.length === 0 ? <span className='subtitle-nothing-found'>Nothing</span> :
+                              {subSearchList.length === 0 ? <>
+                                <span className='subtitle-nothing-found'>Nothing</span>
+                                <input
+                                  type="file"
+                                  id='fileUpload'
+                                  // multiple
+                                  accept=".vtt,.srt,.zip"
+                                  // onChange={(e) => setSubtitleFile(e.target.files[0])}
+                                  onChange={handleSubSelected}
+                                />
+                              </> :
                               <>
                               {/* List of subtitles that found based of selected source [ subdl / opensubtitles ] */}
                               <select className='subtitles-select' onChange={handleSubtitleSelectChange}>

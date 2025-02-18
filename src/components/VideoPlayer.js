@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import '../styles/VideoPlayer.scss'
 
-function VideoPlayer({currentVideo, captionsArr}) {
+function VideoPlayer({currentVideo, captionsArr, isTV}) {
   // const [selectedCaption, setSelectedCaption] = useState([]);
   // const [isSubSelected, setIsSubSelected] = useState(false);
 
@@ -21,12 +21,26 @@ function VideoPlayer({currentVideo, captionsArr}) {
   //   setSelectedCaption(src);
   //   setIsSubSelected(true);
   // };
+  console.log(captionsArr);
 
   return (
     <div className='video-players'>
       {currentVideo &&
         <div className='player'>
           <div className="react-player-wrapper">
+          {
+            isTV ?
+            <video
+              controls
+              width='90%'
+              preload="auto"
+            >
+              <source src={currentVideo} />
+              { captionsArr.length > 0 &&
+                captionsArr.map((sub, index) => (<track crossOrigin='none' key={index} label={sub.label} kind={sub.kind} src={sub.src} default={sub.default} />))
+              }
+            </video> 
+            :
             <ReactPlayer
               className='react-player'
               url={currentVideo}
@@ -35,13 +49,14 @@ function VideoPlayer({currentVideo, captionsArr}) {
                   attributes: {
                     crossOrigin: '',
                   },
-                    tracks: captionsArr,
+                  tracks: captionsArr,
                 },
               }}
               width='100%' height='auto'
               style={{ minWidth: '375px' }}
               controls
             />
+          }
           </div>
         </div>}
     </div>

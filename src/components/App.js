@@ -49,6 +49,10 @@ function App() {
 
   }, []);
 
+  useEffect(() => {
+
+  }, [currentVideo])
+
   // const handleVideoClick = async (url) => {
   //   const video = videoList.find(video => video.url === url);
 
@@ -124,6 +128,8 @@ function App() {
 
   // console.log('isTV: ',isTV);
 
+  // console.log(currentVideo);
+  
   return (
     <div className="App">
       <div className='screen-size'>
@@ -171,11 +177,22 @@ function App() {
           <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
           <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label>
         </div>
+        {/* {
+          (showVideoList && isTV) && 
+          <video 
+            controls
+            width='90%'
+            preload="auto" 
+          >
+            <source src={currentVideo} />
+          </video>
+        } */}
         {
           showVideoList &&
           <VideoPlayer
             currentVideo={currentVideo}
             captionsArr={captionsArr}
+            isTV={isTV}
           />
         }
       </div>
