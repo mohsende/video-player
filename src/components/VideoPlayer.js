@@ -1,27 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import '../styles/VideoPlayer.scss'
 
 function VideoPlayer({currentVideo, captionsArr, isTV}) {
-  // const [selectedCaption, setSelectedCaption] = useState([]);
-  // const [isSubSelected, setIsSubSelected] = useState(false);
 
-  // useEffect(() => {
-  //   setIsSubSelected(false);
-  //   setSelectedCaption([]);
-  //   // console.log('useEffect');
-  // }, [captionsArr]);
+  const videoRef = useRef(null);
 
-  // function handleCaptionSelect(src) {
-  //   changeCaption(src);
-  //   console.log('Clicked:', selectedCaption);
-  // };
+  useEffect(() => {
+    if (videoRef.current && captionsArr.length > 0) {
+      createSubtitle();
+    }
+  }, [captionsArr])
 
-  // function changeCaption(src) {
-  //   setSelectedCaption(src);
-  //   setIsSubSelected(true);
-  // };
-  console.log(captionsArr);
+
+  async function createSubtitle() {
+    const videoElement = videoRef.current;
+    const subtitlePromises = captionsArr.map(async (sub) => {
+      const subtitle = await subtitleToBlob(sub.src);
+      const trackElement = document.createElement('track');
+      trackElement.kind = sub.kind;
+      trackElement.src = subtitle;
+      trackElement.default = sub.default;
+      trackElement.label = sub.label;
+      videoElement.appendChild(trackElement);
+    });
+    await Promise.all(subtitlePromises);
+  }
+
+
+  async function subtitleToBlob(url) {
+    try {
+      const response = await fetch(url);
+      const subtitleContent = await response.text();
+
+      const trackElement = document.getElementById('subtitleTrack');
+
+      const blob = new Blob([subtitleContent], { type: 'text/vtt' });
+      const blobUrl = URL.createObjectURL(blob);
+
+      return blobUrl;
+    } catch (error) {
+      console.error('Error fetching subtitle:', error);
+    }
+  }
+
+  // console.log(captionsArr);
 
   return (
     <div className='video-players'>
@@ -31,14 +54,15 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
           {
             isTV ?
             <video
+                  ref={videoRef}
               controls
               width='90%'
               preload="auto"
             >
               <source src={currentVideo} />
-              { captionsArr.length > 0 &&
-                captionsArr.map((sub, index) => (<track crossOrigin='none' key={index} label={sub.label} kind={sub.kind} src={sub.src} default={sub.default} />))
-              }
+                  {/* { captionsArr.length > 0 &&
+                    captionsArr.map((sub, index) => (<track key={index} label={sub.label} kind={sub.kind} src={subtitleToBlob(sub.src)} default={sub.default} />))
+              } */}
             </video> 
             :
             <ReactPlayer
