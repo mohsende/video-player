@@ -6,11 +6,28 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
 
   const videoRef = useRef(null);
 
+  // useEffect(() => {
+  //   if (videoRef.current && captionsArr.length > 0) {
+  //     clearTracks();
+  //     createSubtitle();
+  //   }
+  // }, [captionsArr])
+
   useEffect(() => {
-    if (videoRef.current && captionsArr.length > 0) {
+    if (videoRef.current) {
+      clearTracks();
       createSubtitle();
     }
-  }, [captionsArr])
+  }, [currentVideo, captionsArr]);
+
+  // Remove the previous tracks
+  function clearTracks() {
+    const videoElement = videoRef.current;
+    const tracks = videoElement.getElementsByTagName('track');
+    for (let i = tracks.length - 1; i >= 0; i--) {
+      videoElement.removeChild(tracks[i]);
+    }
+  }
 
 
   async function createSubtitle() {
@@ -55,6 +72,7 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
             isTV ?
             <video
                   ref={videoRef}
+                  key={currentVideo}
               controls
               width='90%'
               preload="auto"

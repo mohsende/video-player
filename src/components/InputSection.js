@@ -32,6 +32,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   const [selectedName, setSelectedName] = useState(null);
   const [subSearchList, setSubSearchList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNestedModalOpen, setIsNestedModalOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
   // const [subSearchFileList, setSubSearchFileList] = useState([]);
@@ -63,6 +64,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   });
 
 
+  const subSelectRef = useRef(null);
   const mp4Ref = useRef(null);
   const mkvRef = useRef(null);
   const movieSectionRef = useRef(null);
@@ -386,6 +388,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       } else {
         setSubCurrentPage(prevSubCurrentPage => prevSubCurrentPage - 1);
       }
+    subSelectRef.current.value = 'default';
     // }
   }
 
@@ -427,7 +430,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
   // Unzip from a SUBDL url and convert all srt file into vtt
   async function handleZipFile(zipUrl) {
-    console.log(zipUrl);
+    console.log('zipUrl', zipUrl);
     try {
       let zipResponse;
       let zipData;
@@ -442,35 +445,104 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       const vttFilesContent = [];
       for (const [filename, file] of Object.entries(zip.files)) {
         if (filename.endsWith('.srt')) {
-          const srtContent = await file.async("string");
+          // خواندن محتوای فایل با TextDecoder
+          const srtContent = await detectEncoding(file);
+          // console.log(`Best encoding detected: ${srtContent}`);
+          // const srtContent = await readSrtFile(file);
           const vttContent = convertSrtToVtt(srtContent);
           const vttFilename = filename.replace('.srt', '.vtt');
-          // fill select for choosing a vtt to add to movieData
           vttFilesContent.push({ vttFilename: vttFilename, vttContent: vttContent });
           vttFiles.push(`/subs/${vttFilename}`);
         }
       }
       setVttFileList(vttFilesContent);
-      console.log(vttFiles);
       return vttFiles;
     } catch (error) {
       console.log('fetch zip file error:', error);
     }
   }
 
-  // Convert srt to vtt
+  async function detectEncoding(file) {
+    const contentArrayBuffer = await file.async("arraybuffer");
+    const view = new DataView(contentArrayBuffer);
+
+    let encoding = 'utf-8';
+    if (view.byteLength >= 2) {
+      const bom = view.getUint16(0);
+      if (bom === 0xFFFE) 
+        encoding = 'utf-16le';
+      else if (bom === 0xFEFF) 
+        encoding = 'utf-16be';
+    }
+    if (encoding === 'utf-16le' || encoding === 'utf-16be') {
+      return new TextDecoder(encoding, { fatal: false }).decode(view);
+    }
+
+    const decoders = [
+      { name: 'utf-8', decoder: new TextDecoder('utf-8', { fatal: false }) },
+      { name: 'windows-1256', decoder: new TextDecoder('windows-1256', { fatal: false }) },
+      { name: 'iso-8859-6', decoder: new TextDecoder('iso-8859-6', { fatal: false }) },
+      { name: 'windows-1252', decoder: new TextDecoder('windows-1252', { fatal: false }) },
+    ];
+    
+    const bytes = new Uint8Array(contentArrayBuffer);
+    let bestMatch = { encoding: null, readableText: null, score: 0 };
+    for (let { name, decoder } of decoders) {
+      try {
+        const text = decoder.decode(bytes);
+        const score = evaluateTextQuality(text);
+        if (score > bestMatch.score) {
+          bestMatch = { encoding: name, readableText: text, score };
+        }
+      } catch (error) {
+        console.log(`Error decoding with ${name}:`, error);
+      }
+    }
+    
+    // encode by bestMatch
+    const selectedDecoder = decoders.find(({ name }) => name === bestMatch.encoding)?.decoder;
+    if (selectedDecoder) {
+      return selectedDecoder.decode(bytes);
+    }
+
+    console.log("No suitable encoding found.");
+    return null;
+  }
+
+  // تابع بررسی کیفیت متن (امتیازدهی به متن خوانا)
+  function evaluateTextQuality(text) {
+    let score = 0;
+    // اگر حروف فارسی در متن هست، امتیاز بده
+    if (/[آ-ی]/.test(text)) score += 10;
+    // اگر حروف غیرقابل نمایش (مثل علامت سوال، مربع) زیاد باشه، امتیاز کم کن
+    const unreadableChars = text.match(/[\uFFFD�]/g);
+    if (unreadableChars) score -= unreadableChars.length * 2;
+    return score;
+  }
+
   function convertSrtToVtt(srtContent) {
-    return 'WEBVTT\n\n' + srtContent.replace(/\r\n|\n/g, '\n').replace(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/g, '$1:$2:$3.$4');
+    let vttContent = 'WEBVTT\n\n';
+    vttContent += srtContent
+      .replace(/\r\n|\n/g, '\n')
+      .replace(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/g, '$1:$2:$3.$4')
+      .replace(/\d+\n/g, '')
+      .replace(/(\d+)(\n)([^\n]+)/g, '$3\n');
+    return vttContent;
   }
 
   // Add vtt subtitle to subtitleFile useState
   function handleVttSelectChange(filename) {
+    if (filename === 'default') { return; }
     const vttFile = vttFileList.filter(vtt => vtt.vttFilename === filename);
     const { vttFilename, vttContent } = vttFile[0];
     if (window.confirm(`This is Okey ?\n${vttContent.substring(0, 100)}`)) {
       const blob = new Blob([vttContent], { type: 'text/vtt' });
       const file = new File([blob], vttFilename, { type: 'text/vtt' });
-      setSubtitleFile((prevFiles) => [...prevFiles, file]);
+      if (!subtitleFile.some(file => file.name === filename)) {
+        setSubtitleFile((prevFiles) => [...prevFiles, file]);
+      } else {
+        console.log('This file already exist!');
+      }
     }
   }
 
@@ -774,7 +846,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
 
                         {/* Subtitle Search Section */}
-                        {subSearchList.length >= 0 &&
+                        {subSearchList.length >= 0 && <>
                           <Modal
                             isOpen={isModalOpen}
                             onClose={handleModalClose}
@@ -793,15 +865,15 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                               </> :
                               <>
                               {/* List of subtitles that found based of selected source [ subdl / opensubtitles ] */}
-                              <select className='subtitles-select' onChange={handleSubtitleSelectChange}>
-                                <option>Please select a subtitle</option>
+                                  <select ref={subSelectRef} className='subtitles-select' defaultValue='default' onChange={handleSubtitleSelectChange}>
+                                    <option value='default'>Please select a subtitle</option>
                                 {subSearchList.map((result, index) => {
                                   const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
                                   const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
                                   return <option key={index} value={file}>{name}</option>
                                 })}
-                                    {subCurrentPage < subTotalPages && <option key='nextPage' value='nextPage'>... next page</option>}
-                                    {subCurrentPage > 1 && <option key='prevPage' value='prevPage'>... previous page</option>}
+                                    {subCurrentPage < subTotalPages && <option key='nextPage' value='nextPage'>Next Page &gt;&gt;&gt;</option>}
+                                    {subCurrentPage > 1 && <option key='prevPage' value='prevPage'> &lt;&lt;&lt; Previous Page</option>}
                               </select>
 
 
@@ -816,8 +888,8 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
 
                                   {/* list of vtt files that unzip from zip which selected  */}
-                                  <select className='vtt-select' defaultValue='defult' onChange={(event) => handleVttSelectChange(event.target.value)}>
-                                    <option value='defult'>Please select a vtt subtitle</option>
+                                      <select className='vtt-select' defaultValue='default' onChange={(event) => handleVttSelectChange(event.target.value)}>
+                                        <option value='default'>Please select a vtt subtitle</option>
                                     {subtitleFileUrl && vttFileList.map((result, index) => {
                                       const content = api === 'subdl' ? result.vttContent : 'No subdl';
                                       const name = api === 'subdl' ? result.vttFilename : result.attributes.release ?? result.attributes.slug;
@@ -829,6 +901,13 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                               </>}
                             </div>
                           </Modal>
+                          <Modal
+                            isOpen={isNestedModalOpen}
+                            onClose={() => setIsNestedModalOpen(false)}
+                          >
+
+                          </Modal>
+                          </>
                         }
 
 

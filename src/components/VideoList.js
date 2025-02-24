@@ -9,6 +9,8 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(()=> {
+    setCaptions([]);
+    setCurrentVideo('');
     fetchVideoList();
   }, []);
 
