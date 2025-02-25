@@ -118,12 +118,12 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     if (selectedMovie.imdbID) {
       searchSubtitle(byIMDB ? selectedMovie.imdbID.split('tt').pop() : selectedMovie.title);
     }
-    console.log('subCurrentPage', subCurrentPage);
+    // console.log('subCurrentPage', subCurrentPage);
   }, [subCurrentPage]);
 
   useEffect(() => {
 
-    console.log('subtitleUploadedFile', subtitleUploadedFile);
+    // console.log('subtitleUploadedFile', subtitleUploadedFile);
   }, [subtitleUploadedFile]);
 
 
@@ -447,9 +447,11 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
         if (filename.endsWith('.srt')) {
           // خواندن محتوای فایل با TextDecoder
           const srtContent = await detectEncoding(file);
-          // console.log(`Best encoding detected: ${srtContent}`);
+          console.log(`Best encoding detected: \n${srtContent.substring(0, 200)}`);
           // const srtContent = await readSrtFile(file);
+          
           const vttContent = convertSrtToVtt(srtContent);
+          console.log(vttContent.substring(0, 200));
           const vttFilename = filename.replace('.srt', '.vtt');
           vttFilesContent.push({ vttFilename: vttFilename, vttContent: vttContent });
           vttFiles.push(`/subs/${vttFilename}`);
@@ -524,11 +526,14 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     let vttContent = 'WEBVTT\n\n';
     vttContent += srtContent
       .replace(/\r\n|\n/g, '\n')
-      .replace(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/g, '$1:$2:$3.$4')
-      .replace(/\d+\n/g, '')
-      .replace(/(\d+)(\n)([^\n]+)/g, '$3\n');
+      .replace(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/g, '$1:$2:$3.$4');
     return vttContent;
   }
+
+  // Convert srt to vtt
+  // function convertSrtToVtt(srtContent) {
+  //   return 'WEBVTT\n\n' + srtContent.replace(/\r\n|\n/g, '\n').replace(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/g, '$1:$2:$3.$4');
+  // }
 
   // Add vtt subtitle to subtitleFile useState
   function handleVttSelectChange(filename) {

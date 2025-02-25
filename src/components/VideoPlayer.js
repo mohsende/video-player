@@ -34,6 +34,7 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     const videoElement = videoRef.current;
     const subtitlePromises = captionsArr.map(async (sub) => {
       const subtitle = await subtitleToBlob(sub.src);
+      console.log('subtitle', subtitle);
       const trackElement = document.createElement('track');
       trackElement.kind = sub.kind;
       trackElement.src = subtitle;
@@ -61,6 +62,7 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     }
   }
 
+  console.log('captionsArr', captionsArr);
   // console.log(captionsArr);
 
   return (
@@ -71,8 +73,8 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
           {
             isTV ?
             <video
-                  ref={videoRef}
-                  key={currentVideo}
+              ref={videoRef}
+              key={currentVideo}
               controls
               width='90%'
               preload="auto"
@@ -88,9 +90,6 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
               url={currentVideo}
               config={{
                 file: {
-                  attributes: {
-                    crossOrigin: '',
-                  },
                   tracks: captionsArr,
                 },
               }}

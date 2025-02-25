@@ -27,6 +27,19 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
     }
   };
 
+  async function subtitleToBlob(url) {
+    try {
+      const response = await fetch(url);
+      const subtitleContent = await response.text();
+      // const trackElement = document.getElementById('subtitleTrack');
+      const blob = new Blob([subtitleContent], { type: 'text/vtt' });
+      const blobUrl = URL.createObjectURL(blob);
+      return blobUrl;
+    } catch (error) {
+      console.error('Error fetching subtitle:', error);
+    }
+  }
+
   const handleVideoClick = async (url) => {
     const video = videoList.find(video => video.url === url);
 
@@ -38,22 +51,25 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
       .filter(key => key.startsWith("subtitle"))
       .map(key => video[key]);
     console.log('subtitles', subtitles);
-    
+
     // Create subtitle tracks
-    const newSubs = subtitles.map((subtitle, index) => ({
+    const newSubsPromises = subtitles.map(async (subtitle, index) => ({
       label: `Fa ${subtitle.split('/').pop().split('-subtitle').pop().split('.')[0]}`,
       kind: 'subtitles',
-      src: subtitle,
+      src: await subtitleToBlob(subtitle),
       default: index === 0, // Set the first subtitle as default
     }));
+    const newSubs = await Promise.all(newSubsPromises);
     console.log('newSubs', newSubs);
 
     // Bypass CORS if using TV otherwise use Cloudflare proxy if using browser
-    if (isTV) {
-      setCurrentVideo(video.url);
-    } else {
-      setCurrentVideo(proxyUrl);
-    }
+    // if (isTV) {
+    //   setCurrentVideo(video.url);
+    // } else {
+    //   setCurrentVideo(proxyUrl);
+    // }
+
+    setCurrentVideo(video.url);
     setCaptions(newSubs);
   };
 
