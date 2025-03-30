@@ -5,6 +5,7 @@ import VideoList from './VideoList';
 import VideoPlayer from './VideoPlayer';
 import * as rdd from 'react-device-detect';
 import Skaleton from './Skaleton';
+import Sidebar from './Sidebar';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
@@ -142,7 +143,9 @@ function App() {
       {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
         {JSON.stringify(rdd, null, 2)}
       </pre> */}
-      <div className='app-container'>
+      <div className='main-container'>
+        <Sidebar />
+        <div className='app-container'>
         {/* <h1>MDe Player</h1> */}
         <button
           className='show-input-section'
@@ -195,6 +198,7 @@ function App() {
             isTV={isTV}
           />
         }
+        </div>
       </div>
     </div>
   );

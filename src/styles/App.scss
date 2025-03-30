@@ -22,7 +22,8 @@ body {
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
-  height: calc(100vh - 10px);
+  // height: calc(100vh - 10px);
+  height: calc(100vh);
   position: relative;
   .screen-size {
     position: absolute;
@@ -32,7 +33,15 @@ body {
     text-align: 'right';
     opacity: 0.3
   }
-  .app-container {
+  .main-container {
+        // font-family: "poppin", Arial, sans-serif;
+        width: 100vw;
+        height: 100vh;
+        /* padding: 10px; */
+        display: grid;
+        grid-template-columns: auto 1fr;
+      
+    .app-container {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -43,6 +52,8 @@ body {
         outline: none;
         padding: 5px 10px;
         color: white;
+        opacity: 0.2;
+        // display: none;
       }
       &-input-section {
         background-color: $showHidebtnColor;
@@ -65,6 +76,7 @@ body {
     }
 
   }
+}
 
   @media screen and (max-width: $breakpoint-mobile) {
     .app-container {
