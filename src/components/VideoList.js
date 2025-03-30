@@ -50,7 +50,7 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
     const subtitles = Object.keys(video)
       .filter(key => key.startsWith("subtitle"))
       .map(key => video[key]);
-    console.log('subtitles', subtitles);
+    // console.log('subtitles', subtitles);
 
     // Create subtitle tracks
     const newSubsPromises = subtitles.map(async (subtitle, index) => ({
@@ -60,7 +60,7 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
       default: index === 0, // Set the first subtitle as default
     }));
     const newSubs = await Promise.all(newSubsPromises);
-    console.log('newSubs', newSubs);
+    // console.log('newSubs', newSubs);
 
     // Bypass CORS if using TV otherwise use Cloudflare proxy if using browser
     // if (isTV) {

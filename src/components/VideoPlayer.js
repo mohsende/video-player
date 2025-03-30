@@ -5,21 +5,14 @@ import '../styles/VideoPlayer.scss'
 function VideoPlayer({currentVideo, captionsArr, isTV}) {
 
   const videoRef = useRef(null);
-
-  // useEffect(() => {
-  //   if (videoRef.current && captionsArr.length > 0) {
-  //     clearTracks();
-  //     createSubtitle();
-  //   }
-  // }, [captionsArr])
-
+  
   useEffect(() => {
     if (videoRef.current) {
       clearTracks();
       createSubtitle();
     }
   }, [currentVideo, captionsArr]);
-
+  
   // Remove the previous tracks
   function clearTracks() {
     const videoElement = videoRef.current;
@@ -28,7 +21,6 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
       videoElement.removeChild(tracks[i]);
     }
   }
-
 
   async function createSubtitle() {
     const videoElement = videoRef.current;
@@ -44,7 +36,6 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     });
     await Promise.all(subtitlePromises);
   }
-
 
   async function subtitleToBlob(url) {
     try {
@@ -62,45 +53,45 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     }
   }
 
-  console.log('captionsArr', captionsArr);
+  // console.log('captionsArr', captionsArr);
   // console.log(captionsArr);
 
   return (
     <div className='video-players'>
-      {currentVideo &&
+        {currentVideo &&
         <div className='player'>
-          <div className="react-player-wrapper">
-          {
-            isTV ?
-            <video
-              ref={videoRef}
-              key={currentVideo}
-              controls
-              width='90%'
-              preload="auto"
-            >
-              <source src={currentVideo} />
-                  {/* { captionsArr.length > 0 &&
-                    captionsArr.map((sub, index) => (<track key={index} label={sub.label} kind={sub.kind} src={subtitleToBlob(sub.src)} default={sub.default} />))
-              } */}
-            </video> 
-            :
-            <ReactPlayer
-              className='react-player'
-              url={currentVideo}
-              config={{
-                file: {
-                  tracks: captionsArr,
-                },
-              }}
-              width='100%' height='auto'
-              style={{ minWidth: '375px' }}
-              controls
-            />
-          }
-          </div>
+            <div className="react-player-wrapper">
+              {
+                isTV ?
+                  <video
+                    ref={videoRef}
+                    key={currentVideo}
+                    controls
+                    width='90%'
+                    preload="auto"
+                  >
+                    <source src={currentVideo} />
+                    {/* { captionsArr.length > 0 &&
+                      captionsArr.map((sub, index) => (<track key={index} label={sub.label} kind={sub.kind} src={subtitleToBlob(sub.src)} default={sub.default} />))
+                } */}
+                  </video>
+                  :
+                  <ReactPlayer
+                    className='react-player'
+                    url={currentVideo}
+                    config={{
+                      file: {
+                        tracks: captionsArr,
+                      },
+                    }}
+                    width='100%' height='auto'
+                    // style={{ minWidth: '375px' }}
+                    controls
+                  />
+              }
+            </div>
         </div>}
-    </div>
+      </div>
   );
 }
 

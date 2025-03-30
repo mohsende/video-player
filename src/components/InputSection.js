@@ -32,7 +32,6 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   const [selectedName, setSelectedName] = useState(null);
   const [subSearchList, setSubSearchList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNestedModalOpen, setIsNestedModalOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
   // const [subSearchFileList, setSubSearchFileList] = useState([]);
@@ -111,6 +110,9 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       movieSectionRef.current.scrollIntoView({
         behavior: 'smooth',
       });
+    }
+    if (findMovies.length > 0) {
+      console.log('useEffect: findMovies', findMovies);
     }
   }, [page, findMovies]);
 
@@ -242,12 +244,32 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     
   };
 
+
   // Find movie data by OMDB API
   async function searchMovie(name, pageNo = 1) {
     if (!name || !isSearching || (totalPages && pageNo > totalPages)) return;
     setLoading(true);
+    const apiUrl = `https://api.themoviedb.org/3/search/person?query=Louis%20Hofmann&include_adult=false&language=en-US&page=1`;
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMjdjYjk4MGZhZjE2ZmQ3MGU2MDhkZWMwMzVjM2YyYiIsIm5iZiI6MTczMDIwNDk0OC41ODUsInN1YiI6IjY3MjBkNTE0YjNkNWNiYjg0MmY0Y2VlNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IIscuRn6KXOyC2xyS4nUy5BF3Fo3iL8DN8xv7LwhpEc'
+      }
+    };
+    try {
+      const response = await fetch(apiUrl, options);
+      const data = await response.json();
+      if (data) {
+        console.log(data);
+      }
+    } catch (error) {
+      console.error('Error fetching TMDB:', error);
+    }
+
+
     const apiUrlMovie = `${OMDB_API_URL}${typeOfSearch}=${name}&page=${pageNo}`;
-    // console.log(apiUrlMovie);
+    console.log(apiUrlMovie);
     try {
       const response = await fetch(apiUrlMovie);
       const data = await response.json();
@@ -905,12 +927,6 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                                 </div>}
                               </>}
                             </div>
-                          </Modal>
-                          <Modal
-                            isOpen={isNestedModalOpen}
-                            onClose={() => setIsNestedModalOpen(false)}
-                          >
-
                           </Modal>
                           </>
                         }
