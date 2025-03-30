@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   padding: 5px 10px;
-  gap: 5px;
+  // gap: 5px;
 
   input {
     border: none;
@@ -37,6 +37,7 @@
   .url-section {
     // padding: 0 10px;
     // margin-top: 10px;
+    margin-bottom: 10px; // instead of gap
     display: flex;
     justify-content: center;
 
@@ -61,7 +62,7 @@
     color: whitesmoke;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    // gap: 5px;
 
     ul {
       list-style: none;
@@ -72,13 +73,14 @@
     .new-name {
       padding: 7px;
       font-size: 1rem;
+      // margin-bottom: 10px; // instead of gap
     }
 
     .type-of-search {
       display: flex;
-      gap: 10px;
+      // gap: 10px;
       justify-content: space-between;
-
+      padding: 10px 0;
       div {
         display: flex;
         gap: 5px;
@@ -383,3 +385,4 @@
     }
   }
 }
+

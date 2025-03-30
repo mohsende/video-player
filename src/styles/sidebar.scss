@@ -14,33 +14,46 @@
     
     li {
       // list-style-type: none;
+      color: rgb(199, 117, 150);
       a {
+        color: inherit;
         padding: 15px 20px;
-        /* border: 1px solid; */
         display: flex;
-        gap: 20px;
-        align-items: center;
-        color: rgb(199, 117, 150);
+        // align-items: center;
         text-decoration: none;
 
-        .icon {}
+        .icon {
+          margin-right: 15px;
+        }
 
         .title {
           font-size: 1.2rem;
-          /* border: 1px solid; */
-          /* padding-right: 20px; */
         }
       }
 
       a:hover {
-        transition: all 250ms ease-in;
-        background-color: rgb(199, 117, 150);
-        color: rgb(52, 52, 52);
+        
+      }
+      
+      a.active {
+        
       }
 
       &:last-child {
         margin-top: auto;
       }
+
+      &:hover {
+        transition: all 250ms ease-in;
+        background-color: rgb(143, 72, 99);
+        color: rgb(196, 196, 196);
+      }
+      
+      &.active {
+        background-color: rgb(199, 117, 150);
+        color: rgb(52, 52, 52);
+      }
     }
+
   }
 }

@@ -144,7 +144,10 @@ function App() {
         {JSON.stringify(rdd, null, 2)}
       </pre> */}
       <div className='main-container'>
-        <Sidebar />
+        <Sidebar 
+          setShowInputSection={setShowInputSection} 
+          setShowVideoList={setShowVideoList}
+        />
         <div className='app-container'>
         {/* <h1>MDe Player</h1> */}
         <button
