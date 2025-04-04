@@ -9,6 +9,11 @@
       position: relative;
       max-width: 100%;
       height: auto;
+      
+      video {
+        width: 100%;
+      }
+      
       .react-player {
         position: absolute;
         top: 0;
