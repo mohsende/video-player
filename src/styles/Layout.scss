@@ -1,0 +1,24 @@
+.layout {
+  .header {
+    display: none;
+  }
+  .main-container{
+    display: flex;
+
+    .content{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      flex-grow: 1;
+      overflow-y: auto;
+      @media screen and (max-width: 400px) {
+        padding: 10px;
+      }
+    }
+  }
+
+  .footer {
+    display: none;
+  }
+}

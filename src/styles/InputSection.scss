@@ -3,7 +3,7 @@
 .input-movie {
   display: flex;
   flex-direction: column;
-  padding: 5px 10px;
+  padding: 5px;
   // gap: 5px;
 
   input {
@@ -148,10 +148,11 @@
       
       .find-movie {
         width: var(--find-movie-width, 400px);
+        height: calc(var(--find-movie-width, 400px) * 3/2);
         border-radius: 10px;
         overflow: hidden;
         transition: all 250ms ease;
-        aspect-ratio: 2/3;
+        // aspect-ratio: 2/3;
 
         &:hover {}
 
@@ -168,14 +169,15 @@
           position: relative;
 
           .movie-data {
-            padding: 15px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 6px;
+            gap: 5px;
 
             span {
               opacity: 0.6;
+              font-size: 1rem;
               font-weight: 600;
               padding: 2px 8px;
               border-radius: 5px;
@@ -198,8 +200,8 @@
           .file-data {
             display: flex;
             flex-direction: column;
-            padding: 15px;
-            gap: 3px;
+            padding: 0 10px;
+            // gap: 3px;
             font-weight: bold;
             line-height: 30px;
 
@@ -210,16 +212,15 @@
                 display: flex;
                 background: #00000060;
                 border-radius: 10px;
+                gap: 5px;
               }
 
               &-column {
-                gap: 5px;
                 flex-direction: column;
               }
 
               &-row {
                 flex-direction: row;
-                gap: 7px;
               }
             }
 
@@ -243,8 +244,8 @@
               .picker {
                 display: flex;
                 gap: 5px;
-                button,
 
+                button,
                 span {
                   outline: none;
                   border-radius: 5px;

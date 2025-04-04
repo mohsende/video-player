@@ -6,6 +6,14 @@ import VideoPlayer from './VideoPlayer';
 import * as rdd from 'react-device-detect';
 import Skaleton from './Skaleton';
 import Sidebar from './Sidebar';
+import TrendMovie from './TrendMovie';
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./Layout.js";
+import Home from "../pages/Home.js";
+import Trending from "../pages/Trending";
+import Add from "../pages/Add.js";
+import Profile from "../pages/Profile.js";
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
@@ -33,8 +41,8 @@ function App() {
       const deviceWidth = rdd.isMobile ? window.innerWidth : window.innerWidth;
       const deviceHeight = rdd.isMobile ? window.innerWidth : window.innerHeight;
       if (deviceWidth < 400) {
-        document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 20}px`);
-        document.documentElement.style.setProperty("--find-movie-height", `${deviceHeight - 20}px`);
+        document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 80}px`);
+        document.documentElement.style.setProperty("--find-movie-height", `${deviceHeight - 80}px`);
       } else {
         // document.documentElement.style.setProperty("--find-movie-width", "350px");
       }
@@ -125,85 +133,126 @@ function App() {
   //   setShowVideoList(show => !show);
   // }
 
-  
+
 
   // console.log('isTV: ',isTV);
 
   // console.log(currentVideo);
+
+        
   
   return (
-    <div className="App">
-      <div className='screen-size'>
-        <span>Device: {rdd.deviceType}|{rdd.browserName}{rdd.isSmartTV && '|is SmartTV'}{rdd.isDesktop && '|Desktop'}{rdd.isBrowser && '|isBrowser'}|
-        </span>
-        <span>Screen Size: {window.innerWidth}x{window.innerHeight}</span>
-      </div>
-      
-      {/* This section is for getting my TV info for setting CORS */}
-      {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
-        {JSON.stringify(rdd, null, 2)}
-      </pre> */}
-      <div className='main-container'>
-        <Sidebar 
-          setShowInputSection={setShowInputSection} 
-          setShowVideoList={setShowVideoList}
-        />
-        <div className='app-container'>
-        {/* <h1>MDe Player</h1> */}
-        <button
-          className='show-input-section'
-          onClick={() => setShowInputSection(show => !show)}>
-          {showInputSection ? 'Hide Input Movie' : 'Show Input Movie'}
-        </button>
-        {
-          showInputSection &&
-          <InputSection
-            WORKER_URL={WORKER_URL}
-            videoList={videoList}
-            setVideoList={setVideoList}
-            setShowInputSection={setShowInputSection}
-          />
-        }
 
-        <button
-          className='show-video-list'
-          onClick={() => setShowVideoList(show => !show)}>
-          {showVideoList ? 'Hide Movie list' : 'Show Movie list'}
-        </button>
-        {
-          showVideoList &&
-          <VideoList
-            WORKER_URL={WORKER_URL}
-            setCaptions={setCaptions}
-            setCurrentVideo={setCurrentVideo}
-            isTV={isTV}
-          />
-        }
-        <div className='TV'>
-          <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
-          <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label>
-        </div>
-        {/* {
-          (showVideoList && isTV) && 
-          <video 
-            controls
-            width='90%'
-            preload="auto" 
-          >
-            <source src={currentVideo} />
-          </video>
-        } */}
-        {
-          showVideoList &&
-          <VideoPlayer
-            currentVideo={currentVideo}
-            captionsArr={captionsArr}
-            isTV={isTV}
-          />
-        }
-        </div>
-      </div>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <h2 className='main-title'>My Video List</h2>
+              <VideoList /* root shows Video List */
+                WORKER_URL={WORKER_URL}
+                setCaptions={setCaptions}
+                setCurrentVideo={setCurrentVideo}
+                isTV={isTV}
+              />
+              <div className='TV'>
+                <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
+                <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label>
+              </div>
+              <VideoPlayer
+                currentVideo={currentVideo}
+                captionsArr={captionsArr}
+                isTV={isTV}
+              />
+            </>
+            } />
+          <Route path="/trending" element={<Trending />} />
+          <Route path="/add" element={
+            <InputSection /* add shows InputSection */
+              WORKER_URL={WORKER_URL}
+              videoList={videoList}
+              setVideoList={setVideoList}
+              setShowInputSection={setShowInputSection} />
+            } />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Layout>
+    </Router>
+
+
+    // <div className="App">
+    //   <div className='screen-size'>
+    //     <span>Device: {rdd.deviceType}|{rdd.browserName}{rdd.isSmartTV && '|is SmartTV'}{rdd.isDesktop && '|Desktop'}{rdd.isBrowser && '|isBrowser'}|
+    //     </span>
+    //     <span>Screen Size: {window.innerWidth}x{window.innerHeight}</span>
+    //   </div>
+    //   <TrendMovie />
+      
+    //   {/* This section is for getting my TV info for setting CORS */}
+    //   {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
+    //     {JSON.stringify(rdd, null, 2)}
+    //   </pre> */}
+    //   <div className='main-container'>
+    //     <Sidebar 
+    //       setShowInputSection={setShowInputSection} 
+    //       setShowVideoList={setShowVideoList}
+    //     />
+    //     <div className='app-container'>
+    //     {/* <h1>MDe Player</h1> */}
+    //     <button
+    //       className='show-input-section'
+    //       onClick={() => setShowInputSection(show => !show)}>
+    //       {showInputSection ? 'Hide Input Movie' : 'Show Input Movie'}
+    //     </button>
+    //     {
+    //       showInputSection &&
+    //       <InputSection
+    //         WORKER_URL={WORKER_URL}
+    //         videoList={videoList}
+    //         setVideoList={setVideoList}
+    //         setShowInputSection={setShowInputSection}
+    //       />
+    //     }
+
+    //     <button
+    //       className='show-video-list'
+    //       onClick={() => setShowVideoList(show => !show)}>
+    //       {showVideoList ? 'Hide Movie list' : 'Show Movie list'}
+    //     </button>
+    //     {
+    //       showVideoList &&
+    //       <VideoList
+    //         WORKER_URL={WORKER_URL}
+    //         setCaptions={setCaptions}
+    //         setCurrentVideo={setCurrentVideo}
+    //         isTV={isTV}
+    //       />
+    //     }
+    //     <div className='TV'>
+    //       <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
+    //       <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label>
+    //     </div>
+    //     {/* {
+    //       (showVideoList && isTV) && 
+    //       <video 
+    //         controls
+    //         width='90%'
+    //         preload="auto" 
+    //       >
+    //         <source src={currentVideo} />
+    //       </video>
+    //     } */}
+    //     {
+    //       showVideoList &&
+    //       <VideoPlayer
+    //         currentVideo={currentVideo}
+    //         captionsArr={captionsArr}
+    //         isTV={isTV}
+    //       />
+    //     }
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
 

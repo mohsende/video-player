@@ -1,0 +1,36 @@
+.main-title {
+  color: rgb(235, 235, 235);
+  padding-left: 10px;
+  text-shadow: 2px 2px 4px black;
+}
+.card-container {
+  padding: 10px;
+  display: grid;
+  // width: 100%;
+  grid-template-columns: repeat(auto-fill, 170px);  
+  gap: 10px;
+
+
+  .card {
+    padding: 10px;
+    // width: 150px;
+    min-height: 250px;
+    border-radius: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    p {
+      text-shadow: 2px 2px 4px black;
+      color: aliceblue;
+    }
+
+    .title {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .type, .year {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+  }
+}
