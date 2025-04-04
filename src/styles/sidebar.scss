@@ -59,4 +59,8 @@ $showHidebtnColor: rgba(0, 247, 255, 0.302);
       }
     }
   }
+  @media screen and (max-width: $breakpoint-mobile) {
+    width: 60px;
+    overflow: hidden;
+  }
 }
