@@ -15,8 +15,8 @@ function App() {
   const [currentVideo, setCurrentVideo] = useState('');
   const [deviceInfo, setDeviceInfo] = useState({});
   const [captionsArr, setCaptions] = useState([]);
-  const [showInputSection, setShowInputSection] = useState(!rdd.isSmartTV);
-  const [showVideoList, setShowVideoList] = useState(rdd.isSmartTV);
+  const [showInputSection, setShowInputSection] = useState(false);
+  const [showVideoList, setShowVideoList] = useState(true);
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
   useEffect(() => {
