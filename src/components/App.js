@@ -133,11 +133,13 @@ function App() {
   
   return (
     <div className="App">
+      {/* Temporary
       <div className='screen-size'>
         <span>Device: {rdd.deviceType}|{rdd.browserName}{rdd.isSmartTV && '|is SmartTV'}{rdd.isDesktop && '|Desktop'}{rdd.isBrowser && '|isBrowser'}|
         </span>
         <span>Screen Size: {window.innerWidth}x{window.innerHeight}</span>
       </div>
+      */}
       
       {/* This section is for getting my TV info for setting CORS */}
       {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
