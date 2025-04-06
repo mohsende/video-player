@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import '../styles/VideoList.scss';
 import Skaleton from './Skaleton';
-import { useEffect } from 'react';
 
 
-function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
+function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV, setIsTV }) {
   const [videoList, setVideoList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isTvCheck, setIsTvCheck] = useState(false);
+  const checkRef = useRef(null);
 
   useEffect(()=> {
     setCaptions([]);
@@ -92,8 +93,19 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV }) {
     }
   };
 
+  function handleToggleCheck() {
+    if(isTV)
+      setIsTV(false);
+    else
+      setIsTV(true);
+
+  }
+
   
   return (<>
+    <div ref={checkRef} className='inTv' onClick={handleToggleCheck}>
+      <div className={isTV ? `checked` : 'unchecked'}></div>
+    </div>
     <ul className='movie-list'>
       {loading && <><li className=''><Skaleton /></li><li><Skaleton /></li></>}
       {videoList.map((video, index) => {

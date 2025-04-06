@@ -33,7 +33,7 @@ function Sidebar({ setShowVideoList, setShowInputSection }) {
             <li>
               <Link to="/trending" className='link'>
                 <span className="material-symbols-rounded icon">tv</span>
-                <span className="title">Trend Movies</span>
+                <span className="title">Trend</span>
               </Link>
             </li>
             <li>

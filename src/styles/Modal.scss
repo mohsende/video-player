@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(10, 10, 10, 0.3);
+  background-color: rgba(10, 10, 10, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,30 +15,55 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   
+  &.popup {
+    background-color: rgba(10, 10, 10, 0.6);
+    
+    .modal{
+      width: min(100%, 720px);
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 15px 15px 0 0;
+      padding: 20px 10px;
+    }
+  }
+
   .modal {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    // height: 90%;
+    align-items: center;
+    max-width: 720px;
+    max-height: 640px;
     display: flex;
     flex-direction: column;
     gap: 5px;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px 10px;
-    border-radius: 15px 15px 0 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    border-radius: 20px;
     overflow-y: auto;
     transform: translateY(100%);
     transition: transform 0.5s ease-in-out, opacity 0.3s ease-in-out;
     pointer-events: auto;
     opacity: 0;
+    
+    // &.popup {
+    //   width: min(100%, 720px);
+    //   bottom: 0;
+    //   left: 0;
+    //   border-radius: 15px 15px 0 0;
+    //   padding: 20px 10px;
+    // }
 
     .close {
-      align-self: center;
-      border-radius: 5px;
-      width: 95%;
-      background-color: dodgerblue;
-      box-shadow: rgb(255 255 255 / 49%) 0px 2px 14px 1px
+      display: none;
+      // position: fixed;
+      // align-self: center;
+      // top: 0px;
+      // right: 0px;
+      // border-radius: 20px;
+      // padding: 5px 8px;
+      // width: 95%; 
+      // background-color: rgb(255 255 255 / 3%);
+      // color: gray;
     }
   }
 

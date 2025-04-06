@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import '../styles/Modal.scss'
 
-function Modal({ isOpen, onClose, children }) {
+function Modal({ isOpen, onClose, isPopUp, children }) {
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
@@ -19,10 +19,10 @@ function Modal({ isOpen, onClose, children }) {
   }
 
   return (
-    <div className={`modal-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
-      <div className='modal' onClick={e => e.stopPropagation()}>
+    <div className={`modal-overlay ${isOpen ? 'open' : ''} ${isPopUp ? 'popup' : ''}`} onClick={onClose}>
+      <div className={`modal`} onClick={e => e.stopPropagation()}>
         {children}
-        <button className="close" onClick={onClose}>Close</button>
+        <button className="close" onClick={onClose}>X</button>
       </div>
     </div>
   );

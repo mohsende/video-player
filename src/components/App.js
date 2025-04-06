@@ -14,6 +14,8 @@ import Home from "../pages/Home.js";
 import Trending from "../pages/Trending";
 import Add from "../pages/Add.js";
 import Profile from "../pages/Profile.js";
+import Player from '../pages/Player.js';
+import Modal from './Modal.js';
 
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
@@ -26,6 +28,8 @@ function App() {
   const [showInputSection, setShowInputSection] = useState(false);
   const [showVideoList, setShowVideoList] = useState(true);
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setDeviceInfo({...deviceInfo,
@@ -41,7 +45,7 @@ function App() {
       const deviceWidth = rdd.isMobile ? window.innerWidth : window.innerWidth;
       const deviceHeight = rdd.isMobile ? window.innerWidth : window.innerHeight;
       if (deviceWidth < 400) {
-        document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 80}px`);
+        document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 50}px`);
         document.documentElement.style.setProperty("--find-movie-height", `${deviceHeight - 80}px`);
       } else {
         // document.documentElement.style.setProperty("--find-movie-width", "350px");
@@ -59,7 +63,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-
+    if (currentVideo) {
+      setIsModalOpen(true);
+    }
   }, [currentVideo])
 
   // const handleVideoClick = async (url) => {
@@ -139,7 +145,11 @@ function App() {
 
   // console.log(currentVideo);
 
-        
+
+  function handleModalClose() {
+    setCurrentVideo('');
+    setIsModalOpen(false);
+  }
   
   return (
 
@@ -154,16 +164,23 @@ function App() {
                 setCaptions={setCaptions}
                 setCurrentVideo={setCurrentVideo}
                 isTV={isTV}
+                setIsTV={setIsTV}
               />
-              <div className='TV'>
+              {/* <div className='TV'>
                 <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
                 <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label>
-              </div>
-              <VideoPlayer
-                currentVideo={currentVideo}
-                captionsArr={captionsArr}
-                isTV={isTV}
-              />
+              </div> */}
+              <Modal
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                isPopUp={false}
+              >
+                <VideoPlayer
+                  currentVideo={currentVideo}
+                  captionsArr={captionsArr}
+                  isTV={isTV}
+                />
+              </Modal>
             </>
             } />
           <Route path="/trending" element={<Trending />} />

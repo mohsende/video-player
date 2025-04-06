@@ -877,6 +877,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                           <Modal
                             isOpen={isModalOpen}
                             onClose={handleModalClose}
+                            isPopUp={true}
                           >
                             <div className="sub-section">
                               {subSearchList.length === 0 ? <>
