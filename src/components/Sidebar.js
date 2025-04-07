@@ -41,22 +41,22 @@ function Sidebar({ setShowVideoList, setShowInputSection }) {
               </NavLink>
             </li>
             <li>
-             <Link to="/add" className='link'>
+              <NavLink to="/add" className='link' activeClassName="active">
                 <span className="material-symbols-rounded icon">add_circle</span>
                 <span className="title">Add</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/search" className='link'>
+              <NavLink to="/search" className='link' activeClassName="active">
                 <span className="material-symbols-rounded icon">search</span>
                 <span className="title">Search</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/profile" className='link'>
+              <NavLink to="/profile" className='link' activeClassName="active">
                 <span className="material-symbols-rounded icon">account_circle</span>
                 <span className="title">Me</span>
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </nav>

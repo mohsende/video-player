@@ -66,14 +66,22 @@ $breakpoint-mobile: 430px;
   }
   
   @media screen and (max-width: $breakpoint-mobile) {
-    width: 100%;
+    width: 90%;
     position: fixed;
     top: auto;
-    bottom: 0;
     height: 60px;
-    // padding-bottom: 10px;;
+    bottom: 20px;
+      display: flex;
+      align-items: center;
+      // justify-self: anchor-center;
+      // margin: 0 auto;
+      margin-left: 5%;
+      border-radius: 20px;
+      overflow: hidden;
     nav {
       padding: 0;
+      flex-grow: 1;
+        margin: 0 auto;
       ul {
         flex-direction: row;
         justify-content: space-evenly;

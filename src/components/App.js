@@ -220,7 +220,7 @@ function App() {
           <Route path="/search" element={
             <>
               <div className='title'>
-                <h2 className='main-title'>Profile</h2>
+                <h2 className='main-title'>Search</h2>
               </div>
               <Search /> 
             </>
