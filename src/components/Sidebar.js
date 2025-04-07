@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import '../styles/sidebar.scss';
 
 function Sidebar({ setShowVideoList, setShowInputSection }) {
@@ -20,26 +20,36 @@ function Sidebar({ setShowVideoList, setShowInputSection }) {
     // console.log(key);
   }
 
+  function handleLinkClick(event) {
+    // console.log(event.target);
+  }
+
   return (<>
       <aside className="sidebar">
         <nav>
           <ul>
-            <li>
-              <Link to="/" className='link'>
+            <li onClick={handleLinkClick}>
+              <NavLink to="/" className='link' activeClassName="active">
                 <span className="material-symbols-rounded icon">home</span>
                 <span className="title">Home</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/trending" className='link'>
+              <NavLink to="/trending" className='link' activeClassName="active">
                 <span className="material-symbols-rounded icon">tv</span>
                 <span className="title">Trend</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
              <Link to="/add" className='link'>
                 <span className="material-symbols-rounded icon">add_circle</span>
                 <span className="title">Add</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/search" className='link'>
+                <span className="material-symbols-rounded icon">search</span>
+                <span className="title">Search</span>
               </Link>
             </li>
             <li>

@@ -103,9 +103,11 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV, setIsTV }) 
 
   
   return (<>
-    <div ref={checkRef} className='inTv' onClick={handleToggleCheck}>
-      <div className={isTV ? `checked` : 'unchecked'}></div>
-    </div>
+    {/* <div className='inTv-container'>
+      <div ref={checkRef} className={`inTv ${isTV ? 'checked' : 'unchecked'}`} onClick={handleToggleCheck}>
+        <div className={isTV ? `checked` : 'unchecked'}></div>
+      </div>
+    </div> */}
     <ul className='movie-list'>
       {loading && <><li className=''><Skaleton /></li><li><Skaleton /></li></>}
       {videoList.map((video, index) => {

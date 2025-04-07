@@ -15,22 +15,27 @@ $breakpoint-mobile: 430px;
       @media screen and (max-width: 400px) {
         // padding: 10px;
       }
-      .main-title {
-        color: rgb(215, 215, 215);
-        background-color: #1a1a1a;
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         position: -webkit-sticky;
         position: sticky;
-        top: 0px;
-        text-shadow: 2px 2px 4px rgb(158, 158, 158);
-        padding: 10px 20px;
-      }
+        top: 0;
+        color: rgb(215, 215, 215);
+        background-color: #1a1a1a;
+        z-index: 999;
 
-      
+        .main-title {
+          text-shadow: 2px 2px 4px rgb(158, 158, 158);
+          padding: 10px 20px;
+        }
+      }
     }
 
-@media screen and (max-width: $breakpoint-mobile) {
-  flex-direction: column;
-  padding-bottom: 70px;
+    @media screen and (max-width: $breakpoint-mobile) {
+      flex-direction: column;
+      padding-bottom: 70px;
     }
   }
 

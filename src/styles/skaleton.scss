@@ -8,7 +8,9 @@
 
 .movie-card {
   width: var(--find-movie-width, 400px);
-  aspect-ratio: 2 / 3;
+  height: calc(var(--find-movie-width, 400px) * 3/2.5);
+  // aspect-ratio: 2 / 3;
+  margin-top: 20px;
 
   .skeleton {
     padding: 20px;

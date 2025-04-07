@@ -34,7 +34,6 @@ function Trending() {
 
   return (
     <>
-      <h2 className='main-title'>Trend Movies</h2>
       <div className='card-container'>
         {movies.length > 0 &&
           movies.map((movie, index) => {

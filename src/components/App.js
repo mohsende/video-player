@@ -14,6 +14,7 @@ import Home from "../pages/Home.js";
 import Trending from "../pages/Trending";
 import Add from "../pages/Add.js";
 import Profile from "../pages/Profile.js";
+import Search from "../pages/Search.js";
 import Player from '../pages/Player.js';
 import Modal from './Modal.js';
 
@@ -145,6 +146,12 @@ function App() {
 
   // console.log(currentVideo);
 
+  function handleToggleCheck() {
+    if (isTV)
+      setIsTV(false);
+    else
+      setIsTV(true);
+  }
 
   function handleModalClose() {
     setCurrentVideo('');
@@ -158,7 +165,12 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
-              <h2 className='main-title'>My Video List</h2>
+              <div className='title'>
+                <h2 className='main-title'>My Video List</h2>
+                <div className={`inTv ${isTV ? 'checked' : 'unchecked'}`} onClick={handleToggleCheck}>
+                  <div className={isTV ? `checked` : 'unchecked'}></div>
+                </div>
+              </div>
               <VideoList /* root shows Video List */
                 WORKER_URL={WORKER_URL}
                 setCaptions={setCaptions}
@@ -183,15 +195,44 @@ function App() {
               </Modal>
             </>
             } />
-          <Route path="/trending" element={<Trending />} />
-          <Route path="/add" element={
-            <InputSection /* add shows InputSection */
-              WORKER_URL={WORKER_URL}
-              videoList={videoList}
-              setVideoList={setVideoList}
-              setShowInputSection={setShowInputSection} />
+          <Route path="/trending" element={
+            <>
+              <div className='title'>
+                <h2 className='main-title'>Trend Movies</h2>
+
+              </div>
+              <Trending />
+            </>
             } />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/add" element={
+            <>
+              <div className='title'>
+                <h2 className='main-title'>Add Movie or Serie</h2>
+
+              </div>
+              <InputSection /* add shows InputSection */
+                WORKER_URL={WORKER_URL}
+                videoList={videoList}
+                setVideoList={setVideoList}
+                setShowInputSection={setShowInputSection} />
+              </>
+          } />
+          <Route path="/search" element={
+            <>
+              <div className='title'>
+                <h2 className='main-title'>Profile</h2>
+              </div>
+              <Search /> 
+            </>
+          } />
+          <Route path="/profile" element={
+            <>
+              <div className='title'>
+                <h2 className='main-title'>Profile</h2>
+              </div>
+              <Profile /> 
+            </>
+          } />
         </Routes>
       </Layout>
     </Router>

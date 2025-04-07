@@ -44,12 +44,6 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   const [byIMDB, setByIMDB] = useState(true);
   const [resultsPages, setResultsPages] = useState([]);
 
-  // const [fileData, setFileData] = useState({
-  //   filename: 'filename',
-  //   season: 1,
-  //   episode: 1,
-  // });
-
   const [newVideo, setNewVideo] = useState({
     url: undefined,
     title: '',
@@ -105,16 +99,16 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     }
   }, [page, isSearching,  selectedName]);
   
-  useEffect(() => {
-    if (page === 1 && findMovies.length > 0 && movieSectionRef.current) {
-      movieSectionRef.current.scrollIntoView({
-        behavior: 'smooth',
-      });
-    }
-    if (findMovies.length > 0) {
-      console.log('useEffect: findMovies', findMovies);
-    }
-  }, [page, findMovies]);
+  // useEffect(() => {
+  //   if (page === 1 && findMovies.length > 0 && movieSectionRef.current) {
+  //     movieSectionRef.current.scrollIntoView({
+  //       behavior: 'smooth',
+  //     });
+  //   }
+  //   if (findMovies.length > 0) {
+  //     console.log('useEffect: findMovies', findMovies);
+  //   }
+  // }, [page, findMovies]);
 
   useEffect(() => {
     if (selectedMovie.imdbID) {
@@ -880,7 +874,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                             isPopUp={true}
                           >
                             <div className="sub-section">
-                              {subSearchList.length === 0 ? <>
+                              {subSearchList.length === 0 ? <div className='upload'>
                                 <span className='subtitle-nothing-found'>Nothing</span>
                                 <input
                                   type="file"
@@ -890,19 +884,21 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                                   // onChange={(e) => setSubtitleFile(e.target.files[0])}
                                   onChange={handleSubSelected}
                                 />
-                              </> :
+                              </div> :
                               <>
                               {/* List of subtitles that found based of selected source [ subdl / opensubtitles ] */}
-                                  <select ref={subSelectRef} className='subtitles-select' defaultValue='default' onChange={handleSubtitleSelectChange}>
-                                    <option value='default'>Please select a subtitle</option>
-                                {subSearchList.map((result, index) => {
-                                  const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
-                                  const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
-                                  return <option key={index} value={file}>{name}</option>
-                                })}
-                                    {subCurrentPage < subTotalPages && <option key='nextPage' value='nextPage'>Next Page &gt;&gt;&gt;</option>}
-                                    {subCurrentPage > 1 && <option key='prevPage' value='prevPage'> &lt;&lt;&lt; Previous Page</option>}
-                              </select>
+                              <div className='subtitles-section'>
+                                <select ref={subSelectRef} className='subtitles-select' defaultValue='default' onChange={handleSubtitleSelectChange}>
+                                  <option value='default'>Please select a subtitle</option>
+                                  {subSearchList.map((result, index) => {
+                                    const name = api === 'subdl' ? result.release_name : result.attributes.release ?? result.attributes.slug;
+                                    const file = api === 'subdl' ? result.url : result.attributes.files[0].file_id ?? result.attributes.url;
+                                    return <option key={index} value={file}>{name}</option>
+                                  })}
+                                  {subCurrentPage < subTotalPages && <option key='nextPage' value='nextPage'>Next Page &gt;&gt;&gt;</option>}
+                                  {subCurrentPage > 1 && <option key='prevPage' value='prevPage'> &lt;&lt;&lt; Previous Page</option>}
+                                </select>
+                              </div>
 
 
 
