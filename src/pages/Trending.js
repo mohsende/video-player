@@ -40,7 +40,7 @@ function Trending() {
             const full_poster_path = poster_path + movie.poster_path;
             return (
               <div className='card' key={index} style={{ backgroundImage: `url(${full_poster_path})` }}>
-                <p className='title'>{movie.title}</p>
+                <p className='movie-title'>{movie.title}</p>
                 <p className='type'>{movie.media_type}</p>
                 <p className='year'>{movie.release_date}</p>
               </div>

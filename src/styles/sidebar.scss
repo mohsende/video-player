@@ -32,7 +32,7 @@ $breakpoint-mobile: 430px;
         font-size: 18px;
         
         &:hover {
-          background: #333;
+          // background: #333;
         }
         
         // .selected {
@@ -45,6 +45,8 @@ $breakpoint-mobile: 430px;
           text-decoration: none;
           display: flex;
           align-items: center;
+          border-radius: 10px;
+          transition: all 250ms ease-in;
           
           &.active {
             background: #b50fe7;
@@ -69,22 +71,24 @@ $breakpoint-mobile: 430px;
     width: 90%;
     position: fixed;
     top: auto;
-    height: 60px;
+    height: 65px;
     bottom: 20px;
-      display: flex;
-      align-items: center;
-      // justify-self: anchor-center;
-      // margin: 0 auto;
-      margin-left: 5%;
-      border-radius: 20px;
-      overflow: hidden;
+    display: flex;
+    align-items: center;
+    // justify-self: anchor-center;
+    // margin: 0 auto;
+    margin-left: 5%;
+    border-radius: 20px;
+    overflow: hidden;
+    border-radius: 50px;
     nav {
       padding: 0;
-      flex-grow: 1;
-        margin: 0 auto;
+      // flex-grow: 1;
+        // margin: 0 auto;
+        width: 100%;
       ul {
         flex-direction: row;
-        justify-content: space-evenly;
+        justify-content: space-between;
         align-items: center;
         li {
           width: 100%;
@@ -93,7 +97,9 @@ $breakpoint-mobile: 430px;
           align-items: center;
           justify-content: center;
           .link {
-            flex-grow: 1;
+            border-radius: 50px;
+            padding: 10px;
+            // flex-grow: 1;
             flex-direction: column;
             .icon {
               font-size: 2rem;
