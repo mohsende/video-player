@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import '../styles/VideoPlayer.scss'
 
+
+import VideoJS from './VideoJS';
+import 'video.js/dist/video-js.css';
+
 function VideoPlayer({currentVideo, captionsArr, isTV}) {
 
   const videoRef = useRef(null);
@@ -53,6 +57,36 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     }
   }
 
+
+
+
+  const playerRef = React.useRef(null);
+
+  const videoJsOptions = {
+    autoplay: true,
+    controls: true,
+    responsive: true,
+    fluid: true,
+    sources: [{
+      src: `${currentVideo}`,
+      type: 'video/mp4'
+    }]
+  };
+
+  const handlePlayerReady = (player) => {
+    playerRef.current = player;
+
+    // You can handle player events here, for example:
+    // player.on('waiting', () => {
+    //   videojs.log('player is waiting');
+    // });
+
+    // player.on('dispose', () => {
+    //   videojs.log('player will dispose');
+    // });
+  };
+
+
   // console.log('captionsArr', captionsArr);
   // console.log(captionsArr);
 
@@ -61,33 +95,51 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
         {currentVideo &&
         <div className='player'>
             <div className="react-player-wrapper">
-              {
-                isTV ?
-                  <video
-                    ref={videoRef}
-                    key={currentVideo}
-                    controls
-                    width='90%'
-                    preload="auto"
-                  >
-                    <source src={currentVideo} />
-                    {/* { captionsArr.length > 0 &&
-                      captionsArr.map((sub, index) => (<track key={index} label={sub.label} kind={sub.kind} src={subtitleToBlob(sub.src)} default={sub.default} />))
-                } */}
-                  </video>
-                  :
-                  <ReactPlayer
-                    className='react-player'
-                    url={currentVideo}
-                    config={{
-                      file: {
-                        tracks: captionsArr,
-                      },
-                    }}
-                    width='100%' height='auto'
-                    // style={{ minWidth: '375px' }}
-                    controls
-                  />
+            {/* <div className='players'>
+                <div className="player-container">
+                  <h3>Video.js Player</h3>
+                  <div data-vjs-player>
+                    <video
+                      id="video-js"
+                      className="video-js"
+                      controls
+                      preload="auto"
+                      width="100%"
+                      height="200px"
+                    >
+                      <source src={currentVideo} type="video/mp4" />
+                    </video>
+                  </div>
+                </div>
+              </div> */}
+            {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
+            {
+              isTV ?
+                <video
+                  ref={videoRef}
+                  key={currentVideo}
+                  controls
+                  width='90%'
+                  preload="auto"
+                >
+                  <source src={currentVideo} />
+                  {/* { captionsArr.length > 0 &&
+                    captionsArr.map((sub, index) => (<track key={index} label={sub.label} kind={sub.kind} src={subtitleToBlob(sub.src)} default={sub.default} />)) } 
+                  */}
+                </video>
+                :
+                <ReactPlayer
+                  className='react-player'
+                  url={currentVideo}
+                  config={{
+                    file: {
+                      tracks: captionsArr,
+                    },
+                  }}
+                  width='100%' height='auto'
+                  // style={{ minWidth: '375px' }}
+                  controls
+                />
               }
             </div>
         </div>}

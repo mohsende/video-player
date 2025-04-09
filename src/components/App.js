@@ -18,8 +18,11 @@ import Search from "../pages/Search.js";
 import Player from '../pages/Player.js';
 import Modal from './Modal.js';
 
+
 const WORKER_URL = 'https://videolinks.bugatichapi.workers.dev/';
 const MYAPI_URL = 'https://www.omdbapi.com/?apikey=c3327b94&s=';
+
+const testVideoUrl = 'https://eu.cdn.divyacamilla.info/download/2/9/542168/1680126/668446/2a01:4ff:f0:14db::1/1746339337/30286601a8e575b8eccf2b7e413dba54f1c173c746/movies/l/Lost_in_the_Shuffle_2024_720p_WEB-DL_AAC_YIFY_30NAMA.mp4';
 
 function App() {
   const [videoList, setVideoList] = useState([]);
@@ -42,6 +45,10 @@ function App() {
       isSmartTV: rdd.isSmartTV
     });
 
+    // if (testVideoUrl){
+    //   setCurrentVideo(testVideoUrl);
+    // }
+
     const updateCSSVariable = () => {
       const deviceWidth = rdd.isMobile ? window.innerWidth : window.innerWidth;
       const deviceHeight = rdd.isMobile ? window.innerWidth : window.innerHeight;
@@ -60,12 +67,13 @@ function App() {
     window.addEventListener("resize", updateCSSVariable);
     return () => window.removeEventListener("resize", updateCSSVariable);
 
-
   }, []);
 
   useEffect(() => {
     if (currentVideo) {
       setIsModalOpen(true);
+      console.log(currentVideo);
+      // console.log(captionsArr);
     }
   }, [currentVideo])
 
