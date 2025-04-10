@@ -72,8 +72,6 @@ function App() {
   useEffect(() => {
     if (currentVideo) {
       setIsModalOpen(true);
-      console.log(currentVideo);
-      // console.log(captionsArr);
     }
   }, [currentVideo])
 

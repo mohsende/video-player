@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import '../styles/VideoPlayer.scss'
 
-
-import VideoJS from './VideoJS';
-import 'video.js/dist/video-js.css';
-
 function VideoPlayer({currentVideo, captionsArr, isTV}) {
 
   const videoRef = useRef(null);
@@ -45,47 +41,14 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     try {
       const response = await fetch(url);
       const subtitleContent = await response.text();
-
       const trackElement = document.getElementById('subtitleTrack');
-
       const blob = new Blob([subtitleContent], { type: 'text/vtt' });
       const blobUrl = URL.createObjectURL(blob);
-
       return blobUrl;
     } catch (error) {
       console.error('Error fetching subtitle:', error);
     }
   }
-
-
-
-
-  const playerRef = React.useRef(null);
-
-  const videoJsOptions = {
-    autoplay: true,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    sources: [{
-      src: `${currentVideo}`,
-      type: 'video/mp4'
-    }]
-  };
-
-  const handlePlayerReady = (player) => {
-    playerRef.current = player;
-
-    // You can handle player events here, for example:
-    // player.on('waiting', () => {
-    //   videojs.log('player is waiting');
-    // });
-
-    // player.on('dispose', () => {
-    //   videojs.log('player will dispose');
-    // });
-  };
-
 
   // console.log('captionsArr', captionsArr);
   // console.log(captionsArr);

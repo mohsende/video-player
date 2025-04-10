@@ -23,7 +23,7 @@ function Trending() {
       const response = await fetch(apiUrl, options);
       const data = await response.json();
       if (data) {
-        console.log(data.results);
+        // console.log(data.results);
         setMovies(data.results);
       }
     } catch (error) {

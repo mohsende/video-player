@@ -255,7 +255,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       const response = await fetch(apiUrl, options);
       const data = await response.json();
       if (data) {
-        console.log(data);
+        // console.log(data);
       }
     } catch (error) {
       console.error('Error fetching TMDB:', error);
@@ -263,7 +263,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
 
     const apiUrlMovie = `${OMDB_API_URL}${typeOfSearch}=${name}&page=${pageNo}`;
-    console.log(apiUrlMovie);
+    // console.log(apiUrlMovie);
     try {
       const response = await fetch(apiUrlMovie);
       const data = await response.json();
