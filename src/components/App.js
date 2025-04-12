@@ -33,6 +33,8 @@ function App() {
   const [showVideoList, setShowVideoList] = useState(true);
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
+  const [isProxy, setIsProxy] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ function App() {
 
   useEffect(() => {
     if (currentVideo) {
+      console.log(currentVideo);
       setIsModalOpen(true);
     }
   }, [currentVideo])
@@ -159,6 +162,13 @@ function App() {
       setIsTV(true);
   }
 
+  function handleToggleIsProxy() {
+    if (isProxy)
+      setIsProxy(false);
+    else
+      setIsProxy(true);
+  }
+
   function handleModalClose() {
     setCurrentVideo('');
     setIsModalOpen(false);
@@ -173,16 +183,31 @@ function App() {
             <>
               <div className='title'>
                 <h2 className='main-title'>My Video List</h2>
-                <div className={`inTv ${isTV ? 'checked' : 'unchecked'}`} onClick={handleToggleCheck}>
-                  <div className={isTV ? `checked` : 'unchecked'}></div>
+                <div className='check-section'>
+                  <div className={`check-section-proxy ${isProxy ? 'checked' : 'unchecked'}`}>
+                    <span>Proxy</span>
+                    <div className={`inTv ${isProxy ? 'checked' : 'unchecked'}`}
+                      onClick={handleToggleIsProxy}>
+                      <div className={isProxy ? `checked` : 'unchecked'}></div>
+                    </div>
+                  </div>
+                  <div className={`check-section-tv ${isTV ? ' checked' : 'unchecked'}`}>
+                    <span>TV</span>
+                    <div className={`inTv ${isTV ? 'checked' : 'unchecked'}`}
+                      onClick={handleToggleCheck}>
+                      <div className={isTV ? `checked` : 'unchecked'}></div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <VideoList /* root shows Video List */
                 WORKER_URL={WORKER_URL}
                 setCaptions={setCaptions}
                 setCurrentVideo={setCurrentVideo}
-                isTV={isTV}
-                setIsTV={setIsTV}
+                // isTV={isTV}
+                // setIsTV={setIsTV}
+                isProxy={isProxy}
+                // setIsProxy={setIsProxy}
               />
               {/* <div className='TV'>
                 <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
@@ -197,6 +222,7 @@ function App() {
                   currentVideo={currentVideo}
                   captionsArr={captionsArr}
                   isTV={isTV}
+                  isProxy={isProxy}
                 />
               </Modal>
             </>

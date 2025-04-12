@@ -3,7 +3,7 @@ import '../styles/VideoList.scss';
 import Skaleton from './Skaleton';
 
 
-function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV, setIsTV }) {
+function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
   const [videoList, setVideoList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isTvCheck, setIsTvCheck] = useState(false);
@@ -69,8 +69,15 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV, setIsTV }) 
     // } else {
     //   setCurrentVideo(proxyUrl);
     // }
+    
+    // Using Cloudflare proxy for bypassing filtering like telegram videos
+    if (!isProxy) {
+      setCurrentVideo(video.url);
+    } else {
+      setCurrentVideo(proxyUrl);
+    }
 
-    setCurrentVideo(video.url);
+    // setCurrentVideo(video.url);
     setCaptions(newSubs);
   };
 
@@ -93,13 +100,13 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isTV, setIsTV }) 
     }
   };
 
-  function handleToggleCheck() {
-    if(isTV)
-      setIsTV(false);
-    else
-      setIsTV(true);
+  // function handleToggleCheck() {
+  //   if(isTV)
+  //     setIsTV(false);
+  //   else
+  //     setIsTV(true);
 
-  }
+  // }
 
   
   return (<>

@@ -2,35 +2,60 @@
 @import './App.scss';
 
 
-.inTv {
-  width: 55px;
-  padding: 2px;
-  border-radius: 20px;
-  margin-right: 10px;
-  cursor: pointer;
-  transition: all 300ms ease-out;
+.check-section {
+  display: flex;
+  align-items: center;
 
-  &.checked {
-    background-color: #0b9d1e;
-  }
+  .check-section-proxy,
+  .check-section-tv {
+    display: flex;
+    align-items: center;
+    span {
+      margin-right: 5px;
+      opacity: .5;
+    };
 
-  &.unchecked {
-    background-color: #494949;
-  }
+    &.checked {
+      span {
+        opacity: 1;
+        color: #FFFFFF;
+        background: #232323;
+        text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18;
+      }
+    }
 
-  .checked,
-  .unchecked {
-    width: 26px;
-    height: 25px;
-    margin: 1px;
-  border-radius: 30px;
-    background-color: #f4f4f4;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    transition: all 200ms ease-out;
+    .inTv {
+      width: 45px;
+      padding: 2px;
+      border-radius: 20px;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: all 300ms ease-out;
+  
+      &.checked {
+        background-color: #0b9d1e;
+      }
+      
+      &.unchecked {
+        background-color: #494949;
+      }
+      
+      .checked,
+      .unchecked {
+        width: 26px;
+        height: 25px;
+        margin: 1px;
+        border-radius: 30px;
+        background-color: #f4f4f4;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        transition: all 200ms ease-out;
+      }
+      .checked {
+        transform: translateX(13px);
+      }
+    }
   }
-    .checked {
-  transform: translateX(23px);
-  }
+  
 }
 
 
