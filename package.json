@@ -23,6 +23,7 @@
     "shaka-player": "^4.10.10",
     "video.js": "^8.17.3",
     "videojs-contrib-hls": "^5.15.0",
+    "videojs-vtt-thumbnails": "^0.0.13",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.6.0",
     "workbox-broadcast-update": "^6.6.0",

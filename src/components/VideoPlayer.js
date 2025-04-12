@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import '../styles/VideoPlayer.scss'
+import VideoJS from './VideoJS';
+import { preload } from 'react-dom';
 
 function VideoPlayer({currentVideo, captionsArr, isTV}) {
 
@@ -50,15 +52,47 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     }
   }
 
+  const videoJsOptions = {
+    // autoplay: true,
+    controls: true,
+    responsive: true,
+    fluid: true,
+    disablePictureInPicture: true,
+    preload: 'metadata',
+    sources: [{
+      src: currentVideo,
+      type: 'video/mp4'
+    }],
+    controlBar: {
+      skipButtons: {
+        backward: 10,
+        forward: 10
+      }
+    }
+  }
+
+  const playerRef = React.useRef(null);
+  const handlePlayerReady = (player) => {
+    playerRef.current = player;
+
+    player.on('waiting', () => {
+      console.log('Player is waiting');
+    });
+
+    player.on('dispose', () => {
+      console.log('Player will dispose');
+    });
+  };
+
   // console.log('captionsArr', captionsArr);
   // console.log(captionsArr);
 
   return (
     <div className='video-players'>
         {currentVideo &&
-        <div className='player'>
+          <div className='player'>
             <div className="react-player-wrapper">
-            {/* <div className='players'>
+              {/* <div className='players'>
                 <div className="player-container">
                   <h3>Video.js Player</h3>
                   <div data-vjs-player>
@@ -66,43 +100,41 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
                       id="video-js"
                       className="video-js"
                       controls
-                      preload="auto"
-                      width="100%"
-                      height="200px"
+                      preload="metadata"
                     >
                       <source src={currentVideo} type="video/mp4" />
                     </video>
                   </div>
                 </div>
               </div> */}
-            {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
+            <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
             {
-              isTV ?
-                <video
-                  ref={videoRef}
-                  key={currentVideo}
-                  controls
-                  width='90%'
-                  preload="auto"
-                >
-                  <source src={currentVideo} />
-                  {/* { captionsArr.length > 0 &&
-                    captionsArr.map((sub, index) => (<track key={index} label={sub.label} kind={sub.kind} src={subtitleToBlob(sub.src)} default={sub.default} />)) } 
-                  */}
-                </video>
-                :
-                <ReactPlayer
-                  className='react-player'
-                  url={currentVideo}
-                  config={{
-                    file: {
-                      tracks: captionsArr,
-                    },
-                  }}
-                  width='100%' height='auto'
-                  // style={{ minWidth: '375px' }}
-                  controls
-                />
+              // isTV ?
+              //   <video
+              //     ref={videoRef}
+              //     key={currentVideo}
+              //     controls
+              //     width='90%'
+              //     preload="auto"
+              //   >
+              //     <source src={currentVideo} />
+              //     {/* { captionsArr.length > 0 &&
+              //       captionsArr.map((sub, index) => (<track key={index} label={sub.label} kind={sub.kind} src={subtitleToBlob(sub.src)} default={sub.default} />)) } 
+              //     */}
+              //   </video>
+              //   :
+              //   <ReactPlayer
+              //     className='react-player'
+              //     url={currentVideo}
+              //     config={{
+              //       file: {
+              //         tracks: captionsArr,
+              //       },
+              //     }}
+              //     width='100%' height='auto'
+              //     // style={{ minWidth: '375px' }}
+              //     controls
+              //   />
               }
             </div>
         </div>}

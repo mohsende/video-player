@@ -1,0 +1,121 @@
+/* Base styling for the Video.js player */
+.video-js {
+  font-size: 16px;
+  color: #cacaca;
+}
+
+
+.vjs-default-skin .vjs-big-play-button {
+  font-size: 4em;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  border-radius: 50%;
+  background: transparent;
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+
+/* Control bar background */
+.video-js .vjs-control-bar,
+.video-js .vjs-big-play-button {
+  background-color: rgba(38, 38, 38, 0.9);
+  border-radius: 0.5em;
+}
+
+
+.video-js .vjs-control {
+  border-right: 1px solid #323232;
+}
+
+
+.video-js .vjs-play-control:before {
+  content: '\25BA';
+  font-size: 1.2em;
+}
+
+
+.video-js .vjs-playing .vjs-play-control:before {
+  content: '\23F8';
+}
+
+
+/* Fullscreen control */
+.video-js .vjs-fullscreen-control:before {
+  content: '\26F6';
+}
+
+
+/* Volume control */
+.video-js .vjs-volume-menu-button:before {
+  content: '\1F50A';
+}
+
+
+/* Progress bar styles */
+.video-js .vjs-progress-control {
+  height: 0.9em;
+  background-color: rgba(38, 38, 38, 0.9);
+  border-radius: 1em;
+}
+
+
+.video-js .vjs-play-progress {
+  background: #b7090b;
+  border-radius: 1em;
+}
+
+
+.video-js .vjs-load-progress {
+  background: rgba(38, 38, 38, 0.5);
+}
+
+
+/* Slider handle customization */
+.video-js .vjs-play-progress:before {
+  content: '';
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background: radial-gradient(circle, #b7090b 33%, #830607);
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 100%;
+  box-shadow: 0 0 2px #000;
+}
+
+
+.video-js .vjs-play-progress:hover:before {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+
+.video-js .vjs-time-tooltip {
+  background: #cacaca !important;
+  color: #b7090b !important;
+  border-radius: 3px;
+}
+
+
+.vjs-loading-spinner {
+  background: url('https://assets.nflxext.com/en_us/pages/wiplayer/site-spinner.png') no-repeat center center;
+  background-size: 50%;
+  border: none;
+}
+
+
+.video-js:hover .vjs-control-bar {
+  bottom: 2em;
+  transition: bottom 0.3s ease-in-out;
+}
+
+
+.video-js.vjs-fullscreen .vjs-control-bar {
+  bottom: 3em;
+}

@@ -1,6 +1,10 @@
 import React from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import "videojs-vtt-thumbnails";
+// import "../styles/videojs-vtt-thumbnails";
+// import '../styles/videojs-netflix.css';
+
 
 export const VideoJS = (props) => {
   const videoRef = React.useRef(null);
@@ -21,6 +25,10 @@ export const VideoJS = (props) => {
         videojs.log('player is ready');
         onReady && onReady(player);
       });
+
+      // playerRef.current.vttThumbnails({
+      //   src: `sub-1.vtt`
+      // });
 
       // You could update an existing player in the `else` block here
       // on prop change, for example:
