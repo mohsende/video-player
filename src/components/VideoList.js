@@ -116,7 +116,10 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
       </div>
     </div> */}
     <ul className='movie-list'>
-      {loading && <><li className=''><Skaleton /></li><li><Skaleton /></li></>}
+      {loading && <>
+        <Skaleton />
+        <Skaleton />
+        </>}
       {videoList.map((video, index) => {
         const jsonVideo = JSON.stringify(video);
         var hasSub = jsonVideo.includes(`subtitle`); //Check for having subtitle

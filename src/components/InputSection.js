@@ -3,6 +3,7 @@ import JSZip from 'jszip';
 import '../styles/InputSection.scss';
 import Modal from './Modal.js';
 import Skaleton from './Skaleton';
+import { useNavigate } from 'react-router-dom';
 
 // Modal.setAppElement('#root');
 // import { BottomSheet } from 'react-spring-bottom-sheet';
@@ -72,6 +73,10 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
   const [subTotalPages, setSubTotalPages] = useState(1);
   const [subCurrentPage, setSubCurrentPage] = useState(1);
+
+
+  let navigate = useNavigate();
+
   // const [addLastMovieRef, setAddLastMovieRef] = useState(true)
 
   // const lastMovieRef = useCallback(
@@ -692,6 +697,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
             setVideoUrl('');
             setSubtitleFile([]);
             setShowInputSection(false);
+            navigate('/');
           } catch (error) {
             console.error('Error saving links:', error);
           };
