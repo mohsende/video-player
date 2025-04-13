@@ -44,9 +44,9 @@ function Sidebar({ setShowVideoList, setShowInputSection }) {
               </NavLink>
             </li>
             <li>
-            <NavLink to="/search" className={({ isActive }) => isActive ? "active link" : 'link'}>
+            <NavLink to="/details" className={({ isActive }) => isActive ? "active link" : 'link'}>
                 <span className="material-symbols-rounded icon">search</span>
-                <span className="title">Search</span>
+                <span className="title">Details</span>
               </NavLink>
             </li>
             <li>

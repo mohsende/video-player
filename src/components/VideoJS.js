@@ -9,38 +9,30 @@ import "videojs-vtt-thumbnails";
 export const VideoJS = (props) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
-  const { options, onReady } = props;
+  const { options, onReady, captions } = props;
 
   React.useEffect(() => {
-
     // Make sure Video.js player is only initialized once
     if (!playerRef.current) {
       // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode. 
       const videoElement = document.createElement("video-js");
-
       videoElement.classList.add('vjs-big-play-centered');
       videoRef.current.appendChild(videoElement);
-
       const player = playerRef.current = videojs(videoElement, options, () => {
-        videojs.log('player is ready');
+        // videojs.log('player is ready');
         onReady && onReady(player);
       });
-
-      // playerRef.current.vttThumbnails({
-      //   src: `sub-1.vtt`
-      // });
-
-      // You could update an existing player in the `else` block here
-      // on prop change, for example:
     } else {
       const player = playerRef.current;
-
       player.autoplay(options.autoplay);
       player.src(options.sources);
+      
+      captions.forEach((track) => {
+        player.addRemoteTextTrack({...track, mode: 'showing'});
+      });
     }
   }, [options, videoRef]);
-
-  // Dispose the Video.js player when the functional component unmounts
+    
   React.useEffect(() => {
     const player = playerRef.current;
 
@@ -55,6 +47,7 @@ export const VideoJS = (props) => {
   return (
     <div data-vjs-player>
       <div ref={videoRef} />
+      <h6 style={{color: 'gray', opacity: '0.5', textAlign: 'right'}}>by video.js</h6>
     </div>
   );
 }

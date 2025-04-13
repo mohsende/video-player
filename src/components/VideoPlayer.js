@@ -6,6 +6,8 @@ import { preload } from 'react-dom';
 
 function VideoPlayer({currentVideo, captionsArr, isTV}) {
 
+  const [captions, setCaptions] = useState([])
+
   const videoRef = useRef(null);
   
   useEffect(() => {
@@ -13,6 +15,7 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
       clearTracks();
       createSubtitle();
     }
+    // console.log(captionsArr);
   }, [currentVideo, captionsArr]);
   
   // Remove the previous tracks
@@ -25,18 +28,39 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
   }
 
   async function createSubtitle() {
-    const videoElement = videoRef.current;
-    const subtitlePromises = captionsArr.map(async (sub) => {
-      const subtitle = await subtitleToBlob(sub.src);
-      console.log('subtitle', subtitle);
-      const trackElement = document.createElement('track');
-      trackElement.kind = sub.kind;
-      trackElement.src = subtitle;
-      trackElement.default = sub.default;
-      trackElement.label = sub.label;
-      videoElement.appendChild(trackElement);
-    });
-    await Promise.all(subtitlePromises);
+    if (videoRef.current !== null) {
+      const videoElement = videoRef.current;
+      const subtitlePromises = captionsArr.map(async (sub) => {
+        const subtitle = await subtitleToBlob(sub.src);
+        // console.log('subtitle', subtitle);
+        const caption = {
+          kind: sub.kind,
+          srclang: 'fa',
+          label: sub.label,
+          src: subtitle
+        };
+        setCaptions([...captions, caption]);
+        const trackElement = document.createElement('track');
+        trackElement.kind = sub.kind;
+        trackElement.src = subtitle;
+        trackElement.default = sub.default;
+        trackElement.label = sub.label;
+        videoElement.appendChild(trackElement);
+      });
+      await Promise.all(subtitlePromises);
+    } else {
+      const subtitlePromises = captionsArr.map(async (sub) => {
+        const subtitle = await subtitleToBlob(sub.src);
+        // console.log('subtitle', subtitle);
+        const caption = {
+          kind: sub.kind,
+          label: sub.label,
+          src: subtitle
+        };
+        setCaptions([...captions, caption]);
+      });
+      await Promise.all(subtitlePromises);
+    }
   }
 
   async function subtitleToBlob(url) {
@@ -71,44 +95,41 @@ function VideoPlayer({currentVideo, captionsArr, isTV}) {
     }
   }
 
+  // const captionOption = [{
+  //   kind: 'captions',
+  //   srclang: 'fa',
+  //   label: 'Farsi 1',
+  //   src: 'sub-1.vtt',
+  //   mode: 'showing'
+  // }, {
+  //     kind: 'captions',
+  //     srclang: 'fa',
+  //     label: 'Farsi 2',
+  //     src: 'sub-2.vtt',
+  //   },];
+
   const playerRef = React.useRef(null);
   const handlePlayerReady = (player) => {
     playerRef.current = player;
 
+    createSubtitle();
     player.on('waiting', () => {
-      console.log('Player is waiting');
+      // console.log('Player is waiting');
     });
 
     player.on('dispose', () => {
-      console.log('Player will dispose');
+      // console.log('Player will dispose');
     });
   };
-
-  // console.log('captionsArr', captionsArr);
-  // console.log(captionsArr);
 
   return (
     <div className='video-players'>
         {currentVideo &&
           <div className='player'>
             <div className="react-player-wrapper">
-              {/* <div className='players'>
-                <div className="player-container">
-                  <h3>Video.js Player</h3>
-                  <div data-vjs-player>
-                    <video
-                      id="video-js"
-                      className="video-js"
-                      controls
-                      preload="metadata"
-                    >
-                      <source src={currentVideo} type="video/mp4" />
-                    </video>
-                  </div>
-                </div>
-              </div> */}
-            <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
-            {
+              <VideoJS options={videoJsOptions} onReady={handlePlayerReady} captions={captions} />
+
+              {
               // isTV ?
               //   <video
               //     ref={videoRef}

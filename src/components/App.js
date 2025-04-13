@@ -10,6 +10,7 @@ import TrendMovie from './TrendMovie';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout.js";
+import Details from "./Details.js";
 import Home from "../pages/Home.js";
 import Trending from "../pages/Trending";
 import Add from "../pages/Add.js";
@@ -249,12 +250,12 @@ function App() {
                 setShowInputSection={setShowInputSection} />
               </>
           } />
-          <Route path="/search" element={
+          <Route path="/details" element={
             <>
               <div className='title'>
-                <h2 className='main-title'>Search</h2>
+                <h2 className='main-title'>Movie Details</h2>
               </div>
-              <Search /> 
+              <Details /> 
             </>
           } />
           <Route path="/profile" element={
@@ -268,81 +269,6 @@ function App() {
         </Routes>
       </Layout>
     </Router>
-
-
-    // <div className="App">
-    //   <div className='screen-size'>
-    //     <span>Device: {rdd.deviceType}|{rdd.browserName}{rdd.isSmartTV && '|is SmartTV'}{rdd.isDesktop && '|Desktop'}{rdd.isBrowser && '|isBrowser'}|
-    //     </span>
-    //     <span>Screen Size: {window.innerWidth}x{window.innerHeight}</span>
-    //   </div>
-    //   <TrendMovie />
-      
-    //   {/* This section is for getting my TV info for setting CORS */}
-    //   {/* <pre style={{textWrap: 'wrap', color: 'whitesmoke', opacity: '0.3'}}>
-    //     {JSON.stringify(rdd, null, 2)}
-    //   </pre> */}
-    //   <div className='main-container'>
-    //     <Sidebar 
-    //       setShowInputSection={setShowInputSection} 
-    //       setShowVideoList={setShowVideoList}
-    //     />
-    //     <div className='app-container'>
-    //     {/* <h1>MDe Player</h1> */}
-    //     <button
-    //       className='show-input-section'
-    //       onClick={() => setShowInputSection(show => !show)}>
-    //       {showInputSection ? 'Hide Input Movie' : 'Show Input Movie'}
-    //     </button>
-    //     {
-    //       showInputSection &&
-    //       <InputSection
-    //         WORKER_URL={WORKER_URL}
-    //         videoList={videoList}
-    //         setVideoList={setVideoList}
-    //         setShowInputSection={setShowInputSection}
-    //       />
-    //     }
-
-    //     <button
-    //       className='show-video-list'
-    //       onClick={() => setShowVideoList(show => !show)}>
-    //       {showVideoList ? 'Hide Movie list' : 'Show Movie list'}
-    //     </button>
-    //     {
-    //       showVideoList &&
-    //       <VideoList
-    //         WORKER_URL={WORKER_URL}
-    //         setCaptions={setCaptions}
-    //         setCurrentVideo={setCurrentVideo}
-    //         isTV={isTV}
-    //       />
-    //     }
-    //     <div className='TV'>
-    //       <input id='TV' type='checkbox' checked={isTV} onChange={(e) => setIsTV(e.target.checked)} />
-    //       <label htmlFor='TV' style={{ color: isTV ? '#ffff00' : '#555', fontWeight: 'bold' }}>Watching in TV</label>
-    //     </div>
-    //     {/* {
-    //       (showVideoList && isTV) && 
-    //       <video 
-    //         controls
-    //         width='90%'
-    //         preload="auto" 
-    //       >
-    //         <source src={currentVideo} />
-    //       </video>
-    //     } */}
-    //     {
-    //       showVideoList &&
-    //       <VideoPlayer
-    //         currentVideo={currentVideo}
-    //         captionsArr={captionsArr}
-    //         isTV={isTV}
-    //       />
-    //     }
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
 
