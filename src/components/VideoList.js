@@ -1,12 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
 import '../styles/VideoList.scss';
 import Skaleton from './Skaleton';
+import Modal from './Modal.js';
+import Details from './Details';
 
 
 function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
   const [videoList, setVideoList] = useState([]);
+  const [videoToEdit, setVideoToEdit] = useState('');
   const [loading, setLoading] = useState(false);
   const [isTvCheck, setIsTvCheck] = useState(false);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const checkRef = useRef(null);
 
   useEffect(()=> {
@@ -14,13 +20,20 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
     setCurrentVideo('');
     fetchVideoList();
   }, []);
-
+  
+  useEffect(()=> {
+    if (videoToEdit !== '') {
+      setIsEditModalOpen(true);
+    }
+  }, [videoToEdit]);
+  
   const fetchVideoList = async () => {
     setLoading(true);
     try {
       const response = await fetch(WORKER_URL);
       const data = await response.json();
       setVideoList(data || []);
+      // console.log(videoList);
     } catch (error) {
       console.error('Error fetching links:', error);
     } finally {
@@ -100,6 +113,43 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
     }
   };
 
+  function handleEditModalClose() {
+    setVideoToEdit('');
+    setIsEditModalOpen(false);
+  }
+
+  const handleEditVideo = async (event, url) => {
+    event.stopPropagation();
+    setVideoToEdit(videoList.filter(video => video.url === url)[0]);
+
+    // return <>
+    //   <Modal
+    //     isOpen={isEditModalOpen}
+    //     onClose={handleEditModalClose}
+    //     isPopUp={true}
+    //   >
+    //     <Details
+    //       videoDetails={videoDetails}
+    //     />
+    //   </Modal>
+    // </>;
+    // if (window.confirm("Are you sure to delete ?")) {
+    //   setCurrentVideo('');
+    //   try {
+    //     await fetch(WORKER_URL, {
+    //       method: 'DELETE',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify({ url }),
+    //     });
+    //     const updatedList = videoList.filter(video => video.url !== url);
+    //     setVideoList(updatedList);
+    //   } catch (error) {
+    //     alert(`Fail to delete:\n ${url}`)
+    //     console.error('Error deleting link:', error);
+    //   }
+    // }
+  };
+
   // function handleToggleCheck() {
   //   if(isTV)
   //     setIsTV(false);
@@ -138,11 +188,21 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
               <span className={hasSub ? 'is-sub' : undefined}>Subtitle</span>}
             </span>
             
+            <button className='edit-btn' onClick={(event) => handleEditVideo(event, video.url)}>EDIT</button>
             <button className='delete-btn' onClick={(event) => handleDeleteVideo(event, video.url)}>DELETE</button>
           </div>
         </li>
       )})}
     </ul>
+    <Modal
+      isOpen={isEditModalOpen}
+      onClose={handleEditModalClose}
+      isPopUp={false}
+    >
+      <Details
+        videoToEdit={videoToEdit}
+      />
+    </Modal>
   </>
   );
 }

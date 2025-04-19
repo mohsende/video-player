@@ -1,0 +1,143 @@
+@import './global.scss';
+@import './styles.scss';
+
+$breakpoint-mobile: 430px;
+$breakpoint-tablet: 1024px;
+$showHidebtnColor: rgba(0, 247, 255, 0.302);
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.details-container {
+  // display: flex;
+  width: 100%;
+  padding: 10px;
+  // border: 1px solid rgb(196, 196, 196);
+  flex-wrap: nowrap;
+  align-items: center;
+
+  
+  .card {
+    // width: 100%;
+    // flex-grow: 1;
+    background-position: center;
+    border-radius: 8px;
+  }
+
+  .details-box {
+    display: flex;
+    // flex-direction: column;
+    max-width: 100%;
+    flex-grow: 1;
+    padding-left: 10px;
+
+
+    .save-btn {
+      // width: 90%;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+      background-color: #71cd50;
+      color: #3e3e3e;
+      font-size: 1rem;
+      font-weight: bold;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .name-type {
+      // display: flex;
+      max-width: 100%;
+    }
+
+    & input {
+      margin-bottom: 5px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    span {
+      color: #ffe66a;
+      font-size: 0.8rem;
+      margin-bottom: -3px;
+      z-index: 10;
+      margin-left: 5px;
+      text-shadow: 1px 1px 8px rgb(181 88 230);
+    }
+
+    .season-episode {
+      max-width: 100%;
+      input {
+        // flex-grow: 1;
+        // flex-shrink: 1;
+        // width: 100%;
+        // max-width: 100px;
+        // margin-right: 10px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+
+  .modal {
+    height: calc(var(--find-movie-width) * 3 / 1.8);
+  }
+  
+  .details-container {
+    flex-direction: column;
+    position: relative;
+
+    .card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(var(--find-movie-width) * 3 / 1.6);
+      border-radius: 0px;
+      z-index: -1;
+    }
+
+    .details-box {
+      padding: 20px;
+      /* From https://css.glass */
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      // border: 1px solid rgba(255, 255, 255, 0.3);
+
+      span {
+        color: #ffffff;
+        font-size: 1rem;
+        margin-bottom: 0px;
+        z-index: 10;
+        // margin-left: 5px;
+        text-shadow: 1px 1px 8px rgb(0, 0, 0);
+      }
+
+      & .flex-row {
+        flex-direction: column;
+      }
+
+      & .season-episode.flex-row {
+        flex-direction: row;
+        justify-content: space-between;
+
+        .flex-col {
+          width: 48%;
+        }
+      }
+    }
+  }
+}
