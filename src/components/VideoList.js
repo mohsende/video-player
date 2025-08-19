@@ -121,33 +121,6 @@ function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
   const handleEditVideo = async (event, url) => {
     event.stopPropagation();
     setVideoToEdit(videoList.filter(video => video.url === url)[0]);
-
-    // return <>
-    //   <Modal
-    //     isOpen={isEditModalOpen}
-    //     onClose={handleEditModalClose}
-    //     isPopUp={true}
-    //   >
-    //     <Details
-    //       videoDetails={videoDetails}
-    //     />
-    //   </Modal>
-    // </>;
-    // if (window.confirm("Are you sure to delete ?")) {
-    //   setCurrentVideo('');
-    //   try {
-    //     await fetch(WORKER_URL, {
-    //       method: 'DELETE',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify({ url }),
-    //     });
-    //     const updatedList = videoList.filter(video => video.url !== url);
-    //     setVideoList(updatedList);
-    //   } catch (error) {
-    //     alert(`Fail to delete:\n ${url}`)
-    //     console.error('Error deleting link:', error);
-    //   }
-    // }
   };
 
   // function handleToggleCheck() {
