@@ -5,8 +5,8 @@ import Modal from './Modal.js';
 import Details from './Details';
 
 
-function VideoList({ WORKER_URL, setCaptions, setCurrentVideo, isProxy }) {
-  const [videoList, setVideoList] = useState([]);
+function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurrentVideo, isProxy }) {
+  // const [videoList, setVideoList] = useState([]);
   const [videoToEdit, setVideoToEdit] = useState('');
   const [loading, setLoading] = useState(false);
   const [isTvCheck, setIsTvCheck] = useState(false);

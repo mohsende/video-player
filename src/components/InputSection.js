@@ -931,7 +931,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                                   <input style={{flexGrow:'1'}}
                                     type="text"
                                     id='subURL'
-                                    className='video-url'
+                                    className='sub-url'
                                     value={subUrl}
                                     onChange={(e) => handleSubtitleUrlChange(e.target.value)}
                                     placeholder="Enter subtitle URL to download"

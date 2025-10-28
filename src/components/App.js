@@ -183,7 +183,7 @@ function App() {
           <Route path="/" element={
             <>
               <div className='title'>
-                <h2 className='main-title'>My Video List</h2>
+                <h2 className='main-title'>My List</h2>
                 <div className='check-section'>
                   <div className={`check-section-proxy ${isProxy ? 'checked' : 'unchecked'}`}>
                     <span>Proxy</span>
@@ -201,8 +201,10 @@ function App() {
                   </div>
                 </div>
               </div>
-              <VideoList /* root shows Video List */
+              <VideoList /* route shows Video List */
                 WORKER_URL={WORKER_URL}
+                videoList={videoList}
+                setVideoList={setVideoList}
                 setCaptions={setCaptions}
                 setCurrentVideo={setCurrentVideo}
                 // isTV={isTV}
@@ -241,7 +243,7 @@ function App() {
             <>
               <div className='title'>
                 <h2 className='main-title'>Add Movie or Serie</h2>
-
+{/*  */}
               </div>
               <InputSection /* add shows InputSection */
                 WORKER_URL={WORKER_URL}
