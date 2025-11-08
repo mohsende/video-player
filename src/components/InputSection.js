@@ -408,7 +408,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   async function searchSubtitle(movieOrImdbID) {
     const query = byIMDB ? `imdb_id` : `movie`;
     const season_number = newVideo.season ? `&season=${newVideo.season}` : '';
-    const episode_number = newVideo.episode ? `&episode=${newVideo.episode}` : '';
+    const episode_number = byEpisode ? `&episode=${newVideo.episode}` : '';
     var url = `${WORKER_URL}searchSubtitle?api=${api}&${query}=${movieOrImdbID}${season_number}${episode_number}&page=${subCurrentPage}`;
     console.log(url, newVideo);
     try {
@@ -913,13 +913,12 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
                           {selectedMovie.title && <>
                             <button onClick={(event) => handleSearchSubtitleClick(event, movie.imdbID, movie.Title)}
                               className='search-subtitle-btn'>Search Sub</button>
-                            <div className={`check-section-proxy ${byEpisode ? 'checked' : 'unchecked'}`}>
-                              {/* <span></span> */}
+                            {movie.Type === 'series' && <div className={`check-section-proxy ${byEpisode ? 'checked' : 'unchecked'}`}>
                               <div className={`byEpisode ${byEpisode ? 'checked' : 'unchecked'}`}
                                 onClick={handleToggleByEpisode}>
                                 <div className={byEpisode ? `checked` : 'unchecked'}></div>
                               </div>
-                            </div>
+                            </div>}
                             </>
                           }
                         </div>

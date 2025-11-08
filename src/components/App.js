@@ -56,7 +56,7 @@ function App() {
       const deviceWidth = rdd.isMobile ? window.innerWidth : window.innerWidth;
       const deviceHeight = rdd.isMobile ? window.innerWidth : window.innerHeight;
       if (deviceWidth < 400) {
-        document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 50}px`);
+        document.documentElement.style.setProperty("--find-movie-width", `${deviceWidth - 20}px`);
         document.documentElement.style.setProperty("--find-movie-height", `${deviceHeight - 80}px`);
       } else {
         // document.documentElement.style.setProperty("--find-movie-width", "350px");
