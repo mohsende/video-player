@@ -240,7 +240,9 @@
               padding: 5px;
               justify-content: space-between;
 
-              .title {}
+              .title {
+                background-color: transparent;
+              }
 
               .picker {
                 display: flex;
@@ -275,6 +277,7 @@
             .file-type {
               padding: 5px;
               justify-content: space-between;
+              position: relative;
 
               .title {
                 flex-grow: 1;
@@ -291,6 +294,37 @@
                 border-radius: 7px;
                 background-color: rgba(255, 255, 255, 0.27);
               }
+              
+              .byEpisode {
+      width: 45px;
+      padding: 2px;
+      border-radius: 20px;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: all 300ms ease-out;
+  
+      &.checked {
+        background-color: #0b9d1e;
+      }
+      
+      &.unchecked {
+        background-color: #494949;
+      }
+      
+      .checked,
+      .unchecked {
+        width: 26px;
+        height: 25px;
+        margin: 1px;
+        border-radius: 30px;
+        background-color: #f4f4f4;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        transition: all 200ms ease-out;
+      }
+      .checked {
+        transform: translateX(13px);
+      }
+    }
 
               .search-subtitle-btn {
                 width: 100%;
@@ -393,5 +427,7 @@
       margin: 10px 0;
     }
   }
+
+  
 }
 

@@ -7,6 +7,7 @@ import Details from './Details';
 
 function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurrentVideo, isProxy }) {
   // const [videoList, setVideoList] = useState([]);
+  const [filteredList, setFilteredList] = useState([]);
   const [videoToEdit, setVideoToEdit] = useState('');
   const [loading, setLoading] = useState(false);
   const [isTvCheck, setIsTvCheck] = useState(false);
@@ -14,32 +15,86 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const checkRef = useRef(null);
+  const episodRef = useRef(null);
+  const videoLiRef = useRef(null);
 
-  useEffect(()=> {
+  useEffect(() => {
     setCaptions([]);
     setCurrentVideo('');
     fetchVideoList();
   }, []);
-  
-  useEffect(()=> {
+
+  useEffect(() => {
     if (videoToEdit !== '') {
       setIsEditModalOpen(true);
     }
   }, [videoToEdit]);
-  
+
+  // const fetchVideoList = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch(WORKER_URL);
+  //     const data = await response.json();
+  //     const sorted = (data || []).sort((a, b) =>
+  //       (a.title || '').localeCompare(b.title || '')
+  //     );
+  //     setVideoList(sorted);
+  //     // setVideoList(data || []);
+  //     // console.log(videoList);
+  //   } catch (error) {
+  //     console.error('Error fetching links:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // new fetch method
   const fetchVideoList = async () => {
     setLoading(true);
     try {
       const response = await fetch(WORKER_URL);
       const data = await response.json();
-      setVideoList(data || []);
-      // console.log(videoList);
+
+      // اگر چیزی نیامده بود
+      if (!data) {
+        setVideoList([]);
+        return;
+      }
+
+      // مرتب‌سازی سطح بالا
+      const sorted = data.sort((a, b) =>
+        (a.title || '').localeCompare(b.title || '')
+      );
+
+      // مرتب‌سازی اپیزودها (اگر موجود بود)
+      sorted.forEach(item => {
+        if (item.episodes && Array.isArray(item.episodes)) {
+          item.episodes.sort((a, b) =>
+            (a.title || '').localeCompare(b.title || '')
+          );
+        }
+      });
+
+      setVideoList(sorted);
+
+      setFilteredList(sorted.filter((video, index, self) => {
+        if (video.type !== 'series') return true; // فقط برای سریال‌ها چک کن
+
+        // ببین آیا ویدیوی مشابه (با type=series و title یکسان) قبل‌تر بوده یا نه
+        return (
+          index ===
+          self.findIndex(
+            (v) => v.type === 'series' && v.title === video.title
+          )
+        );
+      }));
     } catch (error) {
       console.error('Error fetching links:', error);
     } finally {
       setLoading(false);
     }
   };
+
 
   async function subtitleToBlob(url) {
     try {
@@ -82,7 +137,7 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
     // } else {
     //   setCurrentVideo(proxyUrl);
     // }
-    
+
     // Using Cloudflare proxy for bypassing filtering like telegram videos
     if (!isProxy) {
       setCurrentVideo(video.url);
@@ -93,18 +148,19 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
     // setCurrentVideo(video.url);
     setCaptions(newSubs);
   };
-
-  const handleDeleteVideo = async (event, url) => {
+  
+  const handleDeleteVideo = async (event, video) => {
     event.stopPropagation();
-    if (window.confirm("Are you sure to delete ?")) {
+    if (window.confirm(`Are you sure to delete?\n${video.title} ${video.type === 'series' ? 'S'+video.season+'E'+video.episode : ''}`)) {
       setCurrentVideo('');
+      const url = video.url
       try {
         await fetch(WORKER_URL, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url }),
         });
-        const updatedList = videoList.filter(video => video.url !== url);
+        const updatedList = videoList.filter(v => v.url !== url);
         setVideoList(updatedList);
       } catch (error) {
         alert(`Fail to delete:\n ${url}`)
@@ -117,21 +173,42 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
     setVideoToEdit('');
     setIsEditModalOpen(false);
   }
-
+  
   const handleEditVideo = async (event, url) => {
     event.stopPropagation();
     setVideoToEdit(videoList.filter(video => video.url === url)[0]);
   };
-
-  // function handleToggleCheck() {
-  //   if(isTV)
-  //     setIsTV(false);
-  //   else
-  //     setIsTV(true);
-
-  // }
-
   
+  // function handleToggleCheck() {
+    //   if(isTV)
+    //     setIsTV(false);
+    //   else
+      //     setIsTV(true);
+    
+    // }
+
+
+  const handleChangeEpisode = (currentVideo, direction) => {
+    // پیدا کردن همه‌ی اپیزودهای همین سریال
+    const seriesEpisodes = videoList.filter(v => v.title === currentVideo.title);
+
+    const currentIndex = seriesEpisodes.findIndex(v => v.url === currentVideo.url);
+    const nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+
+    // اگر ایندکس جدید معتبر نبود، برنگرد
+    if (nextIndex < 0 || nextIndex >= seriesEpisodes.length) return;
+
+    const newEpisode = seriesEpisodes[nextIndex];
+
+    // حالا کارت فعلی رو در filteredList با قسمت جدید جایگزین می‌کنیم
+    setFilteredList(prev =>
+      prev.map(v =>
+        v.url === currentVideo.url ? { ...newEpisode } : v
+      )
+    );
+  };
+
+
   return (<>
     {/* <div className='inTv-container'>
       <div ref={checkRef} className={`inTv ${isTV ? 'checked' : 'unchecked'}`} onClick={handleToggleCheck}>
@@ -142,30 +219,51 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
       {loading && <>
         <Skaleton />
         <Skaleton />
-        </>}
-      {videoList.map((video, index) => {
+      </>}
+      {
+        
+      }
+      {filteredList.map((video, index) => {
         const jsonVideo = JSON.stringify(video);
         var hasSub = jsonVideo.includes(`subtitle`); //Check for having subtitle
         // console.log(jsonVideo.includes(`subtitle`));
-        return(
-        <li key={index} className='movie-card'>
-          <div className='movie-card-content'
-            style={{
-              backgroundImage: `url(${video.poster})`,
-              }} 
-              onClick={() => handleVideoClick(video.url)}>
-            <span className='video-name'>
-              <p>{video.title}</p>
-              <p>{video.type === 'series' && `S:${video.season}   E:${video.episode}`}</p>
-              {hasSub && 
-              <span className={hasSub ? 'is-sub' : undefined}>Subtitle</span>}
-            </span>
-            
-            <button className='edit-btn' onClick={(event) => handleEditVideo(event, video.url)}>EDIT</button>
-            <button className='delete-btn' onClick={(event) => handleDeleteVideo(event, video.url)}>DELETE</button>
-          </div>
-        </li>
-      )})}
+        // console.log(video.title);
+        return (
+          <li
+            // ref={videoLiRef}
+            key={index}
+            className={`movie-card ${video.type === 'series' ? 'series-card' : ''}`}
+            style={{ '--poster-url': `url(${video.poster})` }}
+          >
+            {video.type === 'series' && (
+              <div className="card-back"></div>
+            )}
+            <div className='movie-card-content'
+              style={{
+                backgroundImage: `url(${video.poster})`,
+                // '--poster-url': `url(${video.poster})`
+              }}
+            >
+              <span className='video-name'>
+                <p>{video.title}</p>
+                {video.type === 'series' && (
+                  <p ref={episodRef}>S:{video.season} E:{video.episode}</p>
+                )}
+                {hasSub &&
+                  <span className={hasSub ? 'is-sub' : undefined}>Subtitle</span>}
+              </span>
+              <i className={`${video.type === 'series' ? 'previous-season fa fa-angle-left' : 'hidden'}`} aria-hidden="true"
+                onClick={() => handleChangeEpisode(video, 'prev')}></i>
+              <i className='play fa fa-play' aria-hidden="true"
+                onClick={() => handleVideoClick(video.url)}></i>
+              <i className={`${video.type === 'series' ? 'next-season fa fa-angle-right' : 'hidden'}`} aria-hidden="true"
+                onClick={() => handleChangeEpisode(video, 'next')}></i>
+              <button className='edit-btn' onClick={(event) => handleEditVideo(event, video.url)}>EDIT</button>
+              <button className='delete-btn' onClick={(event) => handleDeleteVideo(event, video)}>DELETE</button>
+            </div>
+          </li>
+        )
+      })}
     </ul>
     <Modal
       isOpen={isEditModalOpen}

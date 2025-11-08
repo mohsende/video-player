@@ -1,6 +1,9 @@
 @import './styles.scss';
 @import './App.scss';
-
+$radius: 12px;
+$lift-offset: -25px;
+$shadow-blur: 0.15px;
+$back-scale: 0.80;
 
 .check-section {
   display: flex;
@@ -78,13 +81,47 @@
     font-size: 1.2rem;
     background-color: rgba(255, 255, 255, 0.045);
     border-radius: 10px;
-    overflow: hidden;
+    // overflow: hidden;
+    overflow: visible;
     opacity: 0.7;
     -webkit-transition: opacity 200ms ease-in-out;
     -moz-transition: opacity 200ms ease-in-out;
     -ms-transition: opacity 200ms ease-in-out;
     -o-transition: opacity 200ms ease-in-out;
-    transition: opacity 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
+
+
+    // کارت پشت فقط برای سریال‌ها
+    &.series-card {
+      .card-back {
+        position: absolute;
+        top: $lift-offset;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        // border: 1px solid #49FF18;
+        border-radius: $radius;
+        background: var(--poster-url) center/cover no-repeat;
+        // filter: brightness(0.4) blur(1px);
+
+        // background: rgba(255, 255, 255, 0.1);
+        transform: scale($back-scale);
+        filter: brightness(0.5) blur($shadow-blur);
+        z-index: 0;
+        transition: all 0.3s ease;
+      }
+
+      // افکت hover روی کارت اصلی سریال
+      &:hover {
+        .card-back {
+          // filter: brightness(0.9) blur($shadow-blur);
+          transform: translateY(9px) scale($back-scale + 0.06);
+          
+        }
+      }
+    }
+
+
 
     @media screen and (max-width: $breakpoint-mobile) {
         width: 47%;
@@ -92,11 +129,14 @@
     }
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.121);
+      // background-color: rgba(255, 255, 255, 0.121);
       opacity: 1;
+      transform: scale(1.03);
     }
     .movie-card-content{
       position: relative;
+      // z-index: 2;
+      
       width: 100%;
       height: 100%;
       display: flex;
@@ -106,10 +146,24 @@
       background-repeat: no-repeat;
       background-size: cover;
       cursor: pointer;
+
+
+
+      z-index: 1;
+      border-radius: $radius;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        // transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      }
+
+
       .video-name {
         margin: 4px;
         padding: 5px;
-        font-size: 0.7rem;
+        font-size: 0.9rem;
         background-color: #ffffff1a;
         border-radius: 8px;
         height: auto;
@@ -132,6 +186,49 @@
           color: yellow;
         }
         
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .previous-season, .next-season, .play {
+        position: absolute;
+        transform: translateY(6rem);
+        font-size: 1.7rem;
+        // width: 30px;
+        // height: 30px;
+        // background-color: transparent;
+        color: rgb(197, 203, 129);
+        opacity: 0.4;
+        outline: none;
+        // border-radius: 50%;
+        // border: 1px solid rgb(182, 182, 182);
+        // box-shadow: 0px 2px 11px 1px rgba(119, 119, 119, 0.563);
+        cursor: pointer;
+        
+        transition: opacity 200ms ease-in-out;
+        
+        &:hover {
+          opacity: 0.8;
+          color: rgb(254, 243, 31);
+        }
+      }
+      
+      .previous-season {
+        // left: 0;
+      }
+      .play {
+        transform: translate(50%,150%);
+        // width: 100%;
+        text-align: center;
+        // color: rgb(206, 217, 84);
+        font-size: 3.3rem;
+        // opacity: .7;
+      }
+
+      .next-season {
+        right: 0;
       }
 
       .edit-btn,
@@ -165,4 +262,30 @@
       }
     }
   }
+
+  .series-card {
+    position: relative;
+    z-index: 2;
+
+    // &::before {
+    //   content: '';
+    //   position: absolute;
+    //   top: -5px;              /* لبه از بالا بیرون زده */
+    //   left: 0;
+    //   width: 95%;             /* کمی کوچکتر از کارت اصلی */
+    //   height: 100%;
+    //   border-radius: 10px;
+    //   background: var(--poster-url) center/cover no-repeat;
+    //   filter: brightness(0.4) blur(1px);
+    //   opacity: 0.7;           /* کمی شفاف‌تر برای حس پشت بودن */
+    //   z-index: 1;
+    //   transform: translateX(2.5%) scale(0.96); /* دقیق‌تر جاگذاری پشت کارت */
+    // }
+
+    // &:hover::before {
+    //   filter: brightness(0.6);
+    //   opacity: 0.9;
+    // }
+  }
+
 }
