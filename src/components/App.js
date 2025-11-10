@@ -34,6 +34,9 @@ function App() {
   const [showVideoList, setShowVideoList] = useState(true);
   const [isTV, setIsTV] = useState(rdd.isSmartTV);
 
+  const [videoToEdit, setVideoToEdit] = useState('');
+
+
   const [isProxy, setIsProxy] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -207,6 +210,7 @@ function App() {
                 setVideoList={setVideoList}
                 setCaptions={setCaptions}
                 setCurrentVideo={setCurrentVideo}
+                setVideoToEdit={setVideoToEdit}
                 // isTV={isTV}
                 // setIsTV={setIsTV}
                 isProxy={isProxy}
@@ -257,7 +261,9 @@ function App() {
               <div className='title'>
                 <h2 className='main-title'>Movie Details</h2>
               </div>
-              <Details /> 
+              <Details
+                videoToEdit={videoToEdit}
+              />
             </>
           } />
           <Route path="/profile" element={

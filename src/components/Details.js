@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/details.scss'
 
 function Details({ videoToEdit }) {
@@ -8,6 +9,8 @@ function Details({ videoToEdit }) {
   const [videoType, setVideoType] = useState('');
   const [videoSeason, setVideoSeason] = useState('');
   const [videoEpisode, setVideoEpisode] = useState('');
+
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -24,6 +27,10 @@ function Details({ videoToEdit }) {
 
   function handleSaveClick() {
 
+  }
+
+  function handleNewEpisodeClick() {
+    navigate("/add", { state: { videoToEdit } });
   }
 
   return (
@@ -99,6 +106,7 @@ function Details({ videoToEdit }) {
           </div>
         </div>
         <button className='save-btn' onClick={handleSaveClick}>Save</button>
+        <button className='newEpisode-btn' onClick={handleNewEpisodeClick}>New Episode</button>
       </div>
     </div>
   )

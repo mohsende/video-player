@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, Children, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import JSZip from 'jszip';
 import '../styles/InputSection.scss';
 import Modal from './Modal.js';
@@ -61,6 +62,9 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   const mkvRef = useRef(null);
   const movieSectionRef = useRef(null);
 
+  const location = useLocation();
+  const newEpisode = location.state?.videoToEdit;
+  // console.log(newEpisode);
 
 
   const [hasMore, setHasMore] = useState(true);
@@ -99,24 +103,24 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       searchMovie(selectedName, page);
     }
   }, [page, isSearching, selectedName]);
-
+  
   // useEffect(() => {
-  //   if (page === 1 && findMovies.length > 0 && movieSectionRef.current) {
-  //     movieSectionRef.current.scrollIntoView({
-  //       behavior: 'smooth',
-  //     });
-  //   }
-  //   if (findMovies.length > 0) {
-  //     console.log('useEffect: findMovies', findMovies);
-  //   }
-  // }, [page, findMovies]);
-
-  useEffect(() => {
-    if (selectedMovie.imdbID) {
+    //   if (page === 1 && findMovies.length > 0 && movieSectionRef.current) {
+      //     movieSectionRef.current.scrollIntoView({
+        //       behavior: 'smooth',
+        //     });
+        //   }
+        //   if (findMovies.length > 0) {
+          //     console.log('useEffect: findMovies', findMovies);
+          //   }
+          // }, [page, findMovies]);
+          
+          useEffect(() => {
+            if (selectedMovie.imdbID) {
       searchSubtitle(byIMDB ? selectedMovie.imdbID.split('tt').pop() : selectedMovie.title);
     }
   }, [subCurrentPage]);
-
+  
   useEffect(() => {
     if (subSelectRef.current) {
       if (subSelectRef.current.value === 'default') {
@@ -131,10 +135,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
 
   // useEffect(() => {
-  //   setNewVideo({
-  //     ...newVideo,
-  //     filename: `${newVideo.title}-S${newVideo.season}E${newVideo.episode}`,
-  //   })
+  //   console.log(newVideo)
   // }, [newVideo.episode, newVideo.season])
 
 
@@ -158,10 +159,18 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   } else if (newName !== '') {
     suggestions[0] = newName;
   }
-
+  
   // reset all data
   function reset() {
     setFindMovies([]);
+    setNewVideo({
+      id: undefined,
+      url: undefined,
+      title: '',
+      type: '',
+      year: '',
+      poster: ''
+    });
     setSubtitleFileUrl('');
     setOpenSubtitleFileUrl('');
     setFileType('mp4');
@@ -171,6 +180,13 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     setIsSearching(false);
     setHasMore(true);
   }
+  
+  useEffect(() => {
+    if (newEpisode) {
+      console.log(newEpisode)
+      setVideoUrl(newEpisode.url);
+    }
+  }, []);
 
   function init() {
     console.log('init');
@@ -331,6 +347,8 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   // Handle Poster click set movieData and search subtitle for it when click on movie card
   function handlePosterClick(url, filename, title, type, year, poster, imdbID, e) {
     // console.log(`poster clicked -> imdbID: ${imdbID} - prevIMDB: ${selectedMovie.imdbID ?? 'null'}`);
+    const { season, episode, fileType } = extractSeasonEpisodeFormat(url);
+    // console.log(season);
     if (selectedMovie.imdbID !== imdbID) {
       // const className = e.target.parentElement?.className;
       reset();
@@ -352,7 +370,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
         type: type,
         year: year,
         poster: poster,
-        ...(type === 'series' && { season: 1, episode: 1 })
+        ...(type === 'series' && { season: season, episode: episode })
       })
     }
   }
@@ -410,11 +428,11 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     const season_number = newVideo.season ? `&season=${newVideo.season}` : '';
     const episode_number = byEpisode ? `&episode=${newVideo.episode}` : '';
     var url = `${WORKER_URL}searchSubtitle?api=${api}&${query}=${movieOrImdbID}${season_number}${episode_number}&page=${subCurrentPage}`;
-    console.log(url, newVideo);
+    // console.log(url, newVideo);
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setSubSearchList(api === 'subdl' ? data.subtitles || [] : data.data)
       setSubTotalPages(api === 'subdl' ? data.totalPages || 1 : 1);
       // setSubCurrentPage(api === 'subdl' ? data.currentPages || 1 : 1);
@@ -454,7 +472,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       if (subUrl !== '') {
         url = link;
       }
-      console.log(url);
+      // console.log(url);
       setSubtitleFileUrl(url);
       handleZipFile(url);
     } else if (api === 'open') {
@@ -489,7 +507,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
 
   // Unzip from a SUBDL url and convert all srt file into vtt
   async function handleZipFile(zipUrl) {
-    console.log('zipUrl', zipUrl);
+    // console.log('zipUrl', zipUrl);
     try {
       let zipResponse;
       let zipData;
@@ -506,11 +524,11 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
         if (filename.endsWith('.srt')) {
           // خواندن محتوای فایل با TextDecoder
           const srtContent = await detectEncoding(file);
-          console.log(`Best encoding detected: \n${srtContent.substring(0, 200)}`);
+          // console.log(`Best encoding detected: \n${srtContent.substring(0, 200)}`);
           // const srtContent = await readSrtFile(file);
 
           const vttContent = convertSrtToVtt(srtContent);
-          console.log(vttContent.substring(0, 200));
+          // console.log(vttContent.substring(0, 200));
           const vttFilename = filename.replace('.srt', '.vtt');
           vttFilesContent.push({ vttFilename: vttFilename, vttContent: vttContent });
           vttFiles.push(`/subs/${vttFilename}`);
@@ -682,6 +700,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
         });
       };
     };
+    
   };
 
   function handleFileTypeClick(target) {
@@ -762,6 +781,21 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
     else
       setByEpisode(true);
   }
+
+  function extractSeasonEpisodeFormat(url) {
+    const pattern = /[Ss](?:eason)?\s*(\d{1,2})[^\d]?[Ee](?:pisode)?\s*(\d{1,2})/;
+    const match = url.match(pattern);
+
+    // استخراج فرمت فایل (قسمت آخر بعد از نقطه)
+    const extMatch = url.match(/\.([a-z0-9]+)(?:\?|#|$)/i);
+
+    return {
+      season: match ? parseInt(match[1], 10) : null,
+      episode: match ? parseInt(match[2], 10) : null,
+      format: extMatch ? extMatch[1].toLowerCase() : null
+    };
+  }
+
 
   // console.log('subSearchList', subSearchList);
   // console.log('selectedMovie', selectedMovie);

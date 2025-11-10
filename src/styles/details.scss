@@ -38,20 +38,26 @@ $showHidebtnColor: rgba(0, 247, 255, 0.302);
     flex-grow: 1;
     padding-left: 10px;
 
-
-    .save-btn {
-      // width: 90%;
+    button {
       padding: 10px;
       border-radius: 8px;
       margin-top: 15px;
-      background-color: #71cd50;
       color: #3e3e3e;
       font-size: 1rem;
       font-weight: bold;
-
+      
       &:hover {
-        opacity: 0.8;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+        // opacity: 0.8;
       }
+    }
+    
+    .save-btn {
+      // width: 90%;
+      background-color: #71cd50;
+    }
+    .newEpisode-btn {
+      background-color: #f29e66;
     }
 
     .name-type {

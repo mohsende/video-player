@@ -1,14 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/VideoList.scss';
 import Skaleton from './Skaleton';
 import Modal from './Modal.js';
 import Details from './Details';
 
 
-function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurrentVideo, isProxy }) {
+function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurrentVideo, setVideoToEdit, isProxy }) {
   // const [videoList, setVideoList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
-  const [videoToEdit, setVideoToEdit] = useState('');
+  // const [videoToEdit, setVideoToEdit] = useState('');
   const [loading, setLoading] = useState(false);
   const [isTvCheck, setIsTvCheck] = useState(false);
 
@@ -18,17 +19,19 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
   const episodRef = useRef(null);
   const videoLiRef = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     setCaptions([]);
     setCurrentVideo('');
     fetchVideoList();
   }, []);
 
-  useEffect(() => {
-    if (videoToEdit !== '') {
-      setIsEditModalOpen(true);
-    }
-  }, [videoToEdit]);
+  // useEffect(() => {
+  //   if (videoToEdit !== '') {
+  //     setIsEditModalOpen(true);
+  //   }
+  // }, [videoToEdit]);
 
   // const fetchVideoList = async () => {
   //   setLoading(true);
@@ -177,6 +180,7 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
   const handleEditVideo = async (event, url) => {
     event.stopPropagation();
     setVideoToEdit(videoList.filter(video => video.url === url)[0]);
+    navigate('/Details');
   };
   
   // function handleToggleCheck() {
@@ -270,9 +274,9 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
       onClose={handleEditModalClose}
       isPopUp={false}
     >
-      <Details
+      {/* <Details
         videoToEdit={videoToEdit}
-      />
+      /> */}
     </Modal>
   </>
   );
