@@ -259,7 +259,7 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
               <i className={`${video.type === 'series' ? 'previous-season fa fa-angle-left' : 'hidden'}`} aria-hidden="true"
                 onClick={() => handleChangeEpisode(video, 'prev')}></i>
               <i className='play fa fa-play' aria-hidden="true"
-                onClick={() => handleVideoClick(video.url)}></i>
+                onClick={() => handleVideoClick(video.url)}>▶</i>
               <i className={`${video.type === 'series' ? 'next-season fa fa-angle-right' : 'hidden'}`} aria-hidden="true"
                 onClick={() => handleChangeEpisode(video, 'next')}></i>
               <button className='edit-btn' onClick={(event) => handleEditVideo(event, video.url)}>EDIT</button>
