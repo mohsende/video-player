@@ -33,6 +33,10 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
   //   }
   // }, [videoToEdit]);
 
+  useEffect(() => {
+    createFilteredList(videoList);
+  }, [videoList]);
+
   // const fetchVideoList = async () => {
   //   setLoading(true);
   //   try {
@@ -70,33 +74,47 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
       );
 
       // مرتب‌سازی اپیزودها (اگر موجود بود)
-      sorted.forEach(item => {
-        if (item.episodes && Array.isArray(item.episodes)) {
-          item.episodes.sort((a, b) =>
-            (a.title || '').localeCompare(b.title || '')
-          );
-        }
-      });
+      // sorted.forEach(item => {
+      //   if (item.episodes && Array.isArray(item.episodes)) {
+      //     item.episodes.sort((a, b) =>
+      //       (a.title || '').localeCompare(b.title || '')
+      //     );
+      //   }
+      // });
 
+      createFilteredList(sorted);
+      
       setVideoList(sorted);
 
-      setFilteredList(sorted.filter((video, index, self) => {
-        if (video.type !== 'series') return true; // فقط برای سریال‌ها چک کن
-
-        // ببین آیا ویدیوی مشابه (با type=series و title یکسان) قبل‌تر بوده یا نه
-        return (
-          index ===
-          self.findIndex(
-            (v) => v.type === 'series' && v.title === video.title
-          )
-        );
-      }));
     } catch (error) {
       console.error('Error fetching links:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  function createFilteredList (sorted) {
+    // مرتب‌سازی اپیزودها (اگر موجود بود)
+    sorted.forEach(item => {
+      if (item.episodes && Array.isArray(item.episodes)) {
+        item.episodes.sort((a, b) =>
+          (a.title || '').localeCompare(b.title || '')
+        );
+      }
+    });
+
+    setFilteredList(sorted.filter((video, index, self) => {
+      if (video.type !== 'series') return true; // فقط برای سریال‌ها چک کن
+
+      // ببین آیا ویدیوی مشابه (با type=series و title یکسان) قبل‌تر بوده یا نه
+      return (
+        index ===
+        self.findIndex(
+          (v) => v.type === 'series' && v.title === video.title
+        )
+      );
+    }));
+  }
 
 
   async function subtitleToBlob(url) {
@@ -263,7 +281,7 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
                   onClick={() => handleChangeEpisode(video, 'prev')}>keyboard_double_arrow_left</span>
                 {/* <i className='play fa fa-play' aria-hidden="true"
                   ></i> */}
-                  <span class="material-symbols-rounded play"
+                  <span className="material-symbols-rounded play"
                     onClick={() => handleVideoClick(video.url)}>play_arrow</span>
                 <span className={`material-symbols-rounded ${video.type === 'series' ? "next-season" : "hidden"}`}
                     onClick={() => handleChangeEpisode(video, 'next')}>keyboard_double_arrow_right</span>

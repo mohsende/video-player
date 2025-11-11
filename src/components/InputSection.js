@@ -183,7 +183,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
   
   useEffect(() => {
     if (newEpisode) {
-      console.log(newEpisode)
+      // console.log(newEpisode)
       setVideoUrl(newEpisode.url);
     }
   }, []);
@@ -362,7 +362,7 @@ function InputSection({ WORKER_URL, videoList, setVideoList, setShowInputSection
       setFindMovies(findMovies.filter(movie => movie.Title === title)); // Show just selected movie when selected
       const newTitle = title.replaceAll(' ', '+');
       const newNanoid = generateNanoid();
-      console.log(newNanoid);
+      // console.log(newNanoid);
       setNewVideo({
         id: newNanoid,
         url: url,

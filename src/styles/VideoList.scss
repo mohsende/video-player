@@ -1,9 +1,9 @@
 @import './styles.scss';
 @import './App.scss';
 $radius: 12px;
-$lift-offset: -25px;
+$lift-offset: -35px;
 $shadow-blur: 0.15px;
-$back-scale: 0.87;
+$back-scale: 0.80;
 
 .material-symbols-outlined {
   font-variation-settings:
@@ -79,8 +79,8 @@ $back-scale: 0.87;
   flex-wrap: wrap;
   // flex-basis: 33%;
   .movie-card {
-    width: 200px;
-    height: 300px;
+    width: 190px;
+    height: 290px;
     margin: 5px;
     display: flex;
     flex-direction: column;
@@ -134,7 +134,7 @@ $back-scale: 0.87;
 
     &:hover {
       opacity: 1;
-      transform: scale(1.03);
+      // transfom: scale(1.03);
     }
     .movie-card-content{
       position: relative;
@@ -168,7 +168,7 @@ $back-scale: 0.87;
         font-size: 0.9rem;
         background-color: #ffffff1a;
         border-radius: 8px;
-        height: auto;
+        height: 70px;
         overflow-wrap: break-word;
         hyphens: auto;
         white-space: pre-wrap;
@@ -228,7 +228,7 @@ $back-scale: 0.87;
         // left: 50%;
         // transform: translate(-50%,-30%);
         text-align: center;
-        font-size: 4rem;
+        font-size: 5rem;
         transition: all 300ms ease;
 
         &:hover {
