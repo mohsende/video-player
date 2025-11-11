@@ -256,12 +256,20 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
                 {hasSub &&
                   <span className={hasSub ? 'is-sub' : undefined}>Subtitle</span>}
               </span>
-              <i className={`${video.type === 'series' ? 'previous-season fa fa-angle-left' : 'hidden'}`} aria-hidden="true"
-                onClick={() => handleChangeEpisode(video, 'prev')}></i>
-              <i className='play fa fa-play' aria-hidden="true"
-                onClick={() => handleVideoClick(video.url)}>▶</i>
-              <i className={`${video.type === 'series' ? 'next-season fa fa-angle-right' : 'hidden'}`} aria-hidden="true"
-                onClick={() => handleChangeEpisode(video, 'next')}></i>
+              {/* <i className={`${video.type === 'series' ? 'previous-season fa fa-angle-left' : 'hidden'}`} aria-hidden="true"
+                onClick={() => handleChangeEpisode(video, 'prev')}></i> */}
+              <div className='control-icon'>
+                <span className={`material-symbols-rounded ${video.type === 'series' ? "previous-season" : "hidden"}`}
+                  onClick={() => handleChangeEpisode(video, 'prev')}>keyboard_double_arrow_left</span>
+                {/* <i className='play fa fa-play' aria-hidden="true"
+                  ></i> */}
+                  <span class="material-symbols-rounded play"
+                    onClick={() => handleVideoClick(video.url)}>play_arrow</span>
+                <span className={`material-symbols-rounded ${video.type === 'series' ? "next-season" : "hidden"}`}
+                    onClick={() => handleChangeEpisode(video, 'next')}>keyboard_double_arrow_right</span>
+                {/* <i className={`${video.type === 'series' ? 'next-season fa fa-angle-right' : 'hidden'}`} aria-hidden="true"
+                  onClick={() => handleChangeEpisode(video, 'next')}></i> */}
+              </div>
               <button className='edit-btn' onClick={(event) => handleEditVideo(event, video.url)}>EDIT</button>
               <button className='delete-btn' onClick={(event) => handleDeleteVideo(event, video)}>DELETE</button>
             </div>
