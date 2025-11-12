@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/VideoList.scss';
 import Skaleton from './Skaleton';
 import Modal from './Modal.js';
-import Details from './Details';
+// import Details from './Details';
 
 
 function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurrentVideo, setVideoToEdit, isProxy }) {
@@ -11,13 +11,13 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
   const [filteredList, setFilteredList] = useState([]);
   // const [videoToEdit, setVideoToEdit] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isTvCheck, setIsTvCheck] = useState(false);
+  // const [isTvCheck, setIsTvCheck] = useState(false);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const checkRef = useRef(null);
-  const episodRef = useRef(null);
-  const videoLiRef = useRef(null);
+  // const checkRef = useRef(null);
+  const episodeRefs = useRef({}); // شیء برای نگه داشتن ref هر ویدیو
+  // const videoLiRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -37,24 +37,6 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
     createFilteredList(videoList);
   }, [videoList]);
 
-  // const fetchVideoList = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(WORKER_URL);
-  //     const data = await response.json();
-  //     const sorted = (data || []).sort((a, b) =>
-  //       (a.title || '').localeCompare(b.title || '')
-  //     );
-  //     setVideoList(sorted);
-  //     // setVideoList(data || []);
-  //     // console.log(videoList);
-  //   } catch (error) {
-  //     console.error('Error fetching links:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   // new fetch method
   const fetchVideoList = async () => {
     setLoading(true);
@@ -68,19 +50,24 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
         return;
       }
 
-      // مرتب‌سازی سطح بالا
-      const sorted = data.sort((a, b) =>
-        (a.title || '').localeCompare(b.title || '')
-      );
+      // مرتب‌سازی هوشمند کل لیست (فیلم‌ها و سریال‌ها)
+      const sorted = data.sort((a, b) => {
+        const titleA = a.title || '';
+        const titleB = b.title || '';
 
-      // مرتب‌سازی اپیزودها (اگر موجود بود)
-      // sorted.forEach(item => {
-      //   if (item.episodes && Array.isArray(item.episodes)) {
-      //     item.episodes.sort((a, b) =>
-      //       (a.title || '').localeCompare(b.title || '')
-      //     );
-      //   }
-      // });
+        // اول بر اساس نام
+        const titleCompare = titleA.localeCompare(titleB);
+        if (titleCompare !== 0) return titleCompare;
+
+        // اگر هر دو سریال هستن، بر اساس فصل و اپیزود
+        if (a.type === 'series' && b.type === 'series') {
+          if (a.season !== b.season) return (a.season || 0) - (b.season || 0);
+          return (a.episode || 0) - (b.episode || 0);
+        }
+
+        // بقیه حالت‌ها (فیلم‌ها)
+        return 0;
+      });
 
       createFilteredList(sorted);
       
@@ -94,26 +81,15 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
   };
 
   function createFilteredList (sorted) {
-    // مرتب‌سازی اپیزودها (اگر موجود بود)
-    sorted.forEach(item => {
-      if (item.episodes && Array.isArray(item.episodes)) {
-        item.episodes.sort((a, b) =>
-          (a.title || '').localeCompare(b.title || '')
+    // فقط یک نسخه از هر سریال رو نگه می‌داریم
+    setFilteredList(
+      sorted.filter((video, index, self) => {
+        if (video.type !== 'series') return true;
+        return index === self.findIndex(
+          v => v.type === 'series' && v.title === video.title
         );
-      }
-    });
-
-    setFilteredList(sorted.filter((video, index, self) => {
-      if (video.type !== 'series') return true; // فقط برای سریال‌ها چک کن
-
-      // ببین آیا ویدیوی مشابه (با type=series و title یکسان) قبل‌تر بوده یا نه
-      return (
-        index ===
-        self.findIndex(
-          (v) => v.type === 'series' && v.title === video.title
-        )
-      );
-    }));
+      })
+    );
   }
 
 
@@ -228,6 +204,13 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
         v.url === currentVideo.url ? { ...newEpisode } : v
       )
     );
+
+    // فقط روی کارت مربوطه انیمیشن اعمال کن
+    const cardRef = episodeRefs.current[currentVideo.url];
+    if (cardRef) {
+      cardRef.classList.add('animate');
+      setTimeout(() => cardRef.classList.remove('animate'), 400);
+    }
   };
 
 
@@ -248,8 +231,6 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
       {filteredList.map((video, index) => {
         const jsonVideo = JSON.stringify(video);
         var hasSub = jsonVideo.includes(`subtitle`); //Check for having subtitle
-        // console.log(jsonVideo.includes(`subtitle`));
-        // console.log(video.title);
         return (
           <li
             // ref={videoLiRef}
@@ -263,30 +244,28 @@ function VideoList({ WORKER_URL, videoList, setVideoList, setCaptions, setCurren
             <div className='movie-card-content'
               style={{
                 backgroundImage: `url(${video.poster})`,
-                // '--poster-url': `url(${video.poster})`
               }}
             >
               <span className='video-name'>
                 <p>{video.title}</p>
                 {video.type === 'series' && (
-                  <p ref={episodRef}>S:{video.season} E:{video.episode}</p>
+                  <p
+                    ref={el => (episodeRefs.current[video.url] = el)} // ← اینجا برای هر کارت ref خاص خودش
+                    className="episode-text"
+                  >
+                    S {video.season} - E {video.episode}
+                  </p>
                 )}
                 {hasSub &&
                   <span className={hasSub ? 'is-sub' : undefined}>Subtitle</span>}
               </span>
-              {/* <i className={`${video.type === 'series' ? 'previous-season fa fa-angle-left' : 'hidden'}`} aria-hidden="true"
-                onClick={() => handleChangeEpisode(video, 'prev')}></i> */}
               <div className='control-icon'>
                 <span className={`material-symbols-rounded ${video.type === 'series' ? "previous-season" : "hidden"}`}
                   onClick={() => handleChangeEpisode(video, 'prev')}>keyboard_double_arrow_left</span>
-                {/* <i className='play fa fa-play' aria-hidden="true"
-                  ></i> */}
                   <span className="material-symbols-rounded play"
                     onClick={() => handleVideoClick(video.url)}>play_arrow</span>
                 <span className={`material-symbols-rounded ${video.type === 'series' ? "next-season" : "hidden"}`}
                     onClick={() => handleChangeEpisode(video, 'next')}>keyboard_double_arrow_right</span>
-                {/* <i className={`${video.type === 'series' ? 'next-season fa fa-angle-right' : 'hidden'}`} aria-hidden="true"
-                  onClick={() => handleChangeEpisode(video, 'next')}></i> */}
               </div>
               <button className='edit-btn' onClick={(event) => handleEditVideo(event, video.url)}>EDIT</button>
               <button className='delete-btn' onClick={(event) => handleDeleteVideo(event, video)}>DELETE</button>

@@ -174,18 +174,47 @@ $back-scale: 0.80;
         white-space: pre-wrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: auto;
-        -webkit-box-orient: vertical;
+        display: flex;
+        flex-direction: column;
+        // display: -webkit-box;
+        // -webkit-line-clamp: auto;
+        // -webkit-box-orient: vertical;
         text-shadow: 1px 1px 5px #000;
         background-color: #00000014;
         font-weight: bold;
+        
         p {
           color: white;
+          font-size: 1.1rem;
         }
         .is-sub {
           color: yellow;
         }
+
+        @keyframes episodeChange {
+          0% {
+            transform: scale(1);
+            color: #fff;
+          }
+          50% {
+            transform: scale(1.4) translate(15%, 0%);
+            color: #ffd166; // رنگ زرد ملایم برای تأکید
+          }
+          100% {
+            transform: scale(1);
+            color: #fff;
+          }
+        }
+
+        .episode-text {
+          transition: transform 0.2s ease;
+          display: inline-block;
+
+          &.animate {
+            animation: episodeChange 0.4s ease;
+          }
+        }
+
         
       }
 
@@ -278,3 +307,6 @@ $back-scale: 0.80;
   }
 
 }
+
+
+
